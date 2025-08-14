@@ -1,103 +1,172 @@
-import Image from "next/image";
+'use client';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Header from '../components/common/Header';
+import Footer from '../components/common/Footer';
+import Hero from '../components/sections/Hero';
+import PartnersSection from '../components/sections/Partners';
+import ProductCard from '../components/common/ProductCard';
+import AboutPage from '../components/pages/AboutPage';
+import ProductsPage from '../components/pages/ProductsPage';
+import ServicesPage from '../components/pages/ServicesPage';
+import CareersPage from '../components/pages/CareersPage';
+import NewsPage from '../components/pages/NewsPage';
+import ContactPage from '../components/pages/ContactPage';
+import ProductDetailPage from '../components/pages/ProductDetailPage';
+import BlogDetailPage from '../components/pages/BlogDetailPage';
+import FaqsPage from '../components/pages/FaqsPage';
+import QuotePage from '../components/pages/QuotePage';
+import { Eye, Heart, Target, TrendingUp, Users, Award, Shield, CheckCircle, Star } from 'lucide-react';
 
-export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+const StatsSection = () => (
+    <section className="py-20 bg-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          {[
+            { number: "28+", label: "Years Experience", icon: <Award className="text-brand-gold-dark" size={32} /> },
+            { number: "800+", label: "Happy Clients", icon: <Users className="text-green-600" size={32} /> },
+            { number: "10,000+", label: "Installations", icon: <CheckCircle className="text-blue-600" size={32} /> },
+            { number: "24/7", label: "Support Available", icon: <Shield className="text-purple-600" size={32} /> }
+          ].map((stat, index) => (
+            <div key={index} className="text-center group hover:scale-105 transition-transform">
+              <div className="flex justify-center mb-4">{stat.icon}</div>
+              <div className="text-3xl md:text-4xl font-bold text-brand-brown mb-2">{stat.number}</div>
+              <div className="text-gray-600 font-medium">{stat.label}</div>
+            </div>
+          ))}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </div>
+    </section>
+);
+
+const WhyChooseUsSection = () => (
+    <section className="py-20 bg-gradient-to-r from-amber-50 to-orange-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-4xl font-bold text-brand-brown mb-4">Why Choose Shreedhar Instruments?</h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">Your most trusted, reliable and ethical partner for analytical instruments in pharmaceutical industry</p>
+        </div>
+        <div className="grid md:grid-cols-3 gap-8">
+          <div className="bg-white p-8 rounded-2xl shadow-lg text-center"><Eye className="text-brand-gold mx-auto" size={48} /><h3 className="text-xl font-bold text-brand-brown my-4">Precision & Quality</h3><p className="text-gray-600">We commit to delivering highly accurate and reliable instruments that exceed industry standards.</p></div>
+          <div className="bg-white p-8 rounded-2xl shadow-lg text-center"><Heart className="text-red-500 mx-auto" size={48} /><h3 className="text-xl font-bold text-brand-brown my-4">Integrity</h3><p className="text-gray-600">We uphold the highest ethical standards in every interaction.</p></div>
+          <div className="bg-white p-8 rounded-2xl shadow-lg text-center"><Target className="text-blue-600 mx-auto" size={48} /><h3 className="text-xl font-bold text-brand-brown my-4">Customer-Centricity</h3><p className="text-gray-600">We listen to our customers and shape our solutions to meet their needs.</p></div>
+        </div>
+      </div>
+    </section>
+);
+
+const FeaturedProductsSection = () => {
+    const [featuredProducts, setFeaturedProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchFeatured = async () => {
+            try {
+                const response = await axios.get('http://localhost:8000/api/products/all/?is_featured=true');
+                setFeaturedProducts(response.data.slice(0, 3)); // Show max 3
+            } catch (error) {
+                console.error("Failed to fetch featured products:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchFeatured();
+    }, []);
+
+    return (
+        <section className="py-20 bg-brand-off-white">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="text-center mb-16">
+                    <h2 className="text-3xl md:text-4xl font-bold text-brand-brown mb-4">Featured Analytical Instruments</h2>
+                    <p className="text-xl text-gray-600 max-w-3xl mx-auto">Discover our regulatory-compliant instruments trusted by leading pharmaceutical companies</p>
+                </div>
+                {loading ? (
+                    <p className="text-center">Loading featured products...</p>
+                ) : (
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {featuredProducts.map((product) => (
+                            <ProductCard key={product.id} product={product} />
+                        ))}
+                    </div>
+                )}
+            </div>
+        </section>
+    );
+};
+
+const TestimonialsSection = () => {
+    const [testimonials, setTestimonials] = useState([]);
+
+    useEffect(() => {
+        const fetchTestimonials = async () => {
+            try {
+                const response = await axios.get('http://localhost:8000/api/testimonials/?is_featured=true');
+                setTestimonials(response.data);
+            } catch (error) {
+                console.error("Failed to fetch testimonials:", error);
+            }
+        };
+        fetchTestimonials();
+    }, []);
+
+    return (
+        <section className="py-20 bg-white">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div className="text-center mb-16">
+                    <h2 className="text-3xl md:text-4xl font-bold text-brand-brown mb-4">Trusted by Leading Pharma Companies</h2>
+                    <p className="text-xl text-gray-600">Our customer-centric approach has earned us loyalty across the industry</p>
+                </div>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {testimonials.map((testimonial) => (
+                        <div key={testimonial.id} className="bg-amber-50 p-6 rounded-2xl border-l-4 border-brand-gold">
+                            <div className="flex text-yellow-400 mb-4"><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /></div>
+                            <p className="text-gray-700 mb-4 italic">"{testimonial.testimonial_text}"</p>
+                            <div>
+                                <div className="font-semibold text-brand-brown">{testimonial.client_name}</div>
+                                <div className="text-sm text-brand-brown-light">{testimonial.company}</div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </section>
+    );
+};
+
+const HomePageContent = () => (
+  <>
+    <Hero />
+    <StatsSection />
+    <PartnersSection />
+    <WhyChooseUsSection />
+    <FeaturedProductsSection />
+    <TestimonialsSection />
+  </>
+);
+
+export default function MainApp() {
+  return (
+    <Router>
+      <div className="min-h-screen bg-brand-off-white flex flex-col">
+        <Header />
+        <main className="flex-grow">
+            <Routes>
+                <Route path="/" element={<HomePageContent />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/products" element={<ProductsPage />} />
+                <Route path="/products/:slug" element={<ProductDetailPage />} />
+                <Route path="/services" element={<ServicesPage />} />
+                <Route path="/careers" element={<CareersPage />} />
+                <Route path="/news" element={<NewsPage />} />
+                <Route path="/news/:slug" element={<BlogDetailPage />} />
+                <Route path="/contact" element={<ContactPage />} />
+                <Route path="/faqs" element={<FaqsPage />} />
+                <Route path="/quote" element={<QuotePage />} />
+            </Routes>
+        </main>
+        <Footer />
+      </div>
+    </Router>
   );
 }
