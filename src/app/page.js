@@ -2,21 +2,21 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 // import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import Header from "../components/common/Header";
-import Footer from "../components/common/Footer";
+// import Header from "../components/common/Header";
+// import Footer from "../components/common/Footer";
 import Hero from "../components/sections/Hero";
 import PartnersSection from "../components/sections/Partners";
 import ProductCard from "../components/common/ProductCard";
-import AboutPage from "../components/pages/AboutPage";
-import ProductsPage from "../components/pages/ProductsPage";
-import ServicesPage from "../components/pages/ServicesPage";
-import CareersPage from "../components/pages/CareersPage";
-import NewsPage from "../components/pages/NewsPage";
-import ContactPage from "../components/pages/ContactPage";
-import ProductDetailPage from "../components/pages/ProductDetailPage";
-import BlogDetailPage from "../components/pages/BlogDetailPage";
-import FaqsPage from "../components/pages/FaqsPage";
-import QuotePage from "../components/pages/QuotePage";
+// import AboutPage from "../components/pages/AboutPage";
+// import ProductsPage from "../components/pages/ProductsPage";
+// import ServicesPage from "../components/pages/ServicesPage";
+// import CareersPage from "../components/pages/CareersPage";
+// import NewsPage from "../components/pages/NewsPage";
+// import ContactPage from "../components/pages/ContactPage";
+// import ProductDetailPage from "../components/pages/ProductDetailPage";
+// import BlogDetailPage from "../components/pages/BlogDetailPage";
+// import FaqsPage from "../components/pages/FaqsPage";
+// import QuotePage from "../components/pages/QuotePage";
 import {
   Eye,
   Heart,
