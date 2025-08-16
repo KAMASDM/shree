@@ -14,7 +14,7 @@ export default function NewsPage() {
     const fetchPosts = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/api/blogs/posts/"
+          "https://sweekarme.in/shree/api/blogs/posts/"
         );
         setBlogPosts(response.data);
       } catch (err) {
@@ -29,9 +29,9 @@ export default function NewsPage() {
 
   const filteredPosts = blogPosts.filter(
     (post) =>
-      post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      post.category.name.toLowerCase().includes(searchTerm.toLowerCase())
+      post?.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post?.excerpt?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post?.category?.name?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const featuredPost = blogPosts.find((post) => post.is_featured);
@@ -77,10 +77,10 @@ export default function NewsPage() {
                 </h2>
                 <div
                   className='text-gray-600 mb-6 prose'
-                  dangerouslySetInnerHTML={{ __html: featuredPost.excerpt }}
+                  dangerouslySetInnerHTML={{ __html: featuredPost?.excerpt }}
                 />
                 <Link
-                  to={`/news/${featuredPost.slug}`}
+                  href={`/news/${featuredPost.slug}`}
                   className='text-amber-600 font-semibold hover:text-amber-700 flex items-center gap-2 group'
                 >
                   Read Full Article{" "}
@@ -112,7 +112,7 @@ export default function NewsPage() {
             <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-8'>
               {filteredPosts.map((post) => (
                 <Link
-                  to={`/news/${post.slug}`}
+                  href={`/news/${post.slug}`}
                   key={post.id}
                   className='bg-white rounded-2xl shadow-sm hover:shadow-lg transition-shadow overflow-hidden border group'
                 >
@@ -139,7 +139,7 @@ export default function NewsPage() {
                       </h3>
                       <div
                         className='text-gray-600 mb-4 line-clamp-3 text-sm prose'
-                        dangerouslySetInnerHTML={{ __html: post.excerpt }}
+                        dangerouslySetInnerHTML={{ __html: post?.excerpt }}
                       />
                     </div>
                   </article>

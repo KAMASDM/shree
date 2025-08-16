@@ -28,7 +28,9 @@ export default function ServicesPage() {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/api/services/");
+        const response = await axios.get(
+          "https://sweekarme.in/shree/api/services/"
+        );
         setServices(response.data);
       } catch (err) {
         setError(

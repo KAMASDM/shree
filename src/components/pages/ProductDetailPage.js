@@ -40,7 +40,7 @@ export default function ProductDetailPage() {
       setLoading(true);
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/products/all/${slug}/`
+          `https://sweekarme.in/shree/api/products/all/${slug}/`
         );
         const productData = response.data;
 
@@ -114,7 +114,7 @@ export default function ProductDetailPage() {
             {error || "Sorry, we couldn't find the product you're looking for."}
           </p>
           <Link
-            to='/products'
+            href='/products'
             className='text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 inline-block'
             style={{
               background: "linear-gradient(135deg, #b78852 0%, #c9955f 100%)",
@@ -170,7 +170,7 @@ export default function ProductDetailPage() {
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
           <nav className='mb-8'>
             <Link
-              to='/products'
+              href='/products'
               className='flex items-center gap-2 font-medium transition-all duration-300 mb-4 hover:scale-105'
               style={{ color: "#b78852" }}
               onMouseEnter={(e) => {

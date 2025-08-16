@@ -34,8 +34,8 @@ export default function QuotePage() {
     const fetchData = async () => {
       try {
         const [productRes, serviceRes] = await Promise.all([
-          axios.get("http://localhost:8000/api/products/all/"),
-          axios.get("http://localhost:8000/api/services/"),
+          axios.get("https://sweekarme.in/shree/api/products/all/"),
+          axios.get("https://sweekarme.in/shree/api/services/"),
         ]);
         setProducts(productRes.data);
         setServices(serviceRes.data);
@@ -65,7 +65,7 @@ export default function QuotePage() {
     let payload = {};
 
     if (quoteType === "product") {
-      endpoint = "http://localhost:8000/api/inquiries/product/";
+      endpoint = "https://sweekarme.in/shree/api/inquiries/product/";
       payload = {
         name: formData.name,
         title: "Quote Inquiry", // Defaulting a title as the model requires it
@@ -79,7 +79,7 @@ export default function QuotePage() {
       };
     } else {
       // Service Inquiry
-      endpoint = "http://localhost:8000/api/inquiries/service/";
+      endpoint = "https://sweekarme.in/shree/api/inquiries/service/";
       payload = {
         name: formData.name,
         title: "Quote Inquiry",

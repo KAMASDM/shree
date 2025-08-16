@@ -15,7 +15,9 @@ export default function CareersPage() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/api/hr/jobs/");
+        const response = await axios.get(
+          "https://sweekarme.in/shree/api/hr/jobs/"
+        );
         setOpenPositions(response.data);
       } catch (err) {
         setError("Failed to load job openings. Please try again later.");

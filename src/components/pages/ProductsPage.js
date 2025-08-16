@@ -25,7 +25,7 @@ export default function ProductsPage() {
     const fetchProducts = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/api/products/all/"
+          "https://sweekarme.in/shree/api/products/all/"
         );
         setProducts(response?.data);
       } catch (err) {

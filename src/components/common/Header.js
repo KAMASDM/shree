@@ -312,7 +312,7 @@ export default function Header() {
               {mainNav.map((item) => (
                 <Link
                   key={item.name}
-                  to={item.path}
+                  href={item.path}
                   onClick={() => setIsMenuOpen(false)}
                   className={`block w-full text-left px-3 py-2 text-base font-medium rounded-lg transition-all duration-300 ${
                     location.pathname === item.path ? "font-semibold" : ""
@@ -357,7 +357,7 @@ export default function Header() {
                 {companyLinks.map((item) => (
                   <Link
                     key={item.name}
-                    to={item.path}
+                    href={item.path}
                     onClick={() => setIsMenuOpen(false)}
                     className={`w-full flex items-center gap-3 px-6 py-2 text-sm rounded-lg transition-all duration-300 ${
                       location.pathname === item.path ? "font-semibold" : ""
@@ -391,7 +391,7 @@ export default function Header() {
               </div>
 
               <Link
-                to={contactNav.path}
+                href={contactNav.path}
                 onClick={() => setIsMenuOpen(false)}
                 className={`block w-full text-left px-3 py-2 text-base font-medium rounded-lg transition-all duration-300 ${
                   location.pathname === contactNav.path ? "font-semibold" : ""

@@ -48,7 +48,7 @@ export default function FaqsPage() {
     const fetchFaqs = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/api/faqs/categories/"
+          "https://sweekarme.in/shree/api/faqs/categories/"
         );
         setCategories(response.data);
       } catch (err) {

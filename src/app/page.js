@@ -124,7 +124,7 @@ const FeaturedProductsSection = () => {
     const fetchFeatured = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/api/products/all/?is_featured=true"
+          "https://sweekarme.in/shree/api/products/all/?is_featured=true"
         );
         setFeaturedProducts(response?.data?.slice(0, 3)); // Show max 3
       } catch (error) {
@@ -169,7 +169,7 @@ const TestimonialsSection = () => {
     const fetchTestimonials = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:8000/api/testimonials/?is_featured=true"
+          "https://sweekarme.in/shree/api/testimonials/?is_featured=true"
         );
         setTestimonials(response?.data);
       } catch (error) {

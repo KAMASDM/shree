@@ -30,13 +30,13 @@ export default function BlogDetailPage() {
       try {
         // Fetch the main post
         const postResponse = await axios.get(
-          `http://localhost:8000/api/blogs/posts/${slug}/`
+          `https://sweekarme.in/shree/api/blogs/posts/${slug}/`
         );
         setPost(postResponse.data);
 
         // Fetch related posts (all posts except the current one)
         const relatedResponse = await axios.get(
-          "http://localhost:8000/api/blogs/posts/"
+          "https://sweekarme.in/shree/api/blogs/posts/"
         );
         setRelatedPosts(
           relatedResponse.data.filter((p) => p.slug !== slug).slice(0, 3) // Get up to 3 related posts
@@ -87,7 +87,7 @@ export default function BlogDetailPage() {
       <div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8'>
         <nav className='mb-8'>
           <Link
-            to='/news'
+            href='/news'
             className='flex items-center gap-2 text-amber-600 hover:text-amber-700 font-medium transition-colors'
           >
             <ChevronLeft size={20} />
@@ -140,7 +140,7 @@ export default function BlogDetailPage() {
             the right analytical solutions.
           </p>
           <Link
-            to='/contact'
+            href='/contact'
             className='bg-white text-amber-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors'
           >
             Contact Our Experts
@@ -155,7 +155,7 @@ export default function BlogDetailPage() {
             <div className='grid md:grid-cols-3 gap-6'>
               {relatedPosts.map((relatedPost) => (
                 <Link
-                  to={`/news/${relatedPost.slug}`}
+                  href={`/news/${relatedPost.slug}`}
                   key={relatedPost.id}
                   className='bg-white rounded-lg border overflow-hidden hover:shadow-lg transition-shadow'
                 >
