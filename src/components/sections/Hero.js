@@ -7,20 +7,31 @@ import {
   Users,
   Star,
   CheckCircle,
-  PlayCircle,
 } from "lucide-react";
 import Link from "next/link";
 
 export default function Hero() {
   return (
     <section className='relative min-h-screen flex items-center overflow-hidden'>
-      {/* Background Image */}
+      {/* Background YouTube Video */}
       <div className='absolute inset-0 z-0'>
-        <img
-          src='https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=1920&h=1080&fit=crop&crop=center'
-          alt='Modern Pharmaceutical Laboratory'
-          className='w-full h-full object-cover object-center'
-        />
+        <iframe
+          className='w-full h-full object-cover'
+          src="https://youtu.be/jeVjfNQ_pAI?si=MMVJ8ap95-upXLak"
+          title="Pharmaceutical Laboratory Background"
+          allow="autoplay; encrypted-media"
+          style={{
+            minWidth: '100vw',
+            minHeight: '100vh',
+            width: 'auto',
+            height: 'auto',
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            pointerEvents: 'none'
+          }}
+        ></iframe>
         {/* Gradient Overlay */}
         <div className='absolute inset-0 bg-gradient-to-r from-slate-900/85 via-slate-800/75 to-slate-900/85'></div>
         <div className='absolute inset-0 bg-gradient-to-b from-transparent via-amber-900/10 to-amber-900/20'></div>
@@ -28,28 +39,38 @@ export default function Hero() {
 
       {/* Content */}
       <div className='relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full'>
-        <div className='grid lg:grid-cols-12 gap-12 items-center min-h-screen py-20'>
+        <div className='grid lg:grid-cols-12 gap-8 lg:gap-12 items-center py-20 min-h-screen'>
           {/* Left Content */}
-          <div className='lg:col-span-7 space-y-8'>
+          <div className='lg:col-span-8 space-y-6 md:space-y-8'>
             {/* Trust Badge */}
-            <div className='inline-flex items-center gap-3 bg-amber-500/10 backdrop-blur-sm border border-amber-500/20 rounded-full px-6 py-3'>
-              <Award className='text-amber-400' size={20} />
-              <span className='text-amber-100 font-medium'>
+            <div 
+              className='inline-flex items-center gap-2 md:gap-3 rounded-full px-4 py-2 md:px-6 md:py-3 shadow-sm'
+              style={{
+                backgroundColor: "rgba(255, 200, 87, 0.1)",
+                border: "1px solid rgba(255, 200, 87, 0.3)",
+                backdropFilter: "blur(10px)"
+              }}
+            >
+              <Award size={18} style={{ color: "#fbbf24" }} />
+              <span className='font-medium text-sm md:text-base text-amber-100'>
                 Trusted by 800+ Pharmaceutical Companies
               </span>
             </div>
 
             {/* Main Headline */}
-            <div className='space-y-6'>
-              <h1 className='text-4xl md:text-6xl lg:text-7xl font-bold leading-tight text-white'>
+            <div className='space-y-4 md:space-y-6'>
+              <h1 className='text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight text-white'>
                 {`India's Leading`}
-                <span className='block bg-gradient-to-r from-amber-400 via-orange-400 to-yellow-400 bg-clip-text text-transparent'>
+                <span 
+                  className='block bg-gradient-to-r bg-clip-text text-transparent'
+                  style={{ backgroundImage: "linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%)" }}
+                >
                   FDA Compliant
                 </span>
                 <span className='block'>Instrument Partner</span>
               </h1>
 
-              <p className='text-xl md:text-2xl text-slate-300 leading-relaxed max-w-2xl'>
+              <p className='text-lg md:text-xl lg:text-2xl leading-relaxed max-w-2xl text-slate-300'>
                 28+ years of excellence in delivering cutting-edge analytical
                 instruments and comprehensive validation services for
                 pharmaceutical manufacturing.
@@ -57,18 +78,23 @@ export default function Hero() {
             </div>
 
             {/* Key Value Props */}
-            <div className='grid grid-cols-1 md:grid-cols-3 gap-4'>
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4'>
               {[
-                { icon: <Shield size={18} />, text: "21 CFR Part 11 Ready" },
-                { icon: <CheckCircle size={18} />, text: "Complete IQ/OQ/PQ" },
-                { icon: <Star size={18} />, text: "24/7 Expert Support" },
+                { icon: <Shield size={16} />, text: "21 CFR Part 11 Ready" },
+                { icon: <CheckCircle size={16} />, text: "Complete IQ/OQ/PQ" },
+                { icon: <Star size={16} />, text: "24/7 Expert Support" },
               ].map((prop, index) => (
                 <div
                   key={index}
-                  className='flex items-center gap-3 bg-white/5 backdrop-blur-sm rounded-lg px-4 py-3 border border-white/10'
+                  className='flex items-center gap-2 md:gap-3 rounded-lg px-3 py-2 md:px-4 md:py-3 shadow-sm'
+                  style={{
+                    backgroundColor: "rgba(255, 255, 255, 0.9)",
+                    border: "1px solid rgba(255, 255, 255, 0.2)",
+                    backdropFilter: "blur(10px)"
+                  }}
                 >
-                  <div className='text-amber-400'>{prop.icon}</div>
-                  <span className='text-white font-medium text-sm'>
+                  <div style={{ color: "#b78852" }}>{prop.icon}</div>
+                  <span className='font-medium text-sm md:text-base' style={{ color: "#8b6a3f" }}>
                     {prop.text}
                   </span>
                 </div>
@@ -76,76 +102,60 @@ export default function Hero() {
             </div>
 
             {/* CTA Buttons */}
-            <div className='flex flex-col sm:flex-row gap-4'>
+            <div className='flex flex-col sm:flex-row gap-3 md:gap-4'>
               <Link
                 href='/products'
-                className='group bg-gradient-to-r from-amber-500 to-orange-500 text-white px-8 py-4 rounded-lg text-lg font-semibold shadow-2xl hover:shadow-amber-500/25 transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3'
+                className='group px-6 py-3 md:px-8 md:py-4 rounded-xl text-base md:text-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 md:gap-3 text-white'
+                style={{
+                  background: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)"
+                }}
               >
-                <FlaskConical size={20} />
+                <FlaskConical size={18} />
                 <span>Explore Our Solutions</span>
                 <ArrowRight
-                  size={20}
+                  size={18}
                   className='group-hover:translate-x-1 transition-transform'
                 />
               </Link>
 
               <Link
                 href='/contact'
-                className='group bg-white/10 backdrop-blur-sm border border-white/20 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white/20 transition-all duration-300 flex items-center justify-center gap-3'
+                className='group px-6 py-3 md:px-8 md:py-4 rounded-xl text-base md:text-lg font-semibold transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 md:gap-3 text-white'
+                style={{
+                  backgroundColor: "rgba(255, 255, 255, 0.1)",
+                  border: "2px solid rgba(255, 255, 255, 0.3)",
+                  backdropFilter: "blur(10px)"
+                }}
               >
-                <Phone size={20} />
+                <Phone size={18} />
                 Schedule Consultation
               </Link>
             </div>
 
             {/* Client Logos */}
-            <div className='pt-8'>
-              <p className='text-slate-400 text-sm mb-4'>
+            <div className='pt-6 md:pt-8'>
+              <p className='text-sm mb-3 md:mb-4 text-slate-400'>
                 Trusted by industry leaders
               </p>
-              <div className='flex items-center gap-8 opacity-60'>
-                <div className='text-white/80 font-semibold text-sm'>
-                  Beckman Coulter
-                </div>
-                <div className='text-white/80 font-semibold text-sm'>
-                  Met One
-                </div>
-                <div className='text-white/80 font-semibold text-sm'>
-                  Tailin SciTech
-                </div>
-                <div className='text-white/80 font-semibold text-sm'>
-                  Eurping
-                </div>
+              <div className='flex flex-wrap items-center gap-4 md:gap-8'>
+                {[
+                  "Beckman Coulter",
+                  "Met One",
+                  "Tailin SciTech", 
+                  "Eurping"
+                ].map((partner, index) => (
+                  <div key={index} className='font-semibold text-sm opacity-80 text-white/80'>
+                    {partner}
+                  </div>
+                ))}
               </div>
             </div>
           </div>
 
-          {/* Right Content - Stats & Video */}
-          <div className='lg:col-span-5 space-y-8'>
-            {/* Video Preview */}
-            <div className='relative rounded-2xl overflow-hidden shadow-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 backdrop-blur-sm border border-white/10'>
-              <div className='aspect-video bg-gradient-to-br from-slate-800 to-slate-900 flex items-center justify-center'>
-                <div className='text-center space-y-4'>
-                  <button className='group bg-white/10 backdrop-blur-sm p-6 rounded-full border border-white/20 hover:bg-white/20 transition-all duration-300'>
-                    <PlayCircle
-                      size={32}
-                      className='text-amber-400 group-hover:scale-110 transition-transform'
-                    />
-                  </button>
-                  <div className='text-white'>
-                    <h3 className='font-semibold text-lg'>
-                      See Our Solutions in Action
-                    </h3>
-                    <p className='text-slate-300 text-sm'>
-                      Watch how we deliver FDA compliance
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
+          {/* Right Content - Stats & Compliance */}
+          <div className='lg:col-span-4 space-y-6 md:space-y-8'>
             {/* Stats Grid */}
-            <div className='grid grid-cols-2 gap-4'>
+            <div className='grid grid-cols-2 gap-3 md:gap-4'>
               {[
                 {
                   number: "10K+",
@@ -162,35 +172,47 @@ export default function Hero() {
               ].map((stat, index) => (
                 <div
                   key={index}
-                  className='bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10 text-center hover:bg-white/10 transition-all duration-300'
+                  className='rounded-xl md:rounded-2xl p-4 md:p-6 text-center hover:scale-105 transition-all duration-300 shadow-sm'
+                  style={{
+                    backgroundColor: "rgba(255, 255, 255, 0.9)",
+                    border: "1px solid rgba(183, 136, 82, 0.15)",
+                    backdropFilter: "blur(10px)"
+                  }}
                 >
-                  <div className='text-3xl font-bold text-amber-400 mb-2'>
+                  <div className='text-2xl md:text-3xl font-bold mb-1 md:mb-2' style={{ color: "#b78852" }}>
                     {stat.number}
                   </div>
-                  <div className='text-white font-semibold text-sm'>
+                  <div className='font-semibold text-sm' style={{ color: "#8b6a3f" }}>
                     {stat.label}
                   </div>
-                  <div className='text-slate-400 text-xs'>{stat.sublabel}</div>
+                  <div className='text-xs' style={{ color: "#9c7649" }}>{stat.sublabel}</div>
                 </div>
               ))}
             </div>
 
             {/* Compliance Certifications */}
-            <div className='bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-white/10'>
-              <h3 className='text-white font-semibold mb-4 flex items-center gap-2'>
-                <Shield className='text-amber-400' size={20} />
+            <div 
+              className='rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm'
+              style={{
+                backgroundColor: "rgba(255, 255, 255, 0.9)",
+                border: "1px solid rgba(183, 136, 82, 0.15)",
+                backdropFilter: "blur(10px)"
+              }}
+            >
+              <h3 className='font-semibold mb-3 md:mb-4 flex items-center gap-2' style={{ color: "#8b6a3f" }}>
+                <Shield size={18} style={{ color: "#b78852" }} />
                 Regulatory Compliance
               </h3>
-              <div className='grid grid-cols-1 gap-3'>
+              <div className='grid grid-cols-1 gap-2 md:gap-3'>
                 {[
                   "21 CFR Part 11 Electronic Records",
                   "USP <788> Particulate Matter",
                   "EU GMP Annex 1 Compliance",
                   "ISO 9001:2015 Certified",
                 ].map((cert, index) => (
-                  <div key={index} className='flex items-center gap-3'>
-                    <CheckCircle size={16} className='text-green-400' />
-                    <span className='text-slate-300 text-sm'>{cert}</span>
+                  <div key={index} className='flex items-center gap-2 md:gap-3'>
+                    <CheckCircle size={14} className='flex-shrink-0' style={{ color: "#22c55e" }} />
+                    <span className='text-xs md:text-sm' style={{ color: "#9c7649" }}>{cert}</span>
                   </div>
                 ))}
               </div>
