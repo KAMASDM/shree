@@ -14,6 +14,16 @@ import {
   Phone,
   MessageCircle,
   Star,
+  Heart,
+  Zap,
+  Target,
+  ThumbsUp,
+  Settings,
+  FileText,
+  HelpCircle,
+  Package,
+  MessageSquare,
+  Hammer,
 } from "lucide-react";
 import ServiceInquiryForm from "../forms/ServiceInquiryForm";
 
@@ -21,9 +31,9 @@ export default function ServicesPage() {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const [showServiceForm, setShowServiceForm] = useState(false);
   const [selectedService, setSelectedService] = useState("");
+  const [showFeedbackForm, setShowFeedbackForm] = useState(false);
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -98,6 +108,50 @@ export default function ServicesPage() {
     },
   ];
 
+  // Service Philosophy data
+  const servicePhilosophy = [
+    {
+      title: "Reliability",
+      description: "We deliver consistent, dependable service so your instruments perform optimally day after day.",
+      icon: <Shield size={32} style={{ color: "#059669" }} />,
+    },
+    {
+      title: "Responsiveness", 
+      description: "We act quickly to address issues, minimising downtime and ensuring smooth operations.",
+      icon: <Zap size={32} style={{ color: "#dc2626" }} />,
+    },
+    {
+      title: "Assurance",
+      description: "Our trained experts provide the confidence that your equipment meets the highest quality and compliance standards.",
+      icon: <Award size={32} style={{ color: "#2563eb" }} />,
+    },
+    {
+      title: "Empathy",
+      description: "We understand the challenges you face and tailor our support to your specific needs.",
+      icon: <Heart size={32} style={{ color: "#7c3aed" }} />,
+    },
+  ];
+
+  // Why Choose Us data
+  const whyChooseUs = [
+    "Proven expertise in servicing analytical instruments across industries",
+    "Fast and responsive customer support team", 
+    "Commitment to data security during remote troubleshooting",
+    "Focus on building trust through quality service delivery"
+  ];
+
+  // Comprehensive Services data
+  const comprehensiveServices = [
+    { name: "Instrument Installation Services", icon: <Settings size={20} /> },
+    { name: "Annual Maintenance Contract (AMC) for Instruments", icon: <Hammer size={20} /> },
+    { name: "Instrument Calibration Services", icon: <Target size={20} /> },
+    { name: "Breakdown Repair Services", icon: <Wrench size={20} /> },
+    { name: "Remote & Online Technical Support", icon: <MessageSquare size={20} /> },
+    { name: "Audit Support for Instruments", icon: <FileText size={20} /> },
+    { name: "Customer Training Programs", icon: <BookOpen size={20} /> },
+    { name: "Genuine Spares Supply", icon: <Package size={20} /> },
+  ];
+
   const handleServiceRequest = (serviceType) => {
     setSelectedService(serviceType);
     setShowServiceForm(true);
@@ -161,7 +215,7 @@ export default function ServicesPage() {
               }}
             >
               <Star size={16} />
-              25+ Years of Excellence
+              28+ Years of Service Excellence
             </div>
             <h1
               className='text-4xl md:text-6xl font-bold mb-6'
@@ -176,12 +230,16 @@ export default function ServicesPage() {
               Comprehensive Service Excellence
             </h1>
             <p
-              className='text-xl max-w-4xl mx-auto mb-10 leading-relaxed'
+              className='text-xl max-w-4xl mx-auto mb-6 leading-relaxed'
               style={{ color: "#8b6a3f" }}
             >
-              From installation to lifecycle support, we ensure maximum uptime
-              and regulatory compliance for your analytical instruments. Our
-              service commitment goes beyond equipment supply.
+              At <strong>Shreedhar Instruments</strong>, we deliver more than just high-quality analytical instruments — we provide <strong>reliable technical support, maintenance, and calibration services</strong> to ensure your equipment performs at its best.
+            </p>
+            <p
+              className='text-lg max-w-4xl mx-auto mb-10 leading-relaxed'
+              style={{ color: "#9c7649" }}
+            >
+              We aim to provide <strong>end-to-end technical support and post-sales service</strong> that helps our customers achieve operational efficiency and compliance.
             </p>
             <div className='flex flex-col sm:flex-row gap-4 justify-center'>
               <button
@@ -191,14 +249,6 @@ export default function ServicesPage() {
                   background:
                     "linear-gradient(135deg, #b78852 0%, #c9955f 100%)",
                   boxShadow: "0 4px 15px rgba(183, 136, 82, 0.3)",
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.background =
-                    "linear-gradient(135deg, #a0784a 0%, #b78852 100%)";
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.background =
-                    "linear-gradient(135deg, #b78852 0%, #c9955f 100%)";
                 }}
               >
                 Schedule Free Consultation
@@ -215,6 +265,92 @@ export default function ServicesPage() {
                 <Phone size={20} />
                 Call Now
               </a>
+            </div>
+          </div>
+
+          {/* Service Philosophy Section */}
+          <div className='mb-20'>
+            <div className='text-center mb-12'>
+              <h2
+                className='text-3xl md:text-4xl font-bold mb-4'
+                style={{ color: "#8b6a3f" }}
+              >
+                Our Service Philosophy
+              </h2>
+              <p className='max-w-3xl mx-auto text-lg' style={{ color: "#9c7649" }}>
+                This philosophy is the backbone of our technical support, post-sales service, and maintenance solutions
+              </p>
+            </div>
+            
+            <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12'>
+              {servicePhilosophy.map((item, index) => (
+                <div
+                  key={index}
+                  className='group text-center p-8 rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1'
+                  style={{
+                    backgroundColor: "rgba(255, 255, 255, 0.9)",
+                    border: "1px solid rgba(183, 136, 82, 0.15)",
+                  }}
+                >
+                  <div className='flex justify-center mb-6 group-hover:scale-110 transition-transform duration-300'>
+                    {item.icon}
+                  </div>
+                  <h3 className='text-xl font-bold mb-4' style={{ color: "#8b6a3f" }}>
+                    {item.title}
+                  </h3>
+                  <p className='text-sm leading-relaxed' style={{ color: "#9c7649" }}>
+                    {item.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <div
+              className='text-center p-6 rounded-2xl'
+              style={{
+                backgroundColor: "rgba(183, 136, 82, 0.1)",
+                border: "1px solid rgba(183, 136, 82, 0.2)",
+              }}
+            >
+              <p className='text-lg font-medium' style={{ color: "#8b6a3f" }}>
+                We also believe in <strong>customised service solutions</strong> that adapt to your unique requirements, creating a truly personalised service experience.
+              </p>
+            </div>
+          </div>
+
+          {/* Why Choose Us Section */}
+          <div className='mb-20'>
+            <div
+              className='p-8 md:p-12 rounded-3xl shadow-lg'
+              style={{
+                backgroundColor: "rgba(255, 255, 255, 0.9)",
+                border: "1px solid rgba(183, 136, 82, 0.15)",
+              }}
+            >
+              <div className='text-center mb-8'>
+                <h2
+                  className='text-3xl md:text-4xl font-bold mb-4'
+                  style={{ color: "#8b6a3f" }}
+                >
+                  Why Choose Us?
+                </h2>
+              </div>
+              
+              <div className='grid md:grid-cols-2 gap-6'>
+                {whyChooseUs.map((item, index) => (
+                  <div key={index} className='flex items-start gap-4'>
+                    <div
+                      className='flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center mt-1'
+                      style={{ backgroundColor: "#059669" }}
+                    >
+                      <CheckCircle size={16} className='text-white' />
+                    </div>
+                    <p className='text-lg' style={{ color: "#8b6a3f" }}>
+                      {item}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -249,6 +385,55 @@ export default function ServicesPage() {
             ))}
           </div>
 
+          {/* Comprehensive Instrument Services */}
+          <div className='mb-20'>
+            <div className='text-center mb-12'>
+              <h2
+                className='text-3xl md:text-4xl font-bold mb-4'
+                style={{ color: "#8b6a3f" }}
+              >
+                Comprehensive Instrument Services
+              </h2>
+              <p className='max-w-2xl mx-auto text-lg' style={{ color: "#9c7649" }}>
+                Our wide range of services covers the full lifecycle of your instruments
+              </p>
+            </div>
+
+            <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-4'>
+              {comprehensiveServices.map((service, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleServiceRequest(service.name.toLowerCase().replace(/\s+/g, '-'))}
+                  className='group p-6 rounded-2xl text-left transition-all duration-300 hover:shadow-lg hover:-translate-y-1'
+                  style={{
+                    backgroundColor: "rgba(255, 255, 255, 0.9)",
+                    border: "1px solid rgba(183, 136, 82, 0.15)",
+                  }}
+                >
+                  <div className='flex items-center gap-3 mb-3'>
+                    <div
+                      className='flex-shrink-0 p-2 rounded-lg group-hover:scale-110 transition-transform duration-300'
+                      style={{ backgroundColor: "rgba(183, 136, 82, 0.1)" }}
+                    >
+                      <div style={{ color: "#b78852" }}>
+                        {service.icon}
+                      </div>
+                    </div>
+                  </div>
+                  <h3 className='font-bold text-sm md:text-base leading-tight' style={{ color: "#8b6a3f" }}>
+                    {service.name}
+                  </h3>
+                  <div className='mt-3 flex items-center gap-2'>
+                    <span className='text-xs font-medium' style={{ color: "#b78852" }}>
+                      Request Service
+                    </span>
+                    <ArrowRight size={12} className='group-hover:translate-x-1 transition-transform' style={{ color: "#b78852" }} />
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+
           {/* Main Services Section */}
           <div className='mb-20'>
             <div className='text-center mb-12'>
@@ -256,7 +441,7 @@ export default function ServicesPage() {
                 className='text-3xl md:text-4xl font-bold mb-4'
                 style={{ color: "#8b6a3f" }}
               >
-                Our Services
+                Our Core Services
               </h2>
               <p className='max-w-2xl mx-auto' style={{ color: "#9c7649" }}>
                 Comprehensive solutions tailored to meet your analytical
@@ -333,14 +518,6 @@ export default function ServicesPage() {
                           background:
                             "linear-gradient(135deg, #b78852 0%, #c9955f 100%)",
                         }}
-                        onMouseEnter={(e) => {
-                          e.target.style.background =
-                            "linear-gradient(135deg, #a0784a 0%, #b78852 100%)";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.target.style.background =
-                            "linear-gradient(135deg, #b78852 0%, #c9955f 100%)";
-                        }}
                       >
                         Request This Service
                       </button>
@@ -351,18 +528,6 @@ export default function ServicesPage() {
                           color: "#8b6a3f",
                           border: "2px solid rgba(183, 136, 82, 0.3)",
                           backgroundColor: "rgba(183, 136, 82, 0.05)",
-                        }}
-                        onMouseEnter={(e) => {
-                          e.target.style.backgroundColor =
-                            "rgba(183, 136, 82, 0.1)";
-                          e.target.style.borderColor =
-                            "rgba(183, 136, 82, 0.5)";
-                        }}
-                        onMouseLeave={(e) => {
-                          e.target.style.backgroundColor =
-                            "rgba(183, 136, 82, 0.05)";
-                          e.target.style.borderColor =
-                            "rgba(183, 136, 82, 0.3)";
                         }}
                       >
                         Learn More
@@ -416,13 +581,6 @@ export default function ServicesPage() {
                     style={{
                       color: "#8b6a3f",
                       backgroundColor: "rgba(255, 255, 255, 0.95)",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.backgroundColor = "white";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.backgroundColor =
-                        "rgba(255, 255, 255, 0.95)";
                     }}
                   >
                     <Phone size={20} />
@@ -488,6 +646,44 @@ export default function ServicesPage() {
             </div>
           </div>
 
+          {/* Continuous Service Improvement Section */}
+          <div className='mb-20'>
+            <div
+              className='p-8 md:p-12 rounded-3xl shadow-lg text-center'
+              style={{
+                backgroundColor: "rgba(59, 130, 246, 0.05)",
+                border: "1px solid rgba(59, 130, 246, 0.2)",
+              }}
+            >
+              <div className='flex justify-center mb-6'>
+                <div
+                  className='p-4 rounded-full'
+                  style={{ backgroundColor: "rgba(59, 130, 246, 0.1)" }}
+                >
+                  <ThumbsUp size={32} className='text-blue-600' />
+                </div>
+              </div>
+              <h2
+                className='text-3xl md:text-4xl font-bold mb-4'
+                style={{ color: "#8b6a3f" }}
+              >
+                Continuous Service Improvement (CSAT)
+              </h2>
+              <p className='text-lg mb-8 max-w-3xl mx-auto' style={{ color: "#9c7649" }}>
+                We actively <strong>seek customer feedback</strong> to enhance our services and maintain our position as a trusted service partner. Every suggestion helps us improve turnaround time, service quality, and customer satisfaction.
+              </p>
+              <button
+                onClick={() => setShowFeedbackForm(true)}
+                className='text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300'
+                style={{
+                  background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)",
+                }}
+              >
+                Share Your Feedback
+              </button>
+            </div>
+          </div>
+
           {/* Call to Action */}
           <div className='text-center'>
             <div
@@ -507,7 +703,7 @@ export default function ServicesPage() {
                 className='text-lg mb-8 max-w-2xl mx-auto'
                 style={{ color: "#9c7649" }}
               >
-                {`Let's discuss how our services can help optimize your analytical instrument operations`}
+                Let's discuss how our services can help optimize your analytical instrument operations
               </p>
               <div className='flex flex-col sm:flex-row gap-4 justify-center'>
                 <button
@@ -516,14 +712,6 @@ export default function ServicesPage() {
                   style={{
                     background:
                       "linear-gradient(135deg, #b78852 0%, #c9955f 100%)",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.background =
-                      "linear-gradient(135deg, #a0784a 0%, #b78852 100%)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.background =
-                      "linear-gradient(135deg, #b78852 0%, #c9955f 100%)";
                   }}
                 >
                   Schedule Consultation
@@ -535,12 +723,6 @@ export default function ServicesPage() {
                     backgroundColor: "rgba(183, 136, 82, 0.1)",
                     color: "#8b6a3f",
                     border: "1px solid rgba(183, 136, 82, 0.3)",
-                  }}
-                  onMouseEnter={(e) => {
-                    e.target.style.backgroundColor = "rgba(183, 136, 82, 0.2)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.backgroundColor = "rgba(183, 136, 82, 0.1)";
                   }}
                 >
                   Contact Us

@@ -18,8 +18,351 @@ import {
   Calendar,
   Settings,
   Package,
+  HelpCircle,
+  ChevronDown,
+  Search,
+  MessageCircle,
 } from "lucide-react";
 import ProductInquiryForm from "../forms/ProductInquiryForm";
+
+// FAQ Component for Product Detail Page
+const ProductFAQItem = ({ faq, isOpen, onToggle }) => (
+  <div className='border-b py-4' style={{ borderColor: "rgba(183, 136, 82, 0.2)" }}>
+    <button
+      onClick={onToggle}
+      className='w-full flex justify-between items-start text-left hover:opacity-80 transition-opacity duration-200'
+    >
+      <div className='flex-1 pr-4'>
+        <h4 className='font-semibold mb-1' style={{ color: "#8b6a3f" }}>
+          {faq.question}
+        </h4>
+        {faq.category_name && (
+          <span 
+            className='text-xs px-2 py-1 rounded-full'
+            style={{ 
+              backgroundColor: "rgba(183, 136, 82, 0.1)", 
+              color: "#9c7649" 
+            }}
+          >
+            {faq.category_name}
+          </span>
+        )}
+      </div>
+      <ChevronDown
+        size={20}
+        className={`flex-shrink-0 transform transition-transform duration-300 ${
+          isOpen ? "rotate-180" : ""
+        }`}
+        style={{ color: "#b78852" }}
+      />
+    </button>
+    <div
+      className={`overflow-hidden transition-all duration-300 ease-in-out ${
+        isOpen ? "max-h-screen mt-3" : "max-h-0"
+      }`}
+    >
+      <div 
+        className='prose prose-sm max-w-none'
+        style={{ color: "#9c7649" }}
+        dangerouslySetInnerHTML={{ __html: faq.answer }}
+      />
+      {faq.tags_list && faq.tags_list.length > 0 && (
+        <div className='flex flex-wrap gap-1 mt-3'>
+          {faq.tags_list.map((tag, index) => (
+            <span
+              key={index}
+              className='text-xs px-2 py-1 rounded-full'
+              style={{
+                backgroundColor: "rgba(59, 130, 246, 0.1)",
+                color: "#3730a3"
+              }}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+);
+
+const ProductFAQSection = ({ product }) => {
+  const [productFaqs, setProductFaqs] = useState([]);
+  const [globalFaqs, setGlobalFaqs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [openFaqId, setOpenFaqId] = useState(null);
+  const [showGlobalFaqs, setShowGlobalFaqs] = useState(false);
+
+  useEffect(() => {
+    const fetchFAQs = async () => {
+      setLoading(true);
+      try {
+        // Fetch product-specific FAQs
+        const productFaqResponse = await axios.get(
+          `https://sweekarme.in/shree/api/products/faqs/product/${product.slug}/`
+        );
+        setProductFaqs(productFaqResponse.data || []);
+
+        // Fetch relevant global FAQs (limit to a few relevant categories)
+        const globalFaqResponse = await axios.get(
+          "https://sweekarme.in/shree/api/products/faqs/global_faqs/?category=general"
+        );
+        setGlobalFaqs(globalFaqResponse.data.slice(0, 5) || []); // Limit to 5 most relevant
+
+      } catch (err) {
+        setError("Failed to load FAQs");
+        console.error("FAQ fetch error:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (product) {
+      fetchFAQs();
+    }
+  }, [product]);
+
+  const handleFaqToggle = (faqId) => {
+    setOpenFaqId(openFaqId === faqId ? null : faqId);
+  };
+
+  const filteredProductFaqs = productFaqs.filter(faq =>
+    faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    faq.answer.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const filteredGlobalFaqs = globalFaqs.filter(faq =>
+    faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    faq.answer.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  if (loading) {
+    return (
+      <div className='text-center py-12'>
+        <div 
+          className='inline-block animate-spin rounded-full h-8 w-8 border-b-2 mb-4'
+          style={{ borderColor: "#b78852" }}
+        ></div>
+        <p style={{ color: "#9c7649" }}>Loading FAQs...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div 
+        className='text-center py-12 p-6 rounded-xl'
+        style={{ backgroundColor: "rgba(239, 68, 68, 0.1)" }}
+      >
+        <HelpCircle size={48} className='mx-auto mb-4 text-red-500' />
+        <p className='text-red-600 mb-4'>{error}</p>
+        <Link
+          href='/faqs'
+          className='text-white px-6 py-2 rounded-xl font-semibold transition-all duration-300 hover:scale-105'
+          style={{ background: "linear-gradient(135deg, #b78852 0%, #c9955f 100%)" }}
+        >
+          Visit General FAQ Page
+        </Link>
+      </div>
+    );
+  }
+
+  const totalFaqs = filteredProductFaqs.length + (showGlobalFaqs ? filteredGlobalFaqs.length : 0);
+
+  return (
+    <div 
+      className='p-8 rounded-3xl shadow-sm'
+      style={{ 
+        backgroundColor: "rgba(255, 255, 255, 0.9)", 
+        border: "1px solid rgba(183, 136, 82, 0.15)" 
+      }}
+    >
+      {/* Header */}
+      <div className='flex items-center gap-3 mb-6'>
+        <HelpCircle size={28} style={{ color: "#b78852" }} />
+        <div>
+          <h2 className='text-2xl font-bold' style={{ color: "#8b6a3f" }}>
+            Frequently Asked Questions
+          </h2>
+          <p style={{ color: "#9c7649" }}>
+            Product-specific questions and answers about {product.name}
+          </p>
+        </div>
+      </div>
+
+      {/* Search Bar */}
+      {(productFaqs.length > 0 || globalFaqs.length > 0) && (
+        <div className='relative mb-6'>
+          <Search 
+            className='absolute left-3 top-1/2 transform -translate-y-1/2'
+            style={{ color: "#b78852" }}
+            size={20}
+          />
+          <input
+            type='text'
+            placeholder='Search FAQs...'
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className='w-full pl-10 pr-4 py-3 rounded-xl border-0 focus:outline-none focus:ring-2 transition-all duration-300'
+            style={{
+              backgroundColor: "rgba(255, 255, 255, 0.9)",
+              boxShadow: "0 2px 8px rgba(183, 136, 82, 0.1)",
+              focusRingColor: "#b78852"
+            }}
+          />
+        </div>
+      )}
+
+      {/* Results Summary */}
+      {searchTerm && (
+        <div className='mb-4'>
+          <p className='text-sm' style={{ color: "#9c7649" }}>
+            Found <span className='font-semibold' style={{ color: "#8b6a3f" }}>{totalFaqs}</span> FAQ{totalFaqs !== 1 ? 's' : ''} 
+            {searchTerm && <span> matching "{searchTerm}"</span>}
+          </p>
+        </div>
+      )}
+
+      {/* Product-Specific FAQs */}
+      {filteredProductFaqs.length > 0 ? (
+        <div className='mb-8'>
+          <div className='flex items-center gap-2 mb-4'>
+            <Package size={20} style={{ color: "#b78852" }} />
+            <h3 className='text-lg font-semibold' style={{ color: "#8b6a3f" }}>
+              Product-Specific Questions ({filteredProductFaqs.length})
+            </h3>
+          </div>
+          <div className='space-y-0'>
+            {filteredProductFaqs.map((faq) => (
+              <ProductFAQItem
+                key={`product-${faq.id}`}
+                faq={faq}
+                isOpen={openFaqId === `product-${faq.id}`}
+                onToggle={() => handleFaqToggle(`product-${faq.id}`)}
+              />
+            ))}
+          </div>
+        </div>
+      ) : productFaqs.length === 0 && !searchTerm && (
+        <div className='text-center py-8 mb-8'>
+          <MessageCircle size={48} className='mx-auto mb-4' style={{ color: "#b78852" }} />
+          <h3 className='text-lg font-semibold mb-2' style={{ color: "#8b6a3f" }}>
+            No Product-Specific FAQs Yet
+          </h3>
+          <p className='mb-4' style={{ color: "#9c7649" }}>
+            We haven't added FAQs for this specific product yet, but you can ask us anything!
+          </p>
+        </div>
+      )}
+
+      {/* Global FAQs Toggle */}
+      {globalFaqs.length > 0 && (
+        <div className='mb-6'>
+          <button
+            onClick={() => setShowGlobalFaqs(!showGlobalFaqs)}
+            className='flex items-center gap-2 text-sm font-medium hover:opacity-80 transition-opacity'
+            style={{ color: "#b78852" }}
+          >
+            <ChevronDown 
+              size={16} 
+              className={`transform transition-transform ${showGlobalFaqs ? 'rotate-180' : ''}`}
+            />
+            {showGlobalFaqs ? 'Hide' : 'Show'} General FAQs ({globalFaqs.length})
+          </button>
+        </div>
+      )}
+
+      {/* Global FAQs */}
+      {showGlobalFaqs && filteredGlobalFaqs.length > 0 && (
+        <div className='mb-8'>
+          <div className='flex items-center gap-2 mb-4'>
+            <HelpCircle size={20} style={{ color: "#059669" }} />
+            <h3 className='text-lg font-semibold' style={{ color: "#8b6a3f" }}>
+              General Questions ({filteredGlobalFaqs.length})
+            </h3>
+          </div>
+          <div className='space-y-0'>
+            {filteredGlobalFaqs.map((faq) => (
+              <ProductFAQItem
+                key={`global-${faq.id}`}
+                faq={faq}
+                isOpen={openFaqId === `global-${faq.id}`}
+                onToggle={() => handleFaqToggle(`global-${faq.id}`)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Empty State */}
+      {totalFaqs === 0 && searchTerm && (
+        <div className='text-center py-12'>
+          <Search size={48} className='mx-auto mb-4' style={{ color: "#b78852" }} />
+          <h3 className='text-lg font-semibold mb-2' style={{ color: "#8b6a3f" }}>
+            No FAQs Found
+          </h3>
+          <p className='mb-6' style={{ color: "#9c7649" }}>
+            No FAQs match your search "{searchTerm}". Try different keywords or contact us directly.
+          </p>
+          <button
+            onClick={() => setSearchTerm("")}
+            className='px-4 py-2 rounded-lg font-medium transition-colors'
+            style={{
+              backgroundColor: "rgba(183, 136, 82, 0.1)",
+              color: "#8b6a3f",
+              border: "1px solid rgba(183, 136, 82, 0.3)"
+            }}
+          >
+            Clear Search
+          </button>
+        </div>
+      )}
+
+      {/* Call to Action */}
+      {(productFaqs.length > 0 || globalFaqs.length > 0) && (
+        <div 
+          className='mt-8 p-6 rounded-xl text-center'
+          style={{ 
+            backgroundColor: "rgba(183, 136, 82, 0.05)",
+            border: "1px solid rgba(183, 136, 82, 0.2)"
+          }}
+        >
+          <h4 className='font-semibold mb-2' style={{ color: "#8b6a3f" }}>
+            Still Have Questions?
+          </h4>
+          <p className='text-sm mb-4' style={{ color: "#9c7649" }}>
+            Can't find what you're looking for? Our experts are here to help with personalized answers.
+          </p>
+          <div className='flex flex-col sm:flex-row gap-3 justify-center'>
+            <Link
+              href='/contact'
+              className='px-6 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105'
+              style={{
+                backgroundColor: "#b78852",
+                color: "white"
+              }}
+            >
+              Contact Our Experts
+            </Link>
+            <Link
+              href='/faqs'
+              className='px-6 py-2 rounded-lg font-semibold transition-all duration-300 hover:scale-105'
+              style={{
+                backgroundColor: "rgba(183, 136, 82, 0.1)",
+                color: "#8b6a3f",
+                border: "1px solid rgba(183, 136, 82, 0.3)"
+              }}
+            >
+              View All FAQs
+            </Link>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -44,17 +387,20 @@ export default function ProductDetailPage() {
         const productData = response.data;
         setProduct(productData);
 
-        // Define all possible tabs
+        // Define all possible tabs including FAQs
         const allPossibleTabs = [
           { key: "overview", label: "Overview", icon: <Star size={18} />, data: productData.full_description || productData.features },
           { key: "applications", label: "Applications", icon: <Package size={18} />, data: productData.applications },
           { key: "specifications", label: "Technical Specs", icon: <Settings size={18} />, data: productData.specifications },
           { key: "compliance", label: "Regulatory", icon: <Shield size={18} />, data: productData.compliance },
           { key: "documentation", label: "Documentation", icon: <FileText size={18} />, data: productData.documentation },
+          { key: "faqs", label: "FAQs", icon: <HelpCircle size={18} />, data: true }, // Always show FAQs tab
         ];
 
-        // Filter tabs to only include those with data
-        const currentAvailableTabs = allPossibleTabs.filter(tab => tab.data && tab.data.length > 0);
+        // Filter tabs to only include those with data (except FAQs which we always show)
+        const currentAvailableTabs = allPossibleTabs.filter(tab => 
+          tab.key === "faqs" || (tab.data && tab.data.length > 0)
+        );
         setAvailableTabs(currentAvailableTabs);
         
         // Check if the current active tab is still valid, if not, reset to 'overview'
@@ -348,6 +694,9 @@ export default function ProductDetailPage() {
                       ))}
                     </div>
                   </div>
+                )}
+                {activeTab === "faqs" && (
+                  <ProductFAQSection product={product} />
                 )}
               </div>
             </div>
