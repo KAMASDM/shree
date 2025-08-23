@@ -406,7 +406,7 @@ export default function ProductDetailPage() {
         );
         setAvailableTabs(currentAvailableTabs);
 
-        // Check if the current active tab is still valid, if not, reset to &apos;overview&apos;
+        // Check if the current active tab is still valid, if not, reset to 'overview'
         const availableKeys = currentAvailableTabs.map(tab => tab.key);
         if (!availableKeys.includes(activeTab)) {
           setActiveTab("overview");
@@ -421,7 +421,7 @@ export default function ProductDetailPage() {
     };
 
     fetchProduct();
-  }, [slug, activeTab]); // Added activeTab to dependency array to fix ESLint warning
+  }, [slug]);
 
   if (loading) {
     return (
