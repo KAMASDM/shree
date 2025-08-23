@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import axios from "axios";
 import {
@@ -15,6 +15,8 @@ import {
   Layers,
   ChevronDown,
   SlidersHorizontal,
+  Target,
+  CheckCircle,
 } from "lucide-react";
 import ProductCard from "../common/ProductCard";
 
@@ -23,9 +25,11 @@ export default function ProductsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedApplications, setSelectedApplications] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [categories, setCategories] = useState([]);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [showApplications, setShowApplications] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -54,21 +58,70 @@ export default function ProductsPage() {
     fetchProducts();
   }, []);
 
+  // Get available applications for the selected category
+  const availableApplications = useMemo(() => {
+    if (selectedCategory === "All") return [];
+    
+    const categoryProducts = products.filter(
+      (product) => product.category_name === selectedCategory
+    );
+    
+    const applications = new Set();
+    categoryProducts.forEach((product) => {
+      if (product.applications && Array.isArray(product.applications)) {
+        product.applications.forEach((app) => {
+          // Handle both string and object formats
+          const appName = typeof app === 'string' ? app : app.app || app.name;
+          if (appName) applications.add(appName);
+        });
+      }
+    });
+    
+    return Array.from(applications).sort();
+  }, [products, selectedCategory]);
+
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
+    setSelectedApplications([]); // Clear applications when category changes
     setSearchTerm("");
     setShowMobileFilters(false);
+    setShowApplications(category !== "All");
+  };
+
+  const handleApplicationToggle = (application) => {
+    setSelectedApplications(prev => {
+      if (prev.includes(application)) {
+        return prev.filter(app => app !== application);
+      } else {
+        return [...prev, application];
+      }
+    });
   };
 
   const clearFilter = () => {
     setSelectedCategory("All");
+    setSelectedApplications([]);
     setSearchTerm("");
     setShowMobileFilters(false);
+    setShowApplications(false);
   };
 
   const filteredProducts = products.filter((product) => {
+    // Category filter
     const matchesCategory =
       selectedCategory === "All" || product.category_name === selectedCategory;
+    
+    // Application filter
+    const matchesApplication = selectedApplications.length === 0 || 
+      (product.applications && Array.isArray(product.applications) &&
+       selectedApplications.some(selectedApp => 
+         product.applications.some(app => {
+           const appName = typeof app === 'string' ? app : app.app || app.name;
+           return appName && appName.toLowerCase().includes(selectedApp.toLowerCase());
+         })
+       ));
+    
+    // Search filter
     const matchesSearch =
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       product.short_description
@@ -76,13 +129,28 @@ export default function ProductsPage() {
         .includes(searchTerm.toLowerCase()) ||
       (product.brand &&
         product.brand.name.toLowerCase().includes(searchTerm.toLowerCase()));
-    return matchesCategory && matchesSearch;
+    
+    return matchesCategory && matchesApplication && matchesSearch;
   });
 
   const getCategoryCount = (categoryName) => {
     if (categoryName === "All") return products.length;
     return products.filter((product) => product.category_name === categoryName)
       .length;
+  };
+
+  const getApplicationCount = (application) => {
+    const categoryProducts = products.filter(
+      (product) => product.category_name === selectedCategory
+    );
+    
+    return categoryProducts.filter(product => 
+      product.applications && Array.isArray(product.applications) &&
+      product.applications.some(app => {
+        const appName = typeof app === 'string' ? app : app.app || app.name;
+        return appName && appName.toLowerCase().includes(application.toLowerCase());
+      })
+    ).length;
   };
 
   const getCategoryIcon = (categoryName) => {
@@ -207,10 +275,10 @@ export default function ProductsPage() {
               className='md:hidden flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-300'
               style={{
                 backgroundColor:
-                  selectedCategory !== "All"
+                  selectedCategory !== "All" || selectedApplications.length > 0
                     ? "#b78852"
                     : "rgba(255, 255, 255, 0.9)",
-                color: selectedCategory !== "All" ? "white" : "#b78852",
+                color: selectedCategory !== "All" || selectedApplications.length > 0 ? "white" : "#b78852",
                 boxShadow: "0 2px 8px rgba(183, 136, 82, 0.1)",
               }}
             >
@@ -280,7 +348,48 @@ export default function ProductsPage() {
         </div>
       </div>
 
-      {/* Mobile Category Dropdown */}
+      {/* Desktop Applications Filter */}
+      {showApplications && availableApplications.length > 0 && (
+        <div className='hidden md:block py-4 border-b' style={{ borderColor: "rgba(183, 136, 82, 0.1)" }}>
+          <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+            <div className='mb-3'>
+              <h3 className='text-sm font-semibold flex items-center gap-2' style={{ color: "#8b6a3f" }}>
+                <Target size={16} />
+                Filter by Application:
+              </h3>
+            </div>
+            <div className='flex flex-wrap gap-2'>
+              {availableApplications.map((application) => (
+                <button
+                  key={application}
+                  onClick={() => handleApplicationToggle(application)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
+                    selectedApplications.includes(application)
+                      ? "shadow-md transform scale-105"
+                      : "shadow-sm hover:shadow-md hover:scale-105"
+                  }`}
+                  style={{
+                    backgroundColor: selectedApplications.includes(application)
+                      ? "#c9955f"
+                      : "rgba(255, 255, 255, 0.9)",
+                    color: selectedApplications.includes(application) ? "white" : "#8b6a3f",
+                    border: selectedApplications.includes(application)
+                      ? "none"
+                      : "1px solid rgba(183, 136, 82, 0.2)",
+                  }}
+                >
+                  {selectedApplications.includes(application) && (
+                    <CheckCircle size={14} />
+                  )}
+                  {application} ({getApplicationCount(application)})
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile Category & Application Dropdown */}
       {showMobileFilters && (
         <div
           className='md:hidden border-b'
@@ -290,7 +399,9 @@ export default function ProductsPage() {
           }}
         >
           <div className='max-w-7xl mx-auto px-4 py-4'>
-            <div className='space-y-2'>
+            {/* Categories */}
+            <div className='space-y-2 mb-4'>
+              <h4 className='text-sm font-semibold' style={{ color: "#8b6a3f" }}>Categories:</h4>
               <button
                 onClick={() => handleCategoryClick("All")}
                 className={`w-full flex items-center justify-between p-4 rounded-xl transition-all duration-300 ${
@@ -361,12 +472,64 @@ export default function ProductsPage() {
                 </button>
               ))}
             </div>
+
+            {/* Applications */}
+            {showApplications && availableApplications.length > 0 && (
+              <div className='space-y-2 border-t pt-4' style={{ borderColor: "rgba(183, 136, 82, 0.1)" }}>
+                <h4 className='text-sm font-semibold flex items-center gap-2' style={{ color: "#8b6a3f" }}>
+                  <Target size={16} />
+                  Applications:
+                </h4>
+                <div className='space-y-2'>
+                  {availableApplications.map((application) => (
+                    <button
+                      key={application}
+                      onClick={() => handleApplicationToggle(application)}
+                      className={`w-full flex items-center justify-between p-3 rounded-lg transition-all duration-300 ${
+                        selectedApplications.includes(application) ? "ring-2" : ""
+                      }`}
+                      style={{
+                        backgroundColor: selectedApplications.includes(application)
+                          ? "rgba(201, 149, 95, 0.1)"
+                          : "rgba(249, 250, 251, 0.8)",
+                        ringColor: selectedApplications.includes(application) ? "#c9955f" : "transparent",
+                      }}
+                    >
+                      <div className='flex items-center gap-3'>
+                        <div style={{ color: "#c9955f" }}>
+                          {selectedApplications.includes(application) ? (
+                            <CheckCircle size={16} />
+                          ) : (
+                            <Target size={16} />
+                          )}
+                        </div>
+                        <span
+                          className='font-medium text-left text-sm'
+                          style={{ color: "#8b6a3f" }}
+                        >
+                          {application}
+                        </span>
+                      </div>
+                      <span
+                        className='text-xs px-2 py-1 rounded-full'
+                        style={{
+                          backgroundColor: "rgba(183, 136, 82, 0.1)",
+                          color: "#9c7649",
+                        }}
+                      >
+                        {getApplicationCount(application)}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
 
       {/* Active Filters */}
-      {(selectedCategory !== "All" || searchTerm) && (
+      {(selectedCategory !== "All" || selectedApplications.length > 0 || searchTerm) && (
         <div className='py-4'>
           <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
             <div className='flex items-center justify-between'>
@@ -388,11 +551,24 @@ export default function ProductsPage() {
                     {selectedCategory}
                   </span>
                 )}
+                {selectedApplications.map((app) => (
+                  <span
+                    key={app}
+                    className='px-3 py-1 rounded-full text-sm font-medium flex items-center gap-1'
+                    style={{
+                      backgroundColor: "#c9955f",
+                      color: "white",
+                    }}
+                  >
+                    <Target size={12} />
+                    {app}
+                  </span>
+                ))}
                 {searchTerm && (
                   <span
                     className='px-3 py-1 rounded-full text-sm font-medium'
                     style={{
-                      backgroundColor: "#b78852",
+                      backgroundColor: "#8b6a3f",
                       color: "white",
                     }}
                   >
@@ -410,7 +586,7 @@ export default function ProductsPage() {
                 }}
               >
                 <XCircle size={14} />
-                Clear
+                Clear All
               </button>
             </div>
           </div>
@@ -432,6 +608,15 @@ export default function ProductsPage() {
                   in{" "}
                   <span className='font-semibold' style={{ color: "#8b6a3f" }}>
                     {selectedCategory}
+                  </span>
+                </span>
+              )}
+              {selectedApplications.length > 0 && (
+                <span>
+                  {" "}
+                  for{" "}
+                  <span className='font-semibold' style={{ color: "#8b6a3f" }}>
+                    {selectedApplications.join(", ")}
                   </span>
                 </span>
               )}
@@ -477,11 +662,9 @@ export default function ProductsPage() {
                 style={{ color: "#9c7649" }}
               >
                 {searchTerm
-                  ? `No products match "${searchTerm}" in ${
-                      selectedCategory === "All"
-                        ? "any category"
-                        : selectedCategory
-                    }.`
+                  ? `No products match your search criteria.`
+                  : selectedApplications.length > 0
+                  ? `No products found for the selected applications in ${selectedCategory}.`
                   : `No products found in ${
                       selectedCategory === "All"
                         ? "any category"
