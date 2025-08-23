@@ -14,7 +14,7 @@ import {
   Newspaper,
   HelpCircle,
 } from "lucide-react";
-import SHREELogo from "../../../public/SHREE-LOGO.webp"; // Import the new logo
+import SHREELogo from "../../../src/img/SHREE-LOGO.webp"; // Import the new logo
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
