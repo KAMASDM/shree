@@ -83,8 +83,9 @@ const nextConfig = {
   },
 
   // Webpack configuration for bundle optimization
-  webpack(config, { dev, isServer }) {
-    if (!dev && !isServer && process.env.ANALYZE === 'true') {
+ webpack(config, { dev, isServer }) {
+  if (!dev && !isServer && process.env.ANALYZE === 'true') {
+    try {
       const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
       config.plugins.push(
         new BundleAnalyzerPlugin({
@@ -92,16 +93,19 @@ const nextConfig = {
           openAnalyzer: false,
         })
       );
+    } catch (error) {
+      console.error('webpack-bundle-analyzer not found. Skipping plugin.');
     }
+  }
 
-    // Optimize SVGs
-    config.module.rules.push({
-      test: /\.svg$/,
-      use: ['@svgr/webpack'],
-    });
+  // Optimize SVGs
+  config.module.rules.push({
+    test: /\.svg$/,
+    use: ['@svgr/webpack'],
+  });
 
-    return config;
-  },
+  return config;
+},
 
   // Environment variables
   env: {
