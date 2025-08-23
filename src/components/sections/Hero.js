@@ -163,6 +163,11 @@ export default function SimpleHeroSlider() {
             />
             {/* Optional overlay for better text readability */}
             <div className="absolute inset-0 bg-black/20"></div>
+            {image.caption && (
+              <div className="absolute bottom-16 md:bottom-24 left-1/2 -translate-x-1/2 text-center text-white p-4">
+                <h2 className="text-3xl md:text-5xl font-bold">{image.caption}</h2>
+              </div>
+            )}
           </div>
         ))}
       </div>

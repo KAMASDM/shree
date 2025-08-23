@@ -1,6 +1,8 @@
+// src/components/common/Header.js
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   Menu,
@@ -12,6 +14,7 @@ import {
   Newspaper,
   HelpCircle,
 } from "lucide-react";
+import SHREELogo from "../../../public/SHREE-LOGO.webp"; // Import the new logo
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -22,16 +25,15 @@ export default function Header() {
     { name: "Home", path: "/" },
     { name: "Products", path: "/products" },
     { name: "Services", path: "/services" },
+    { name: "Contact", path: "/contact" },
   ];
-
+  
   const companyLinks = [
     { name: "About Us", path: "/about", icon: <Building size={16} /> },
     { name: "Careers", path: "/careers", icon: <Briefcase size={16} /> },
-    { name: "News", path: "/news", icon: <Newspaper size={16} /> },
+    { name: "Events & Blogs", path: "/news", icon: <Newspaper size={16} /> },
     { name: "FAQs", path: "/faqs", icon: <HelpCircle size={16} /> },
   ];
-
-  const contactNav = { name: "Contact", path: "/contact" };
 
   const handleDropdownMouseEnter = () => {
     setIsDropdownOpen(true);
@@ -46,8 +48,8 @@ export default function Header() {
       className='fixed top-0 w-full z-50 border-b transition-all duration-300'
       style={{
         backgroundColor: "rgba(255, 255, 255, 0.85)",
-        backdropFilter: "blur(-20px)",
-        WebkitBackdropFilter: "blur(-20px)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
         borderColor: "rgba(183, 136, 82, 0.1)",
         boxShadow: "0 1px 30px rgba(183, 136, 82, 0.1)",
       }}
@@ -59,10 +61,13 @@ export default function Header() {
               href='/'
               className='hover:scale-105 transition-transform duration-300'
             >
-              <img
-                src='https://shreedhargroup.com/wp-content/uploads/2014/12/logo02.png'
+              <Image
+                src={SHREELogo} // Use the new logo import
                 alt='Shreedhar Instruments'
+                width={250}
+                height={64}
                 className='h-16 w-auto'
+                priority
               />
             </Link>
           </div>
@@ -70,39 +75,25 @@ export default function Header() {
           {/* Desktop Navigation */}
           <div className='hidden lg:block'>
             <div className='ml-10 flex items-baseline space-x-8'>
-              {mainNav.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.path}
-                  className={`px-3 py-2 text-sm font-medium transition-all duration-300 relative ${
-                    location?.pathname === item.path
-                      ? "border-b-2"
-                      : "hover:scale-105"
-                  }`}
-                  style={{
-                    color:
-                      location?.pathname === item.path ? "#b78852" : "#4a4a4a",
-                    borderColor:
-                      location?.pathname === item.path
-                        ? "#b78852"
-                        : "transparent",
-                  }}
-                  onMouseEnter={(e) => {
-                    if (location?.pathname !== item.path) {
-                      e.target.style.color = "#b78852";
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (location?.pathname !== item.path) {
-                      e.target.style.color = "#4a4a4a";
-                    }
-                  }}
-                >
-                  {item.name}
-                </Link>
-              ))}
-
-              {/* Company Dropdown - Fixed version */}
+              {/* Home Link */}
+              <Link
+                href='/'
+                className={`px-3 py-2 text-sm font-medium transition-all duration-300 relative ${
+                  location?.pathname === "/" ? "border-b-2" : "hover:scale-105"
+                }`}
+                style={{
+                  color:
+                    location?.pathname === "/" ? "#b78852" : "#4a4a4a",
+                  borderColor:
+                    location?.pathname === "/"
+                      ? "#b78852"
+                      : "transparent",
+                }}
+              >
+                Home
+              </Link>
+              
+              {/* Company Dropdown */}
               <div
                 className='relative'
                 onMouseEnter={handleDropdownMouseEnter}
@@ -128,24 +119,6 @@ export default function Header() {
                       ? "#b78852"
                       : "transparent",
                   }}
-                  onMouseEnter={(e) => {
-                    if (
-                      !companyLinks.some((l) =>
-                        location?.pathname?.startsWith(l.path)
-                      )
-                    ) {
-                      e.target.style.color = "#b78852";
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (
-                      !companyLinks.some((l) =>
-                        location?.pathname?.startsWith(l.path)
-                      )
-                    ) {
-                      e.target.style.color = "#4a4a4a";
-                    }
-                  }}
                 >
                   Company
                   <ChevronDown
@@ -155,8 +128,6 @@ export default function Header() {
                     }`}
                   />
                 </button>
-
-                {/* Dropdown Menu - Fixed positioning and glass effect */}
                 <div
                   className={`absolute top-full left-0 mt-1 w-48 py-2 z-20 transition-all duration-300 transform ${
                     isDropdownOpen
@@ -184,17 +155,6 @@ export default function Header() {
                             ? "#b78852"
                             : "#4a4a4a",
                       }}
-                      onMouseEnter={(e) => {
-                        e.target.style.backgroundColor =
-                          "rgba(183, 136, 82, 0.08)";
-                        e.target.style.color = "#b78852";
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.backgroundColor = "transparent";
-                        if (location.pathname !== item.path) {
-                          e.target.style.color = "#4a4a4a";
-                        }
-                      }}
                     >
                       <span style={{ color: "#9c7649" }}>{item.icon}</span>
                       {item.name}
@@ -202,36 +162,55 @@ export default function Header() {
                   ))}
                 </div>
               </div>
-
+              
+              {/* Other Main Nav Links */}
               <Link
-                href={contactNav.path}
+                href="/products"
                 className={`px-3 py-2 text-sm font-medium transition-all duration-300 relative ${
-                  location?.pathname === contactNav.path
-                    ? "border-b-2"
-                    : "hover:scale-105"
+                  location?.pathname === "/products" ? "border-b-2" : "hover:scale-105"
                 }`}
                 style={{
                   color:
-                    location?.pathname === contactNav.path
-                      ? "#b78852"
-                      : "#4a4a4a",
+                    location?.pathname === "/products" ? "#b78852" : "#4a4a4a",
                   borderColor:
-                    location?.pathname === contactNav.path
+                    location?.pathname === "/products"
                       ? "#b78852"
                       : "transparent",
                 }}
-                onMouseEnter={(e) => {
-                  if (location?.pathname !== contactNav.path) {
-                    e.target.style.color = "#b78852";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (location?.pathname !== contactNav.path) {
-                    e.target.style.color = "#4a4a4a";
-                  }
+              >
+                Products
+              </Link>
+              <Link
+                href="/services"
+                className={`px-3 py-2 text-sm font-medium transition-all duration-300 relative ${
+                  location?.pathname === "/services" ? "border-b-2" : "hover:scale-105"
+                }`}
+                style={{
+                  color:
+                    location?.pathname === "/services" ? "#b78852" : "#4a4a4a",
+                  borderColor:
+                    location?.pathname === "/services"
+                      ? "#b78852"
+                      : "transparent",
                 }}
               >
-                {contactNav.name}
+                Services
+              </Link>
+              <Link
+                href="/contact"
+                className={`px-3 py-2 text-sm font-medium transition-all duration-300 relative ${
+                  location?.pathname === "/contact" ? "border-b-2" : "hover:scale-105"
+                }`}
+                style={{
+                  color:
+                    location?.pathname === "/contact" ? "#b78852" : "#4a4a4a",
+                  borderColor:
+                    location?.pathname === "/contact"
+                      ? "#b78852"
+                      : "transparent",
+                }}
+              >
+                Contact
               </Link>
             </div>
           </div>
@@ -242,12 +221,6 @@ export default function Header() {
               href='tel:+917096033001'
               className='flex items-center gap-2 font-medium transition-all duration-300 hover:scale-105'
               style={{ color: "#b78852" }}
-              onMouseEnter={(e) => {
-                e.target.style.color = "#8b6a3f";
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.color = "#b78852";
-              }}
             >
               <Phone size={16} />
               <span className='text-sm'>+91 7096033001</span>
@@ -257,16 +230,6 @@ export default function Header() {
               className='text-white px-6 py-2 rounded-full text-sm font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300'
               style={{
                 background: "linear-gradient(135deg, #b78852 0%, #c9955f 100%)",
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.background =
-                  "linear-gradient(135deg, #a0784a 0%, #b78852 100%)";
-                e.target.style.transform = "scale(1.05)";
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.background =
-                  "linear-gradient(135deg, #b78852 0%, #c9955f 100%)";
-                e.target.style.transform = "scale(1)";
               }}
             >
               Get Quote
@@ -279,14 +242,6 @@ export default function Header() {
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className='p-2 rounded-md transition-all duration-300'
               style={{ color: "#4a4a4a" }}
-              onMouseEnter={(e) => {
-                e.target.style.color = "#b78852";
-                e.target.style.backgroundColor = "rgba(183, 136, 82, 0.08)";
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.color = "#4a4a4a";
-                e.target.style.backgroundColor = "transparent";
-              }}
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -309,41 +264,22 @@ export default function Header() {
             }}
           >
             <div className='space-y-2'>
-              {mainNav.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.path}
-                  onClick={() => setIsMenuOpen(false)}
-                  className={`block w-full text-left px-3 py-2 text-base font-medium rounded-lg transition-all duration-300 ${
-                    location.pathname === item.path ? "font-semibold" : ""
-                  }`}
-                  style={{
-                    color:
-                      location.pathname === item.path ? "#b78852" : "#4a4a4a",
-                    backgroundColor:
-                      location.pathname === item.path
-                        ? "rgba(183, 136, 82, 0.08)"
-                        : "transparent",
-                  }}
-                  onMouseEnter={(e) => {
-                    if (location.pathname !== item.path) {
-                      e.target.style.backgroundColor =
-                        "rgba(183, 136, 82, 0.05)";
-                      e.target.style.color = "#b78852";
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (location.pathname !== item.path) {
-                      e.target.style.backgroundColor = "transparent";
-                      e.target.style.color = "#4a4a4a";
-                    }
-                  }}
-                >
-                  {item.name}
-                </Link>
-              ))}
-
-              {/* Company links in mobile */}
+              {/* Home */}
+              <Link
+                href="/"
+                onClick={() => setIsMenuOpen(false)}
+                className={`block w-full text-left px-3 py-2 text-base font-medium rounded-lg transition-all duration-300 ${
+                  location.pathname === "/" ? "font-semibold" : ""
+                }`}
+                style={{
+                  color: location.pathname === "/" ? "#b78852" : "#4a4a4a",
+                  backgroundColor: location.pathname === "/" ? "rgba(183, 136, 82, 0.08)" : "transparent",
+                }}
+              >
+                Home
+              </Link>
+              
+              {/* Company Links */}
               <div
                 className='border-t pt-2 mt-2'
                 style={{ borderColor: "rgba(183, 136, 82, 0.1)" }}
@@ -370,19 +306,6 @@ export default function Header() {
                           ? "rgba(183, 136, 82, 0.08)"
                           : "transparent",
                     }}
-                    onMouseEnter={(e) => {
-                      if (location.pathname !== item.path) {
-                        e.target.style.backgroundColor =
-                          "rgba(183, 136, 82, 0.05)";
-                        e.target.style.color = "#b78852";
-                      }
-                    }}
-                    onMouseLeave={(e) => {
-                      if (location.pathname !== item.path) {
-                        e.target.style.backgroundColor = "transparent";
-                        e.target.style.color = "#4a4a4a";
-                      }
-                    }}
                   >
                     <span style={{ color: "#9c7649" }}>{item.icon}</span>
                     {item.name}
@@ -390,36 +313,45 @@ export default function Header() {
                 ))}
               </div>
 
+              {/* Other Main Nav Links */}
               <Link
-                href={contactNav.path}
+                href="/products"
                 onClick={() => setIsMenuOpen(false)}
                 className={`block w-full text-left px-3 py-2 text-base font-medium rounded-lg transition-all duration-300 ${
-                  location.pathname === contactNav.path ? "font-semibold" : ""
+                  location.pathname === "/products" ? "font-semibold" : ""
                 }`}
                 style={{
-                  color:
-                    location.pathname === contactNav.path
-                      ? "#b78852"
-                      : "#4a4a4a",
-                  backgroundColor:
-                    location.pathname === contactNav.path
-                      ? "rgba(183, 136, 82, 0.08)"
-                      : "transparent",
-                }}
-                onMouseEnter={(e) => {
-                  if (location.pathname !== contactNav.path) {
-                    e.target.style.backgroundColor = "rgba(183, 136, 82, 0.05)";
-                    e.target.style.color = "#b78852";
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (location.pathname !== contactNav.path) {
-                    e.target.style.backgroundColor = "transparent";
-                    e.target.style.color = "#4a4a4a";
-                  }
+                  color: location.pathname === "/products" ? "#b78852" : "#4a4a4a",
+                  backgroundColor: location.pathname === "/products" ? "rgba(183, 136, 82, 0.08)" : "transparent",
                 }}
               >
-                {contactNav.name}
+                Products
+              </Link>
+              <Link
+                href="/services"
+                onClick={() => setIsMenuOpen(false)}
+                className={`block w-full text-left px-3 py-2 text-base font-medium rounded-lg transition-all duration-300 ${
+                  location.pathname === "/services" ? "font-semibold" : ""
+                }`}
+                style={{
+                  color: location.pathname === "/services" ? "#b78852" : "#4a4a4a",
+                  backgroundColor: location.pathname === "/services" ? "rgba(183, 136, 82, 0.08)" : "transparent",
+                }}
+              >
+                Services
+              </Link>
+              <Link
+                href="/contact"
+                onClick={() => setIsMenuOpen(false)}
+                className={`block w-full text-left px-3 py-2 text-base font-medium rounded-lg transition-all duration-300 ${
+                  location.pathname === "/contact" ? "font-semibold" : ""
+                }`}
+                style={{
+                  color: location.pathname === "/contact" ? "#b78852" : "#4a4a4a",
+                  backgroundColor: location.pathname === "/contact" ? "rgba(183, 136, 82, 0.08)" : "transparent",
+                }}
+              >
+                Contact
               </Link>
 
               {/* Mobile CTA */}

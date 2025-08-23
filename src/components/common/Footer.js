@@ -1,3 +1,4 @@
+// src/components/common/Footer.js
 "use client";
 
 import {
@@ -11,6 +12,7 @@ import {
   Award,
 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer({ setCurrentPage, setSelectedProduct }) {
   const navigation = [
@@ -46,10 +48,13 @@ export default function Footer({ setCurrentPage, setSelectedProduct }) {
           {/* Company Info */}
           <div className='md:col-span-2 space-y-4'>
             <div className='flex items-center gap-3'>
-              <img
+              <Image
                 src='https://shreedhargroup.com/wp-content/uploads/2014/12/logo02.png'
                 alt='Shreedhar Instruments'
+                width={200}
+                height={48}
                 className='h-12 w-auto brightness-0 invert'
+                priority
               />
             </div>
             <p className='text-gray-400 leading-relaxed max-w-md'>

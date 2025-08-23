@@ -1,5 +1,7 @@
+// src/components/common/ProductCard.js
 import { ArrowRight, Star } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function ProductCard({ product }) {
   const brandName = product.brand ? product.brand.name : "Shreedhar";
@@ -16,12 +18,14 @@ export default function ProductCard({ product }) {
     >
       {/* Image Section */}
       <div className='relative overflow-hidden'>
-        <img
+        <Image
           src={
             product.main_image ||
             "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=300&fit=crop"
           }
           alt={product.name}
+          width={400}
+          height={300}
           className='w-full h-40 sm:h-48 md:h-52 object-cover group-hover:scale-110 transition-transform duration-500'
           loading="lazy"
         />
@@ -114,5 +118,4 @@ export default function ProductCard({ product }) {
       ></div>
     </Link>
   );
-
 }

@@ -98,8 +98,14 @@ export default function ContactPage() {
 
   if (isSubmitted) {
     return (
-      <div className='min-h-screen bg-gradient-to-br from-amber-50 to-orange-50 flex items-center justify-center p-4'>
-        <div className='bg-white p-12 rounded-3xl shadow-2xl text-center max-w-md w-full transform'>
+      <div
+        className='min-h-screen flex items-center justify-center p-4'
+        style={{ background: "linear-gradient(135deg, #fefcf8 0%, #fdf8f0 50%, #fcf4e8 100%)" }}
+      >
+        <div
+          className='bg-white p-12 rounded-3xl shadow-2xl text-center max-w-md w-full transform'
+          style={{ border: "1px solid rgba(183, 136, 82, 0.2)" }}
+        >
           <div className='w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6'>
             <CheckCircle className='text-green-600' size={40} />
           </div>
@@ -117,16 +123,27 @@ export default function ContactPage() {
   }
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50'>
+    <div
+      className='min-h-screen'
+      style={{ background: "linear-gradient(135deg, #fefcf8 0%, #fdf8f0 50%, #fcf4e8 100%)" }}
+    >
       <div className='pt-24 pb-20'>
         <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
           {/* Hero Section */}
           <div className='text-center mb-16 relative'>
             <div className='absolute inset-0 -z-10 bg-gradient-to-r from-amber-200/20 to-orange-200/20 blur-3xl rounded-full'></div>
-            <h1 className='text-5xl md:text-6xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent mb-6'>
+            <h1
+              className='text-5xl md:text-6xl font-bold mb-6'
+              style={{
+                background: "linear-gradient(135deg, #8b6a3f 0%, #b78852 50%, #9c7649 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+                backgroundClip: "text",
+              }}
+            >
               Get Expert Consultation
             </h1>
-            <p className='text-xl text-gray-600 max-w-2xl mx-auto'>
+            <p className='text-xl max-w-2xl mx-auto' style={{ color: "#9c7649" }}>
               Connect with our specialists and discover how we can help
               transform your business
             </p>
@@ -134,12 +151,22 @@ export default function ContactPage() {
 
           <div className='grid lg:grid-cols-2 gap-16 mb-20'>
             {/* Contact Form */}
-            <div className='bg-white/80 backdrop-blur-sm p-8 rounded-3xl shadow-xl border border-white/50 hover:shadow-2xl transition-all duration-300'>
+            <div
+              className='p-8 rounded-3xl shadow-xl transition-all duration-300 hover:shadow-2xl'
+              style={{
+                backgroundColor: "rgba(255, 255, 255, 0.9)",
+                border: "1px solid rgba(183, 136, 82, 0.15)",
+                backdropFilter: "blur(10px)",
+              }}
+            >
               <div className='flex items-center gap-3 mb-8'>
-                <div className='w-12 h-12 bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl flex items-center justify-center'>
+                <div
+                  className='w-12 h-12 rounded-xl flex items-center justify-center'
+                  style={{ background: "linear-gradient(135deg, #b78852 0%, #c9955f 100%)" }}
+                >
                   <MessageSquare className='text-white' size={24} />
                 </div>
-                <h3 className='text-2xl font-bold text-gray-900'>
+                <h3 className='text-2xl font-bold' style={{ color: "#8b6a3f" }}>
                   Send Your Requirements
                 </h3>
               </div>
@@ -147,7 +174,7 @@ export default function ContactPage() {
               <form onSubmit={handleSubmit} className='space-y-6'>
                 <div className='grid md:grid-cols-2 gap-6'>
                   <div className='group'>
-                    <label className='block text-sm font-semibold text-gray-700 mb-2'>
+                    <label className='block text-sm font-semibold mb-2' style={{ color: "#9c7649" }}>
                       First Name *
                     </label>
                     <input
@@ -156,12 +183,16 @@ export default function ContactPage() {
                       value={formData.firstName}
                       onChange={handleInputChange}
                       required
-                      className='w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 group-hover:border-amber-300'
+                      className='w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200'
+                      style={{
+                        backgroundColor: "rgba(255, 255, 255, 0.7)",
+                        borderColor: "rgba(183, 136, 82, 0.2)"
+                      }}
                       placeholder='John'
                     />
                   </div>
                   <div className='group'>
-                    <label className='block text-sm font-semibold text-gray-700 mb-2'>
+                    <label className='block text-sm font-semibold mb-2' style={{ color: "#9c7649" }}>
                       Last Name *
                     </label>
                     <input
@@ -170,14 +201,18 @@ export default function ContactPage() {
                       value={formData.lastName}
                       onChange={handleInputChange}
                       required
-                      className='w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 group-hover:border-amber-300'
+                      className='w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200'
+                      style={{
+                        backgroundColor: "rgba(255, 255, 255, 0.7)",
+                        borderColor: "rgba(183, 136, 82, 0.2)"
+                      }}
                       placeholder='Doe'
                     />
                   </div>
                 </div>
 
                 <div className='group'>
-                  <label className='block text-sm font-semibold text-gray-700 mb-2'>
+                  <label className='block text-sm font-semibold mb-2' style={{ color: "#9c7649" }}>
                     Company/Organization *
                   </label>
                   <input
@@ -186,14 +221,18 @@ export default function ContactPage() {
                     value={formData.company}
                     onChange={handleInputChange}
                     required
-                    className='w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 group-hover:border-amber-300'
+                    className='w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200'
+                    style={{
+                      backgroundColor: "rgba(255, 255, 255, 0.7)",
+                      borderColor: "rgba(183, 136, 82, 0.2)"
+                    }}
                     placeholder='Your Company Name'
                   />
                 </div>
 
                 <div className='grid md:grid-cols-2 gap-6'>
                   <div className='group'>
-                    <label className='block text-sm font-semibold text-gray-700 mb-2'>
+                    <label className='block text-sm font-semibold mb-2' style={{ color: "#9c7649" }}>
                       Business Email *
                     </label>
                     <input
@@ -202,12 +241,16 @@ export default function ContactPage() {
                       value={formData.email}
                       onChange={handleInputChange}
                       required
-                      className='w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 group-hover:border-amber-300'
+                      className='w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200'
+                      style={{
+                        backgroundColor: "rgba(255, 255, 255, 0.7)",
+                        borderColor: "rgba(183, 136, 82, 0.2)"
+                      }}
                       placeholder='john.doe@company.com'
                     />
                   </div>
                   <div className='group'>
-                    <label className='block text-sm font-semibold text-gray-700 mb-2'>
+                    <label className='block text-sm font-semibold mb-2' style={{ color: "#9c7649" }}>
                       Phone Number *
                     </label>
                     <input
@@ -216,14 +259,18 @@ export default function ContactPage() {
                       value={formData.phone}
                       onChange={handleInputChange}
                       required
-                      className='w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 group-hover:border-amber-300'
+                      className='w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200'
+                      style={{
+                        backgroundColor: "rgba(255, 255, 255, 0.7)",
+                        borderColor: "rgba(183, 136, 82, 0.2)"
+                      }}
                       placeholder='+91 98765 43210'
                     />
                   </div>
                 </div>
 
                 <div className='group'>
-                  <label className='block text-sm font-semibold text-gray-700 mb-2'>
+                  <label className='block text-sm font-semibold mb-2' style={{ color: "#9c7649" }}>
                     Subject *
                   </label>
                   <select
@@ -231,7 +278,11 @@ export default function ContactPage() {
                     value={formData.subject}
                     onChange={handleInputChange}
                     required
-                    className='w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 group-hover:border-amber-300 bg-white'
+                    className='w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200'
+                    style={{
+                      backgroundColor: "rgba(255, 255, 255, 0.7)",
+                      borderColor: "rgba(183, 136, 82, 0.2)"
+                    }}
                   >
                     <option value=''>Select Subject</option>
                     {contactReasons.map((reason) => (
@@ -243,7 +294,7 @@ export default function ContactPage() {
                 </div>
 
                 <div className='group'>
-                  <label className='block text-sm font-semibold text-gray-700 mb-2'>
+                  <label className='block text-sm font-semibold mb-2' style={{ color: "#9c7649" }}>
                     Message *
                   </label>
                   <textarea
@@ -252,12 +303,22 @@ export default function ContactPage() {
                     value={formData.message}
                     onChange={handleInputChange}
                     required
-                    className='w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 group-hover:border-amber-300 resize-none'
+                    className='w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200 resize-none'
+                    style={{
+                      backgroundColor: "rgba(255, 255, 255, 0.7)",
+                      borderColor: "rgba(183, 136, 82, 0.2)"
+                    }}
                     placeholder='Tell us about your requirements...'
                   />
                 </div>
 
-                <div className='flex items-start gap-3 p-4 bg-amber-50/50 rounded-xl border border-amber-200/50'>
+                <div
+                  className='flex items-start gap-3 p-4 rounded-xl border'
+                  style={{
+                    backgroundColor: "rgba(183, 136, 82, 0.05)",
+                    borderColor: "rgba(183, 136, 82, 0.2)",
+                  }}
+                >
                   <input
                     type='checkbox'
                     id='privacy'
@@ -266,11 +327,9 @@ export default function ContactPage() {
                     onChange={handleInputChange}
                     required
                     className='rounded mt-1 text-amber-600 focus:ring-amber-500'
+                    style={{ color: "#b78852" }}
                   />
-                  <label
-                    htmlFor='privacy'
-                    className='text-sm text-gray-700 font-medium'
-                  >
+                  <label htmlFor='privacy' className='text-sm font-medium' style={{ color: "#9c7649" }}>
                     I agree to the privacy policy and consent to be contacted. *
                   </label>
                 </div>
@@ -285,7 +344,8 @@ export default function ContactPage() {
 
                 <button
                   type='submit'
-                  className='w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white py-4 rounded-xl text-lg font-semibold hover:from-amber-600 hover:to-orange-600 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl'
+                  className='w-full text-white py-4 rounded-xl text-lg font-semibold hover:from-amber-600 hover:to-orange-600 transform hover:scale-105 transition-all duration-200 shadow-lg hover:shadow-xl'
+                  style={{ background: "linear-gradient(135deg, #b78852 0%, #c9955f 100%)" }}
                 >
                   <Send size={20} className='inline mr-2' />
                   Send Requirements
@@ -296,33 +356,48 @@ export default function ContactPage() {
             {/* Head Office Info */}
             <div className='space-y-8'>
               {headOffice && (
-                <div className='bg-white/80 backdrop-blur-sm rounded-3xl shadow-xl border border-white/50 overflow-hidden'>
-                  <div className='bg-gradient-to-r from-amber-500 to-orange-500 p-6'>
+                <div
+                  className='rounded-3xl shadow-xl overflow-hidden'
+                  style={{
+                    backgroundColor: "rgba(255, 255, 255, 0.9)",
+                    border: "1px solid rgba(183, 136, 82, 0.15)",
+                    backdropFilter: "blur(10px)",
+                  }}
+                >
+                  <div
+                    className='p-6'
+                    style={{ background: "linear-gradient(135deg, #b78852 0%, #c9955f 100%)" }}
+                  >
                     <div className='flex items-center gap-3 text-white'>
-                      <div className='w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center'>
+                      <div
+                        className='w-12 h-12 rounded-xl flex items-center justify-center'
+                        style={{ backgroundColor: "rgba(255, 255, 255, 0.2)" }}
+                      >
                         <Building size={24} />
                       </div>
                       <h2 className='text-2xl font-bold'>Head Office</h2>
                     </div>
                   </div>
                   <div className='p-8'>
-                    <h3 className='font-bold text-xl text-gray-900 mb-3'>
+                    <h3 className='font-bold text-xl mb-3' style={{ color: "#8b6a3f" }}>
                       {headOffice.name}
                     </h3>
                     <div className='space-y-3'>
                       <div className='flex items-start gap-3'>
                         <MapPin
-                          className='text-amber-600 mt-1 flex-shrink-0'
+                          className='mt-1 flex-shrink-0'
                           size={20}
+                          style={{ color: "#b78852" }}
                         />
                         <p className='text-gray-700'>{headOffice.address}</p>
                       </div>
                       <div className='flex items-center gap-3'>
                         <Phone
-                          className='text-amber-600 flex-shrink-0'
+                          className='flex-shrink-0'
                           size={20}
+                          style={{ color: "#b78852" }}
                         />
-                        <p className='text-gray-900 font-semibold'>
+                        <p className='font-semibold' style={{ color: "#8b6a3f" }}>
                           {headOffice.contact_number}
                         </p>
                       </div>
@@ -333,21 +408,41 @@ export default function ContactPage() {
 
               {/* Quick Contact Stats */}
               <div className='grid grid-cols-2 gap-4'>
-                <div className='bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/50 text-center'>
-                  <div className='w-12 h-12 bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl flex items-center justify-center mx-auto mb-3'>
+                <div
+                  className='p-6 rounded-2xl shadow-lg text-center'
+                  style={{
+                    backgroundColor: "rgba(255, 255, 255, 0.9)",
+                    border: "1px solid rgba(183, 136, 82, 0.15)",
+                    backdropFilter: "blur(10px)",
+                  }}
+                >
+                  <div
+                    className='w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3'
+                    style={{ background: "linear-gradient(135deg, #b78852 0%, #c9955f 100%)" }}
+                  >
                     <Clock className='text-white' size={24} />
                   </div>
-                  <h4 className='font-bold text-gray-900 mb-1'>24/7 Support</h4>
-                  <p className='text-sm text-gray-600'>
+                  <h4 className='font-bold mb-1' style={{ color: "#8b6a3f" }}>24/7 Support</h4>
+                  <p className='text-sm' style={{ color: "#9c7649" }}>
                     Round the clock assistance
                   </p>
                 </div>
-                <div className='bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/50 text-center'>
-                  <div className='w-12 h-12 bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl flex items-center justify-center mx-auto mb-3'>
+                <div
+                  className='p-6 rounded-2xl shadow-lg text-center'
+                  style={{
+                    backgroundColor: "rgba(255, 255, 255, 0.9)",
+                    border: "1px solid rgba(183, 136, 82, 0.15)",
+                    backdropFilter: "blur(10px)",
+                  }}
+                >
+                  <div
+                    className='w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3'
+                    style={{ background: "linear-gradient(135deg, #b78852 0%, #c9955f 100%)" }}
+                  >
                     <Award className='text-white' size={24} />
                   </div>
-                  <h4 className='font-bold text-gray-900 mb-1'>Expert Team</h4>
-                  <p className='text-sm text-gray-600'>
+                  <h4 className='font-bold mb-1' style={{ color: "#8b6a3f" }}>Expert Team</h4>
+                  <p className='text-sm' style={{ color: "#9c7649" }}>
                     Industry professionals
                   </p>
                 </div>
@@ -358,10 +453,18 @@ export default function ContactPage() {
           {/* Regional Offices */}
           <div className='mt-20'>
             <div className='text-center mb-12'>
-              <h2 className='text-4xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent mb-4'>
+              <h2
+                className='text-4xl font-bold mb-4'
+                style={{
+                  background: "linear-gradient(135deg, #8b6a3f 0%, #b78852 50%, #9c7649 100%)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  backgroundClip: "text",
+                }}
+              >
                 Regional Offices & Service Centers
               </h2>
-              <p className='text-gray-600 text-lg'>
+              <p className='text-lg' style={{ color: "#9c7649" }}>
                 Our nationwide network ensures local support everywhere
               </p>
             </div>
@@ -370,17 +473,25 @@ export default function ContactPage() {
               {regionalOffices.map((office) => (
                 <div
                   key={office.id}
-                  className='bg-white/80 backdrop-blur-sm p-6 rounded-2xl shadow-lg border border-white/50 hover:shadow-xl hover:scale-105 transition-all duration-300 group'
+                  className='p-6 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 group'
+                  style={{
+                    backgroundColor: "rgba(255, 255, 255, 0.9)",
+                    border: "1px solid rgba(183, 136, 82, 0.15)",
+                    backdropFilter: "blur(10px)",
+                  }}
                 >
                   <div className='flex items-start gap-4'>
-                    <div className='w-10 h-10 bg-gradient-to-r from-amber-500 to-orange-500 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-200'>
+                    <div
+                      className='w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-200'
+                      style={{ background: "linear-gradient(135deg, #b78852 0%, #c9955f 100%)" }}
+                    >
                       <MapPin className='text-white' size={20} />
                     </div>
                     <div>
-                      <h4 className='font-bold text-gray-900 mb-2'>
+                      <h4 className='font-bold mb-2' style={{ color: "#8b6a3f" }}>
                         {office.name}
                       </h4>
-                      <p className='text-gray-600 text-sm leading-relaxed'>
+                      <p className='text-sm leading-relaxed' style={{ color: "#9c7649" }}>
                         {office.address}
                       </p>
                     </div>

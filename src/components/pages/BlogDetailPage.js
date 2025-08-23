@@ -1,8 +1,10 @@
+// src/components/pages/BlogDetailPage.js
 "use client";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import axios from "axios";
 import Link from "next/link";
+import Image from "next/image";
 import {
   ChevronLeft,
   Calendar,
@@ -111,7 +113,7 @@ export default function BlogDetailPage() {
         >
           <h1 className='text-2xl md:text-3xl font-bold mb-4' style={{ color: "#8b6a3f" }}>Article Not Found</h1>
           <p className='mb-6 text-sm md:text-base' style={{ color: "#9c7649" }}>
-            {error || "Sorry, we couldn't find the article you're looking for."}
+            {error || "Sorry, we couldn&apos;t find the article you&apos;re looking for."}
           </p>
           <Link
             href='/news'
@@ -134,7 +136,8 @@ export default function BlogDetailPage() {
       style={{ background: "linear-gradient(135deg, #fefcf8 0%, #fdf8f0 50%, #fcf4e8 100%)" }}
     >
       <div className='pt-20 md:pt-32 pb-12 md:pb-20'>
-        <div className='max-w-4xl mx-auto px-4 sm:px-6 lg:px-8'>
+        {/* Changed max-w-4xl to max-w-6xl for wider content */}
+        <div className='max-w-6xl mx-auto px-4 sm:px-6 lg:px-8'>
           {/* Navigation */}
           <nav className='mb-6 md:mb-8'>
             <Link
@@ -248,11 +251,13 @@ export default function BlogDetailPage() {
               className='relative rounded-2xl md:rounded-3xl overflow-hidden shadow-lg'
               style={{ border: "1px solid rgba(183, 136, 82, 0.15)" }}
             >
-              <img
+              <Image
                 src={post.featured_image}
                 alt={post.title}
+                width={1000} // Increased width for wider layout
+                height={500} // Adjusted height
                 className='w-full h-48 sm:h-64 md:h-80 lg:h-96 object-cover'
-                loading="lazy"
+                priority
               />
             </div>
           </div>
@@ -357,9 +362,11 @@ export default function BlogDetailPage() {
                     }}
                   >
                     <div className='relative overflow-hidden'>
-                      <img
+                      <Image
                         src={relatedPost.featured_image}
                         alt={relatedPost.title}
+                        width={400}
+                        height={192}
                         className='h-32 sm:h-40 md:h-48 w-full object-cover group-hover:scale-110 transition-transform duration-500'
                         loading="lazy"
                       />

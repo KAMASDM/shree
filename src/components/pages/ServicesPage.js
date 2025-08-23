@@ -1,7 +1,9 @@
+// src/components/pages/ServicesPage.js
 "use client";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Link from "next/link";
+import Image from "next/image";
 import {
   CheckCircle,
   ArrowRight,
@@ -112,26 +114,22 @@ export default function ServicesPage() {
   const servicePhilosophy = [
     {
       title: "Reliability",
-      description:
-        "We deliver consistent, dependable service so your instruments perform optimally day after day.",
+      description: "We deliver consistent, dependable service so your instruments perform optimally day after day.",
       icon: <Shield size={32} style={{ color: "#059669" }} />,
     },
     {
-      title: "Responsiveness",
-      description:
-        "We act quickly to address issues, minimising downtime and ensuring smooth operations.",
+      title: "Responsiveness", 
+      description: "We act quickly to address issues, minimising downtime and ensuring smooth operations.",
       icon: <Zap size={32} style={{ color: "#dc2626" }} />,
     },
     {
       title: "Assurance",
-      description:
-        "Our trained experts provide the confidence that your equipment meets the highest quality and compliance standards.",
+      description: "Our trained experts provide the confidence that your equipment meets the highest quality and compliance standards.",
       icon: <Award size={32} style={{ color: "#2563eb" }} />,
     },
     {
       title: "Empathy",
-      description:
-        "We understand the challenges you face and tailor our support to your specific needs.",
+      description: "We understand the challenges you face and tailor our support to your specific needs.",
       icon: <Heart size={32} style={{ color: "#7c3aed" }} />,
     },
   ];
@@ -139,24 +137,18 @@ export default function ServicesPage() {
   // Why Choose Us data
   const whyChooseUs = [
     "Proven expertise in servicing analytical instruments across industries",
-    "Fast and responsive customer support team",
+    "Fast and responsive customer support team", 
     "Commitment to data security during remote troubleshooting",
-    "Focus on building trust through quality service delivery",
+    "Focus on building trust through quality service delivery"
   ];
 
   // Comprehensive Services data
   const comprehensiveServices = [
     { name: "Instrument Installation Services", icon: <Settings size={20} /> },
-    {
-      name: "Annual Maintenance Contract (AMC) for Instruments",
-      icon: <Hammer size={20} />,
-    },
+    { name: "Annual Maintenance Contract (AMC) for Instruments", icon: <Hammer size={20} /> },
     { name: "Instrument Calibration Services", icon: <Target size={20} /> },
     { name: "Breakdown Repair Services", icon: <Wrench size={20} /> },
-    {
-      name: "Remote & Online Technical Support",
-      icon: <MessageSquare size={20} />,
-    },
+    { name: "Remote & Online Technical Support", icon: <MessageSquare size={20} /> },
     { name: "Audit Support for Instruments", icon: <FileText size={20} /> },
     { name: "Customer Training Programs", icon: <BookOpen size={20} /> },
     { name: "Genuine Spares Supply", icon: <Package size={20} /> },
@@ -243,24 +235,13 @@ export default function ServicesPage() {
               className='text-xl max-w-4xl mx-auto mb-6 leading-relaxed'
               style={{ color: "#8b6a3f" }}
             >
-              At <strong>Shreedhar Instruments</strong>, we deliver more than
-              just high-quality analytical instruments — we provide{" "}
-              <strong>
-                reliable technical support, maintenance, and calibration
-                services
-              </strong>{" "}
-              to ensure your equipment performs at its best.
+              At <strong>Shreedhar Instruments</strong>, we deliver more than just high-quality analytical instruments — we provide <strong>reliable technical support, maintenance, and calibration services</strong> to ensure your equipment performs at its best.
             </p>
             <p
               className='text-lg max-w-4xl mx-auto mb-10 leading-relaxed'
               style={{ color: "#9c7649" }}
             >
-              We aim to provide{" "}
-              <strong>
-                end-to-end technical support and post-sales service
-              </strong>{" "}
-              that helps our customers achieve operational efficiency and
-              compliance.
+              We aim to provide <strong>end-to-end technical support and post-sales service</strong> that helps our customers achieve operational efficiency and compliance.
             </p>
             <div className='flex flex-col sm:flex-row gap-4 justify-center'>
               <button
@@ -298,15 +279,11 @@ export default function ServicesPage() {
               >
                 Our Service Philosophy
               </h2>
-              <p
-                className='max-w-3xl mx-auto text-lg'
-                style={{ color: "#9c7649" }}
-              >
-                This philosophy is the backbone of our technical support,
-                post-sales service, and maintenance solutions
+              <p className='max-w-3xl mx-auto text-lg' style={{ color: "#9c7649" }}>
+                This philosophy is the backbone of our technical support, post-sales service, and maintenance solutions
               </p>
             </div>
-
+            
             <div className='grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12'>
               {servicePhilosophy.map((item, index) => (
                 <div
@@ -320,16 +297,10 @@ export default function ServicesPage() {
                   <div className='flex justify-center mb-6 group-hover:scale-110 transition-transform duration-300'>
                     {item.icon}
                   </div>
-                  <h3
-                    className='text-xl font-bold mb-4'
-                    style={{ color: "#8b6a3f" }}
-                  >
+                  <h3 className='text-xl font-bold mb-4' style={{ color: "#8b6a3f" }}>
                     {item.title}
                   </h3>
-                  <p
-                    className='text-sm leading-relaxed'
-                    style={{ color: "#9c7649" }}
-                  >
+                  <p className='text-sm leading-relaxed' style={{ color: "#9c7649" }}>
                     {item.description}
                   </p>
                 </div>
@@ -344,9 +315,7 @@ export default function ServicesPage() {
               }}
             >
               <p className='text-lg font-medium' style={{ color: "#8b6a3f" }}>
-                We also believe in <strong>customised service solutions</strong>{" "}
-                that adapt to your unique requirements, creating a truly
-                personalised service experience.
+                We also believe in <strong>customised service solutions</strong> that adapt to your unique requirements, creating a truly personalised service experience.
               </p>
             </div>
           </div>
@@ -368,7 +337,7 @@ export default function ServicesPage() {
                   Why Choose Us?
                 </h2>
               </div>
-
+              
               <div className='grid md:grid-cols-2 gap-6'>
                 {whyChooseUs.map((item, index) => (
                   <div key={index} className='flex items-start gap-4'>
@@ -427,12 +396,8 @@ export default function ServicesPage() {
               >
                 Comprehensive Instrument Services
               </h2>
-              <p
-                className='max-w-2xl mx-auto text-lg'
-                style={{ color: "#9c7649" }}
-              >
-                Our wide range of services covers the full lifecycle of your
-                instruments
+              <p className='max-w-2xl mx-auto text-lg' style={{ color: "#9c7649" }}>
+                Our wide range of services covers the full lifecycle of your instruments
               </p>
             </div>
 
@@ -440,11 +405,7 @@ export default function ServicesPage() {
               {comprehensiveServices.map((service, index) => (
                 <button
                   key={index}
-                  onClick={() =>
-                    handleServiceRequest(
-                      service.name.toLowerCase().replace(/\s+/g, "-")
-                    )
-                  }
+                  onClick={() => handleServiceRequest(service.name.toLowerCase().replace(/\s+/g, '-'))}
                   className='group p-6 rounded-2xl text-left transition-all duration-300 hover:shadow-lg hover:-translate-y-1'
                   style={{
                     backgroundColor: "rgba(255, 255, 255, 0.9)",
@@ -456,27 +417,19 @@ export default function ServicesPage() {
                       className='flex-shrink-0 p-2 rounded-lg group-hover:scale-110 transition-transform duration-300'
                       style={{ backgroundColor: "rgba(183, 136, 82, 0.1)" }}
                     >
-                      <div style={{ color: "#b78852" }}>{service.icon}</div>
+                      <div style={{ color: "#b78852" }}>
+                        {service.icon}
+                      </div>
                     </div>
                   </div>
-                  <h3
-                    className='font-bold text-sm md:text-base leading-tight'
-                    style={{ color: "#8b6a3f" }}
-                  >
+                  <h3 className='font-bold text-sm md:text-base leading-tight' style={{ color: "#8b6a3f" }}>
                     {service.name}
                   </h3>
                   <div className='mt-3 flex items-center gap-2'>
-                    <span
-                      className='text-xs font-medium'
-                      style={{ color: "#b78852" }}
-                    >
+                    <span className='text-xs font-medium' style={{ color: "#b78852" }}>
                       Request Service
                     </span>
-                    <ArrowRight
-                      size={12}
-                      className='group-hover:translate-x-1 transition-transform'
-                      style={{ color: "#b78852" }}
-                    />
+                    <ArrowRight size={12} className='group-hover:translate-x-1 transition-transform' style={{ color: "#b78852" }} />
                   </div>
                 </button>
               ))}
@@ -528,9 +481,11 @@ export default function ServicesPage() {
                   >
                     <div className='flex items-start gap-6 mb-6'>
                       <div className='flex-shrink-0'>
-                        <img
+                        <Image
                           src={service.image}
                           alt={service.title}
+                          width={80}
+                          height={80}
                           className='w-20 h-20 object-cover rounded-2xl shadow-md group-hover:shadow-lg transition-shadow duration-300'
                         />
                       </div>
@@ -718,21 +673,14 @@ export default function ServicesPage() {
               >
                 Continuous Service Improvement (CSAT)
               </h2>
-              <p
-                className='text-lg mb-8 max-w-3xl mx-auto'
-                style={{ color: "#9c7649" }}
-              >
-                We actively <strong>seek customer feedback</strong> to enhance
-                our services and maintain our position as a trusted service
-                partner. Every suggestion helps us improve turnaround time,
-                service quality, and customer satisfaction.
+              <p className='text-lg mb-8 max-w-3xl mx-auto' style={{ color: "#9c7649" }}>
+                We actively <strong>seek customer feedback</strong> to enhance our services and maintain our position as a trusted service partner. Every suggestion helps us improve turnaround time, service quality, and customer satisfaction.
               </p>
               <button
                 onClick={() => setShowFeedbackForm(true)}
                 className='text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300'
                 style={{
-                  background:
-                    "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)",
+                  background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)",
                 }}
               >
                 Share Your Feedback
@@ -759,7 +707,7 @@ export default function ServicesPage() {
                 className='text-lg mb-8 max-w-2xl mx-auto'
                 style={{ color: "#9c7649" }}
               >
-                {`Let's discuss how our services can help optimize your analytical instrument operations`}
+                Let&apos;s discuss how our services can help optimize your analytical instrument operations
               </p>
               <div className='flex flex-col sm:flex-row gap-4 justify-center'>
                 <button
