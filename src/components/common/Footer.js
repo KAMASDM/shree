@@ -13,6 +13,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import SHREELogo from "../../../src/img/SHREE-LOGO.webp"; // Import the new logo
+
 
 export default function Footer({ setCurrentPage, setSelectedProduct }) {
   const navigation = [
@@ -56,11 +58,11 @@ export default function Footer({ setCurrentPage, setSelectedProduct }) {
           <div className='md:col-span-2 space-y-4'>
             <div className='flex items-center gap-3'>
               <Image
-                src='https://shreedhargroup.com/wp-content/uploads/2014/12/logo02.png'
+                src={SHREELogo}
                 alt='Shreedhar Instruments'
                 width={200}
                 height={48}
-                className='h-12 w-auto brightness-0 invert'
+                className='h-22 w-65'
                 priority
                 onError={(e) => {
                   // Fallback if image fails to load
@@ -213,7 +215,7 @@ export default function Footer({ setCurrentPage, setSelectedProduct }) {
                   size={16}
                 />
                 <div className='text-gray-400'>
-                  <p>info@shreedhargroup.com</p>
+                  
                   <p>sales@shreedhargroup.com</p>
                 </div>
               </div>
