@@ -26,6 +26,7 @@ import {
   Hammer,
 } from "lucide-react";
 import ServiceInquiryForm from "../forms/ServiceInquiryForm";
+import FeedbackForm from "../forms/FeedbackForm"; // Import the new form
 import { apiService } from "../../lib/api";
 
 export default function ServicesPage() {
@@ -34,7 +35,7 @@ export default function ServicesPage() {
   const [error, setError] = useState(null);
   const [showServiceForm, setShowServiceForm] = useState(false);
   const [selectedService, setSelectedService] = useState("");
-  const [showFeedbackForm, setShowFeedbackForm] = useState(false);
+  const [showFeedbackForm, setShowFeedbackForm] = useState(false); // State for feedback form
 
   useEffect(() => {
     const fetchServices = async () => {
@@ -156,24 +157,46 @@ export default function ServicesPage() {
     setShowServiceForm(true);
   };
 
-  if (showServiceForm) {
-    return (
-      <div
-        className='pt-32 pb-20 min-h-screen'
-        style={{
-          background:
-            "linear-gradient(135deg, #fefcf8 0%, #fdf8f0 50%, #fcf4e8 100%)",
-        }}
-      >
-        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <ServiceInquiryForm
-            selectedService={selectedService}
-            onClose={() => setShowServiceForm(false)}
-          />
+  // Modal container for forms
+ // Replace the existing modal container section with this improved version
+
+// Modal container for forms - FIXED VERSION
+if (showServiceForm || showFeedbackForm) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm p-4">
+      <div className="relative w-full max-w-4xl max-h-[90vh] bg-white rounded-2xl shadow-2xl overflow-hidden">
+        {/* Scrollable content area */}
+        <div className="max-h-[90vh] overflow-y-auto overflow-x-hidden">
+          <div className="p-6 sm:p-8">
+            {showServiceForm && (
+              <ServiceInquiryForm
+                selectedService={selectedService}
+                onClose={() => setShowServiceForm(false)}
+              />
+            )}
+            {showFeedbackForm && (
+              <FeedbackForm onClose={() => setShowFeedbackForm(false)} />
+            )}
+          </div>
         </div>
+        
+        {/* Optional: Close button overlay (if forms don't have their own close buttons) */}
+        <button
+          onClick={() => {
+            setShowServiceForm(false);
+            setShowFeedbackForm(false);
+          }}
+          className="absolute top-4 right-4 z-10 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors duration-200"
+          aria-label="Close modal"
+        >
+          <svg className="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   return (
     <div
@@ -467,7 +490,7 @@ export default function ServicesPage() {
             )}
 
             <div className='grid lg:grid-cols-2 gap-8'>
-              {services.map((service, index) => (
+              {services.map((service) => (
                 <div key={service.id} className='group'>
                   <div
                     className='p-8 rounded-3xl shadow-sm hover:shadow-lg transition-all duration-500 hover:-translate-y-1'
