@@ -16,6 +16,7 @@ export default function FeedbackForm({ onClose }) {
   });
 
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
 
   const handleInputChange = (e) => {
@@ -29,24 +30,57 @@ export default function FeedbackForm({ onClose }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+    setIsSubmitting(true);
+    
     if (!formData.agreeToPrivacy) {
       setError("You must agree to the privacy policy.");
+      setIsSubmitting(false);
       return;
     }
+
+    // Validate required fields
+    if (!formData.firstName || !formData.lastName || !formData.email || !formData.message) {
+      setError("Please fill in all required fields.");
+      setIsSubmitting(false);
+      return;
+    }
+
     const payload = {
-      name: `${formData.firstName} ${formData.lastName}`,
-      company: formData.company,
-      email: formData.email,
-      phone: formData.phone,
-      message: `Subject: ${formData.subject}\n\nMessage: ${formData.message}`,
-      source: "feedback_form", // Set source to identify feedback submissions
+      name: `${formData.firstName.trim()} ${formData.lastName.trim()}`,
+      company: formData.company.trim(),
+      email: formData.email.trim(),
+      phone: formData.phone.trim(),
+      message: `Subject: ${formData.subject}\n\nFeedback: ${formData.message.trim()}`,
+      source: "contact_us", // Changed from "feedback_form" to "website" which is likely a valid choice
+      related_product: null
     };
+
+    console.log("Submitting payload:", payload); // Debug log
+
     try {
-      await apiService.submitLead(payload);
+      const response = await apiService.submitLead(payload);
+      console.log("Submission successful:", response); // Debug log
       setIsSubmitted(true);
     } catch (err) {
-      setError("An error occurred. Please try again.");
       console.error("Submission Error:", err);
+      
+      // More detailed error handling
+      if (err.response && err.response.data) {
+        const errorData = err.response.data;
+        if (typeof errorData === 'object') {
+          // Extract specific field errors
+          const errorMessages = Object.entries(errorData)
+            .map(([field, messages]) => `${field}: ${Array.isArray(messages) ? messages.join(', ') : messages}`)
+            .join('\n');
+          setError(`Validation errors:\n${errorMessages}`);
+        } else {
+          setError("An error occurred. Please try again.");
+        }
+      } else {
+        setError("Network error. Please check your connection and try again.");
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -64,11 +98,11 @@ export default function FeedbackForm({ onClose }) {
           Your feedback has been received. We appreciate you taking the time to help us improve.
         </p>
         <button
-            onClick={onClose}
-            className="mt-4 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300"
-            style={{ background: "linear-gradient(135deg, #b78852 0%, #c9955f 100%)" }}
+          onClick={onClose}
+          className="mt-4 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300"
+          style={{ background: "linear-gradient(135deg, #b78852 0%, #c9955f 100%)" }}
         >
-            Close
+          Close
         </button>
       </div>
     );
@@ -105,8 +139,9 @@ export default function FeedbackForm({ onClose }) {
               value={formData.firstName}
               onChange={handleInputChange}
               required
-              className='w-full px-4 py-3 border rounded-xl'
+              className='w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500'
               placeholder='John'
+              style={{ borderColor: "rgba(183, 136, 82, 0.3)" }}
             />
           </div>
           <div>
@@ -119,13 +154,15 @@ export default function FeedbackForm({ onClose }) {
               value={formData.lastName}
               onChange={handleInputChange}
               required
-              className='w-full px-4 py-3 border rounded-xl'
+              className='w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500'
               placeholder='Doe'
+              style={{ borderColor: "rgba(183, 136, 82, 0.3)" }}
             />
           </div>
         </div>
 
-        <div>
+        <div className='grid md:grid-cols-2 gap-6'>
+          <div>
             <label className='block text-sm font-semibold mb-2' style={{ color: "#9c7649" }}>
               Email *
             </label>
@@ -135,9 +172,40 @@ export default function FeedbackForm({ onClose }) {
               value={formData.email}
               onChange={handleInputChange}
               required
-              className='w-full px-4 py-3 border rounded-xl'
+              className='w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500'
               placeholder='john.doe@company.com'
+              style={{ borderColor: "rgba(183, 136, 82, 0.3)" }}
             />
+          </div>
+          <div>
+            <label className='block text-sm font-semibold mb-2' style={{ color: "#9c7649" }}>
+              Phone
+            </label>
+            <input
+              type='tel'
+              name='phone'
+              value={formData.phone}
+              onChange={handleInputChange}
+              className='w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+              placeholder='+91 98765 43210'
+              style={{ borderColor: "rgba(183, 136, 82, 0.3)" }}
+            />
+          </div>
+        </div>
+
+        <div>
+          <label className='block text-sm font-semibold mb-2' style={{ color: "#9c7649" }}>
+            Company
+          </label>
+          <input
+            type='text'
+            name='company'
+            value={formData.company}
+            onChange={handleInputChange}
+            className='w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500'
+            placeholder='Your Company Name'
+            style={{ borderColor: "rgba(183, 136, 82, 0.3)" }}
+          />
         </div>
 
         <div>
@@ -150,8 +218,9 @@ export default function FeedbackForm({ onClose }) {
             value={formData.message}
             onChange={handleInputChange}
             required
-            className='w-full px-4 py-3 border rounded-xl resize-none'
+            className='w-full px-4 py-3 border rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500'
             placeholder='Tell us about your experience or suggestions...'
+            style={{ borderColor: "rgba(183, 136, 82, 0.3)" }}
           />
         </div>
 
@@ -179,27 +248,39 @@ export default function FeedbackForm({ onClose }) {
 
         {error && (
           <div className='p-3 bg-red-50 border border-red-200 rounded-xl'>
-            <p className='text-red-600 text-sm font-medium text-center'>
+            <p className='text-red-600 text-sm font-medium text-center whitespace-pre-line'>
               {error}
             </p>
           </div>
         )}
+        
         <div className="flex gap-4">
-            <button
+          <button
             type='submit'
-            className='flex-1 text-white py-3 rounded-xl text-lg font-semibold transform hover:scale-105 transition-all duration-200 shadow-lg'
+            disabled={isSubmitting}
+            className='flex-1 text-white py-3 rounded-xl text-lg font-semibold transform hover:scale-105 transition-all duration-200 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100'
             style={{ background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)" }}
-            >
-            <Send size={20} className='inline mr-2' />
-            Submit Feedback
-            </button>
-            <button
-                type="button"
-                onClick={onClose}
-                className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl font-semibold"
-            >
-                Cancel
-            </button>
+          >
+            {isSubmitting ? (
+              <>
+                <div className="inline-block animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                Submitting...
+              </>
+            ) : (
+              <>
+                <Send size={20} className='inline mr-2' />
+                Submit Feedback
+              </>
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={isSubmitting}
+            className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Cancel
+          </button>
         </div>
       </form>
     </div>
