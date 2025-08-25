@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import axios from "axios";
 import {
   ChevronDown,
   HelpCircle,
@@ -10,6 +9,7 @@ import {
   Shield,
   Wrench,
 } from "lucide-react";
+import { apiService } from "../../lib/api";
 
 const FaqItem = ({ faq, isOpen, onToggle }) => (
   <div className='border-b border-gray-200 py-6'>
@@ -47,9 +47,7 @@ export default function FaqsPage() {
   useEffect(() => {
     const fetchFaqs = async () => {
       try {
-        const response = await axios.get(
-          "https://sweekarme.in/shree/api/faqs/categories/"
-        );
+        const response = await apiService.getFAQCategories();
         setCategories(response.data);
       } catch (err) {
         setError("Failed to load FAQs. Please try again later.");

@@ -1,7 +1,5 @@
-// src/components/pages/ServicesPage.js
 "use client";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -28,6 +26,7 @@ import {
   Hammer,
 } from "lucide-react";
 import ServiceInquiryForm from "../forms/ServiceInquiryForm";
+import { apiService } from "../../lib/api";
 
 export default function ServicesPage() {
   const [services, setServices] = useState([]);
@@ -40,9 +39,7 @@ export default function ServicesPage() {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await axios.get(
-          "https://sweekarme.in/shree/api/services/"
-        );
+        const response = await apiService.getAllServices();
         setServices(response.data);
       } catch (err) {
         setError(
@@ -89,8 +86,8 @@ export default function ServicesPage() {
 
   const serviceHighlights = [
     {
-      title: "NABL Certified Calibration",
-      description: "Traceable to national standards with uncertainty analysis",
+      title: "Globally Recognized",
+      description: "Our services meet international standards.",
       icon: <Shield className='text-green-400' size={28} />,
     },
     {

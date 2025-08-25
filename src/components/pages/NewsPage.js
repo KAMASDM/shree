@@ -1,24 +1,21 @@
-// src/components/pages/NewsPage.js
 "use client";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Calendar, User, Search, Globe, ChevronDown, Award } from "lucide-react";
+import { apiService } from "../../lib/api";
 
 export default function NewsPage() {
   const [blogPosts, setBlogPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [activeTab, setActiveTab] = useState("blogs"); // New state for tabs
+  const [activeTab, setActiveTab] = useState("blogs");
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get(
-          "https://sweekarme.in/shree/api/blogs/posts/"
-        );
+        const response = await apiService.getAllBlogPosts();
         setBlogPosts(response.data);
       } catch (err) {
         setError("Failed to load news and insights. Please try again later.");

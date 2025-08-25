@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import {
   Send,
   User,
@@ -11,6 +10,7 @@ import {
   Wrench,
   CheckCircle,
 } from "lucide-react";
+import { apiService } from "../../lib/api";
 
 export default function QuotePage() {
   const [quoteType, setQuoteType] = useState("product");
@@ -34,8 +34,8 @@ export default function QuotePage() {
     const fetchData = async () => {
       try {
         const [productRes, serviceRes] = await Promise.all([
-          axios.get("https://sweekarme.in/shree/api/products/all/"),
-          axios.get("https://sweekarme.in/shree/api/services/"),
+          apiService.getAllProducts(),
+          apiService.getAllServices(),
         ]);
         setProducts(productRes.data);
         setServices(serviceRes.data);
@@ -93,10 +93,12 @@ export default function QuotePage() {
     }
 
     try {
-      const response = await axios.post(endpoint, payload);
-      if (response.status === 201) {
-        setIsSubmitted(true);
+      if (quoteType === "product") {
+        await apiService.submitProductInquiry(payload);
+      } else {
+        await apiService.submitServiceInquiry(payload);
       }
+      setIsSubmitted(true);
     } catch (err) {
       setError(
         "An error occurred. Please ensure all required fields are filled and try again."

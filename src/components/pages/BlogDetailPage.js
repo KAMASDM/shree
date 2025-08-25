@@ -1,8 +1,6 @@
-// src/components/pages/BlogDetailPage.js
 "use client";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import axios from "axios";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -19,6 +17,7 @@ import {
   Linkedin,
   Copy,
 } from "lucide-react";
+import { apiService } from "../../lib/api";
 
 export default function BlogDetailPage() {
   const params = useParams();
@@ -36,15 +35,11 @@ export default function BlogDetailPage() {
       setError(null);
       try {
         // Fetch the main post
-        const postResponse = await axios.get(
-          `https://sweekarme.in/shree/api/blogs/posts/${slug}/`
-        );
+        const postResponse = await apiService.getBlogPostBySlug(slug);
         setPost(postResponse.data);
 
         // Fetch related posts (all posts except the current one)
-        const relatedResponse = await axios.get(
-          "https://sweekarme.in/shree/api/blogs/posts/"
-        );
+        const relatedResponse = await apiService.getAllBlogPosts();
         setRelatedPosts(
           relatedResponse.data.filter((p) => p.slug !== slug).slice(0, 3)
         );

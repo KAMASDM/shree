@@ -16,28 +16,35 @@ import Image from "next/image";
 
 export default function Footer({ setCurrentPage, setSelectedProduct }) {
   const navigation = [
-    { name: "Home", key: "home" },
-    { name: "About Us", key: "about" },
-    { name: "Products", key: "products" },
-    { name: "Services", key: "services" },
-    { name: "Careers", key: "careers" },
-    { name: "News", key: "news" },
-    { name: "Contact", key: "contact" },
+    { name: "Home", key: "home", path: "/" },
+    { name: "About Us", key: "about", path: "/about" },
+    { name: "Products", key: "products", path: "/products" },
+    { name: "Services", key: "services", path: "/services" },
+    { name: "Careers", key: "careers", path: "/careers" },
+    { name: "News", key: "news", path: "/news" },
+    { name: "Contact", key: "contact", path: "/contact" },
   ];
 
   const productCategories = [
-    "Particle Counters",
-    "Environmental Monitors",
-    "Analytical Balances",
-    "Airborne Monitors",
-    "Cleanroom Systems",
+    { name: "Particle Counters", path: "/products" },
+    { name: "Environmental Monitors", path: "/products" },
+    { name: "Analytical Balances", path: "/products" },
+    { name: "Airborne Monitors", path: "/products" },
+    { name: "Cleanroom Systems", path: "/products" },
   ];
 
   const complianceStandards = [
     "21 CFR Part 11",
     "USP <788> Testing",
-    "EU GMP Annex 1",
+    "EU GMP Annex 1", 
     "ISO 14644 Standards",
+  ];
+
+  const legalLinks = [
+    { name: "Privacy Policy", path: "/privacy" },
+    { name: "Terms of Service", path: "/terms" },
+    { name: "Quality Policy", path: "/quality" },
+    { name: "Sitemap", path: "/sitemap.xml" }, // Fixed sitemap link
   ];
 
   return (
@@ -55,6 +62,10 @@ export default function Footer({ setCurrentPage, setSelectedProduct }) {
                 height={48}
                 className='h-12 w-auto brightness-0 invert'
                 priority
+                onError={(e) => {
+                  // Fallback if image fails to load
+                  e.target.style.display = 'none';
+                }}
               />
             </div>
             <p className='text-gray-400 leading-relaxed max-w-md'>
@@ -87,30 +98,37 @@ export default function Footer({ setCurrentPage, setSelectedProduct }) {
                   icon: <Facebook size={20} />,
                   color: "hover:text-blue-400",
                   name: "Facebook",
+                  url: "https://www.facebook.com/shreedharinstruments"
                 },
                 {
                   icon: <Twitter size={20} />,
                   color: "hover:text-sky-400",
                   name: "Twitter",
+                  url: "https://twitter.com/shreedhargroup"
                 },
                 {
                   icon: <Linkedin size={20} />,
                   color: "hover:text-blue-400",
                   name: "LinkedIn",
+                  url: "https://www.linkedin.com/company/shreedhar-instruments"
                 },
                 {
                   icon: <Instagram size={20} />,
                   color: "hover:text-pink-400",
-                  name: "Instagram",
+                  name: "Instagram", 
+                  url: "https://www.instagram.com/shreedharinstruments"
                 },
               ]?.map((social, index) => (
-                <button
+                <a
                   key={index}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className={`text-gray-400 ${social.color} transition-colors p-2 hover:bg-gray-800 rounded`}
                   aria-label={`Follow us on ${social.name}`}
                 >
                   {social.icon}
-                </button>
+                </a>
               ))}
             </div>
           </div>
@@ -126,19 +144,11 @@ export default function Footer({ setCurrentPage, setSelectedProduct }) {
             <div className='space-y-2'>
               {navigation.map((item) => (
                 <Link
-                  href={`/${item.key}`}
-                  className='block text-gray-400 hover:text-white transition-colors text-sm hover:text-golden-brown-light cursor-pointer'
                   key={item.key}
+                  href={item.path}
+                  className='block text-gray-400 hover:text-white transition-colors text-sm hover:text-golden-brown-light'
                 >
-                  <button
-                    onClick={() => {
-                      setCurrentPage?.(item?.key);
-                      setSelectedProduct && setSelectedProduct?.(null);
-                    }}
-                    className='block text-gray-400 hover:text-white transition-colors text-sm hover:text-golden-brown-light !cursor-pointer'
-                  >
-                    {item.name}
-                  </button>
+                  {item.name}
                 </Link>
               ))}
             </div>
@@ -154,13 +164,13 @@ export default function Footer({ setCurrentPage, setSelectedProduct }) {
             </h4>
             <div className='space-y-2'>
               {productCategories.map((category, index) => (
-                <button
+                <Link
                   key={index}
-                  onClick={() => setCurrentPage?.("products")}
+                  href={category.path}
                   className='block text-gray-400 hover:text-white transition-colors text-sm hover:text-golden-brown-light'
                 >
-                  {category}
-                </button>
+                  {category.name}
+                </Link>
               ))}
             </div>
           </div>
@@ -236,19 +246,18 @@ export default function Footer({ setCurrentPage, setSelectedProduct }) {
                 Established 1998 | 28+ Years of Excellence
               </p>
             </div>
-            <div className='flex gap-6 mt-4 md:mt-0 text-sm'>
-              <button className='hover:text-white transition-colors hover:text-golden-brown-light'>
-                Privacy Policy
-              </button>
-              <button className='hover:text-white transition-colors hover:text-golden-brown-light'>
-                Terms of Service
-              </button>
-              <button className='hover:text-white transition-colors hover:text-golden-brown-light'>
-                Quality Policy
-              </button>
-              <button className='hover:text-white transition-colors hover:text-golden-brown-light'>
-                Sitemap
-              </button>
+            <div className='flex flex-wrap gap-4 md:gap-6 mt-4 md:mt-0 text-sm justify-center'>
+              {legalLinks.map((link, index) => (
+                <Link
+                  key={index}
+                  href={link.path}
+                  className='hover:text-white transition-colors hover:text-golden-brown-light'
+                  target={link.name === "Sitemap" ? "_blank" : "_self"}
+                  rel={link.name === "Sitemap" ? "noopener noreferrer" : ""}
+                >
+                  {link.name}
+                </Link>
+              ))}
             </div>
           </div>
 

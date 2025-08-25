@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import {
   Phone,
   Mail,
@@ -12,6 +11,7 @@ import {
   MessageSquare,
   Clock,
 } from "lucide-react";
+import { apiService } from "../../lib/api";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -33,9 +33,7 @@ export default function ContactPage() {
   useEffect(() => {
     const fetchOffices = async () => {
       try {
-        const response = await axios.get(
-          "https://sweekarme.in/shree/api/core/office-locations/"
-        );
+        const response = await apiService.getOfficeLocations();
         setOfficeLocations(response.data);
       } catch (err) {
         console.error("Failed to fetch office locations", err);
@@ -70,11 +68,8 @@ export default function ContactPage() {
       source: "contact_us",
     };
     try {
-      const response = await axios.post(
-        "https://sweekarme.in/shree/api/leads/submit/",
-        payload
-      );
-      if (response.status === 201) setIsSubmitted(true);
+      await apiService.submitLead(payload);
+      setIsSubmitted(true)
     } catch (err) {
       setError("An error occurred. Please try again.");
       console.error("Submission Error:", err);
