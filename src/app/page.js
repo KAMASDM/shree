@@ -448,11 +448,11 @@ const UniqueValuePropositionSection = () => {
           
           <div className="max-w-4xl mx-auto">
             <blockquote className="text-lg md:text-xl text-gray-700 mb-8 italic leading-relaxed">
-              "We commit to deliver the technically best solution complemented by after-sales service. From IQ/OQ qualification and calibration to preventive maintenance and rapid breakdown support, we ensure maximum uptime and process reliability."
+              &quot;We commit to deliver the technically best solution complemented by after-sales service. From IQ/OQ qualification and calibration to preventive maintenance and rapid breakdown support, we ensure maximum uptime and process reliability.&quot;
             </blockquote>
             
             <p className="text-gray-600 text-base md:text-lg leading-relaxed mb-8">
-              This level of all-India leadership and unmatched service quality has earned us a loyal brand reputation for us and our esteemed Principals, making us the most preferred partner in the pharmaceutical analytical instruments sector.
+              This level of all-India leadership and unmatched service quality has earned us a loyal brand reputation with our esteemed Principals, making us the most preferred partner in the pharmaceutical analytical instruments sector.
             </p>
 
             {/* Service Highlights */}
@@ -770,7 +770,7 @@ const TestimonialsSection = () => {
                   ))}
                 </div>
                 <p className="text-gray-700 mb-4 italic text-sm leading-relaxed">
-                  "{testimonial.testimonial_text}"
+                  {`"${testimonial.testimonial_text}"`}
                 </p>
                 <div>
                   <div className="font-semibold text-amber-800 text-sm">
