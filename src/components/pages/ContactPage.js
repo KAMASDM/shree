@@ -10,6 +10,7 @@ import {
   CheckCircle,
   MessageSquare,
   Clock,
+  ExternalLink,
 } from "lucide-react";
 import { apiService } from "../../lib/api";
 
@@ -76,12 +77,55 @@ export default function ContactPage() {
     }
   };
 
+  // Helper function to clean phone numbers
+  const cleanPhoneNumber = (phoneStr) => {
+    if (!phoneStr) return "";
+    // Remove prefixes like "Mobile:", "Tele:", etc. and clean up the number
+    return phoneStr.replace(/^(Mobile\s*:\s*|Tele\s*:\s*|\|\s*Mobile\s*:\s*)/i, "").trim();
+  };
+
+  // Office type configurations
+  const officeTypeConfig = {
+    'HO': { 
+      label: 'Head Office', 
+      icon: Building, 
+      color: '#8b6a3f',
+      bgGradient: 'linear-gradient(135deg, #b78852 0%, #c9955f 100%)',
+      description: 'Corporate headquarters and main operations center'
+    },
+    'RO': { 
+      label: 'Regional Office', 
+      icon: Building, 
+      color: '#c9955f',
+      bgGradient: 'linear-gradient(135deg, #c9955f 0%, #d4a76a 100%)',
+      description: 'Regional business centers with full services'
+    },
+    'BO': { 
+      label: 'Branch Office', 
+      icon: Building, 
+      color: '#d4a76a',
+      bgGradient: 'linear-gradient(135deg, #d4a76a 0%, #e0b975 100%)',
+      description: 'Local branch offices for customer support'
+    },
+    'GO': { 
+      label: 'Our Local Service Locations', 
+      icon: MapPin, 
+      color: '#e0b975',
+      bgGradient: 'linear-gradient(135deg, #e0b975 0%, #eccc80 100%)',
+      description: 'Service points for local assistance'
+    }
+  };
+
   const headOffice = officeLocations.find(
     (office) => office.office_type === "HO"
   );
-  const regionalOffices = officeLocations.filter(
-    (office) => office.office_type === "RO"
-  );
+  
+  // Group offices by type
+  const groupedOffices = {
+    'RO': officeLocations.filter(office => office.office_type === "RO"),
+    'BO': officeLocations.filter(office => office.office_type === "BO"),  
+    'GO': officeLocations.filter(office => office.office_type === "GO")
+  };
 
   const contactReasons = [
     { value: "product-inquiry", label: "Product Information" },
@@ -374,10 +418,10 @@ export default function ContactPage() {
                     </div>
                   </div>
                   <div className='p-8'>
-                    <h3 className='font-bold text-xl mb-3' style={{ color: "#8b6a3f" }}>
+                    <h3 className='font-bold text-xl mb-4' style={{ color: "#8b6a3f" }}>
                       {headOffice.name}
                     </h3>
-                    <div className='space-y-3'>
+                    <div className='space-y-4'>
                       <div className='flex items-start gap-3'>
                         <MapPin
                           className='mt-1 flex-shrink-0'
@@ -386,16 +430,33 @@ export default function ContactPage() {
                         />
                         <p className='text-gray-700'>{headOffice.address}</p>
                       </div>
-                      <div className='flex items-center gap-3'>
+                      <div className='flex items-start gap-3'>
                         <Phone
-                          className='flex-shrink-0'
+                          className='mt-1 flex-shrink-0'
                           size={20}
                           style={{ color: "#b78852" }}
                         />
-                        <p className='font-semibold' style={{ color: "#8b6a3f" }}>
-                          {headOffice.contact_number}
-                        </p>
+                        <div>
+                          <p className='font-semibold' style={{ color: "#8b6a3f" }}>
+                            {cleanPhoneNumber(headOffice.contact_number)}
+                          </p>
+                        </div>
                       </div>
+                      {headOffice.google_maps_link && (
+                        <div className='pt-2'>
+                          <a
+                            href={headOffice.google_maps_link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className='inline-flex items-center gap-2 px-4 py-2 rounded-lg text-white text-sm font-medium hover:shadow-lg transition-all duration-200'
+                            style={{ background: "linear-gradient(135deg, #b78852 0%, #c9955f 100%)" }}
+                          >
+                            <MapPin size={16} />
+                            View on Google Maps
+                            <ExternalLink size={14} />
+                          </a>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -445,9 +506,9 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Regional Offices */}
+          {/* Office Locations by Type */}
           <div className='mt-20'>
-            <div className='text-center mb-12'>
+            <div className='text-center mb-16'>
               <h2
                 className='text-4xl font-bold mb-4'
                 style={{
@@ -457,43 +518,176 @@ export default function ContactPage() {
                   backgroundClip: "text",
                 }}
               >
-                Regional Offices & Service Centers
+                Our Office Network
               </h2>
               <p className='text-lg' style={{ color: "#9c7649" }}>
-                Our nationwide network ensures local support everywhere
+                Comprehensive coverage with specialized locations nationwide
               </p>
             </div>
 
-            <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
-              {regionalOffices.map((office) => (
-                <div
-                  key={office.id}
-                  className='p-6 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 group'
-                  style={{
-                    backgroundColor: "rgba(255, 255, 255, 0.9)",
-                    border: "1px solid rgba(183, 136, 82, 0.15)",
-                    backdropFilter: "blur(10px)",
-                  }}
-                >
-                  <div className='flex items-start gap-4'>
-                    <div
-                      className='w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-200'
-                      style={{ background: "linear-gradient(135deg, #b78852 0%, #c9955f 100%)" }}
-                    >
-                      <MapPin className='text-white' size={20} />
+            {loading ? (
+              <div className='text-center py-12'>
+                <div className='inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-amber-600'></div>
+                <p className='mt-4 text-gray-600'>Loading offices...</p>
+              </div>
+            ) : (
+              <div className='space-y-16'>
+                {/* Render each office type section */}
+                {Object.entries(groupedOffices).map(([officeType, offices]) => {
+                  if (offices.length === 0) return null;
+                  
+                  const config = officeTypeConfig[officeType];
+                  const IconComponent = config.icon;
+                  
+                  return (
+                    <div key={officeType} className=''>
+                      {/* Section Header */}
+                      <div className='text-center mb-8'>
+                        <div className='flex items-center justify-center gap-4 mb-4'>
+                          <div
+                            className='w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg'
+                            style={{ background: config.bgGradient }}
+                          >
+                            <IconComponent className='text-white' size={28} />
+                          </div>
+                          <div className='text-left'>
+                            <h3
+                              className='text-2xl font-bold mb-1'
+                              style={{ color: config.color }}
+                            >
+                              {config.label}
+                            </h3>
+                            <p className='text-sm' style={{ color: "#9c7649" }}>
+                              {config.description}
+                            </p>
+                          </div>
+                        </div>
+                        <div className='w-24 h-1 mx-auto rounded-full' style={{ background: config.bgGradient }}></div>
+                      </div>
+
+                      {/* Office Cards Grid */}
+                      <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-6'>
+                        {offices.map((office) => (
+                          <div
+                            key={office.id}
+                            className='p-6 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 group'
+                            style={{
+                              backgroundColor: "rgba(255, 255, 255, 0.9)",
+                              border: `1px solid ${config.color}30`,
+                              backdropFilter: "blur(10px)",
+                            }}
+                          >
+                            <div className='space-y-4'>
+                              {/* Office Name with Type Badge */}
+                              <div className='space-y-3'>
+                                <div className='flex items-start gap-3'>
+                                  <div
+                                    className='w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-200'
+                                    style={{ background: config.bgGradient }}
+                                  >
+                                    <IconComponent className='text-white' size={18} />
+                                  </div>
+                                  <div className='flex-1'>
+                                    <h4 className='font-bold text-lg leading-tight' style={{ color: config.color }}>
+                                      {office.name}
+                                    </h4>
+                                    <div
+                                      className='inline-block px-2 py-1 rounded-full text-xs font-medium text-white mt-2'
+                                      style={{ background: config.bgGradient }}
+                                    >
+                                      {config.label}
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+
+                              {/* Address */}
+                              <div className='flex items-start gap-3'>
+                                <MapPin
+                                  className='mt-1 flex-shrink-0'
+                                  size={18}
+                                  style={{ color: config.color }}
+                                />
+                                <p className='text-sm leading-relaxed' style={{ color: "#6b7280" }}>
+                                  {office.address}
+                                </p>
+                              </div>
+
+                              {/* Phone Number */}
+                              {office.contact_number && (
+                                <div className='flex items-center gap-3'>
+                                  <Phone
+                                    className='flex-shrink-0'
+                                    size={18}
+                                    style={{ color: config.color }}
+                                  />
+                                  <p className='text-sm font-semibold' style={{ color: config.color }}>
+                                    {cleanPhoneNumber(office.contact_number)}
+                                  </p>
+                                </div>
+                              )}
+
+                              {/* Google Maps Link */}
+                              {office.google_maps_link && (
+                                <div className='pt-2'>
+                                  <a
+                                    href={office.google_maps_link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className='inline-flex items-center gap-2 px-3 py-2 rounded-lg text-white text-xs font-medium hover:shadow-lg transition-all duration-200 transform hover:scale-105'
+                                    style={{ background: config.bgGradient }}
+                                  >
+                                    <MapPin size={14} />
+                                    View Location
+                                    <ExternalLink size={12} />
+                                  </a>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                    <div>
-                      <h4 className='font-bold mb-2' style={{ color: "#8b6a3f" }}>
-                        {office.name}
-                      </h4>
-                      <p className='text-sm leading-relaxed' style={{ color: "#9c7649" }}>
-                        {office.address}
-                      </p>
-                    </div>
+                  );
+                })}
+
+                {/* Summary Stats */}
+                <div className='mt-16 bg-gradient-to-r from-amber-50 to-orange-50 rounded-3xl p-8'>
+                  <div className='text-center mb-8'>
+                    <h3 className='text-2xl font-bold mb-2' style={{ color: "#8b6a3f" }}>
+                      Our Network at a Glance
+                    </h3>
+                    <p style={{ color: "#9c7649" }}>
+                      Strategically located offices to serve you better
+                    </p>
+                  </div>
+                  <div className='grid grid-cols-2 md:grid-cols-4 gap-6'>
+                    {Object.entries(groupedOffices).map(([officeType, offices]) => {
+                      if (offices.length === 0) return null;
+                      const config = officeTypeConfig[officeType];
+                      const IconComponent = config.icon;
+                      
+                      return (
+                        <div key={officeType} className='text-center'>
+                          <div
+                            className='w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-md'
+                            style={{ background: config.bgGradient }}
+                          >
+                            <IconComponent className='text-white' size={20} />
+                          </div>
+                          <div className='text-2xl font-bold mb-1' style={{ color: config.color }}>
+                            {offices.length}
+                          </div>
+                          <div className='text-sm font-medium' style={{ color: "#9c7649" }}>
+                            {config.label}{offices.length > 1 ? 's' : ''}
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -204,8 +204,8 @@ export default function Footer({ setCurrentPage, setSelectedProduct }) {
                   size={16}
                 />
                 <div className='text-gray-400'>
-                  <p>(0265) 2313041</p>
-                  <p>+91 7096033001</p>
+                  <p>(0265) 2323041</p>
+                  <p>+91 9824510383</p>
                 </div>
               </div>
               <div className='flex items-center gap-2'>

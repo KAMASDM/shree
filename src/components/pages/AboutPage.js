@@ -50,44 +50,38 @@ const companyInfo = {
   ]
 };
 
-const awards = [
-  {
-    award: "Excellence in Distribution",
-    awardedBy: "Pharmaceutical Industry Association",
-    year: "2023",
-    description: "Outstanding performance in analytical instrument distribution"
-  },
-  {
-    award: "Service Excellence Award",
-    awardedBy: "Indian Pharma Awards",
-    year: "2022",
-    description: "Recognition for exceptional after-sales service and support"
-  },
-  {
-    award: "Trusted Partner Award",
-    awardedBy: "Leading Pharmaceutical Companies",
-    year: "2021",
-    description: "Consistent delivery of quality solutions and services"
-  }
-];
-
 export default function AboutPage() {
   const [milestones, setMilestones] = useState([]);
   const [loadingMilestones, setLoadingMilestones] = useState(true);
+  const [awards, setAwards] = useState([]);
+  const [loadingAwards, setLoadingAwards] = useState(true);
 
   useEffect(() => {
-    const fetchMilestones = async () => {
+    const fetchData = async () => {
+      // Fetch milestones
       try {
         setLoadingMilestones(true);
-        const response = await apiService.getMilestones(); // Correctly call the new method
+        const response = await apiService.getMilestones();
         setMilestones(response.data);
       } catch (error) {
         console.error("Failed to fetch milestones:", error);
       } finally {
         setLoadingMilestones(false);
       }
+
+      // Fetch awards
+      try {
+        setLoadingAwards(true);
+        const response = await apiService.getAwards();
+        setAwards(response.data);
+      } catch (error) {
+        console.error("Failed to fetch awards:", error);
+      } finally {
+        setLoadingAwards(false);
+      }
     };
-    fetchMilestones();
+    
+    fetchData();
   }, []);
 
   return (
@@ -278,7 +272,7 @@ export default function AboutPage() {
                 <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2" style={{ borderColor: "#b78852" }}></div>
                 <p className="mt-4 text-lg" style={{ color: "#8b6a3f" }}>Loading Journey...</p>
               </div>
-            ) : (
+            ) : milestones.length > 0 ? (
               <div className="space-y-8">
                 {milestones.map((milestone, index) => (
                   <div key={milestone.id || index} className="relative flex items-center gap-8 group">
@@ -295,6 +289,10 @@ export default function AboutPage() {
                   </div>
                 ))}
               </div>
+            ) : (
+              <div className="text-center py-10">
+                <p className="text-gray-600">No milestones found.</p>
+              </div>
             )}
           </div>
         </div>
@@ -305,21 +303,102 @@ export default function AboutPage() {
             <h2 className="text-4xl font-bold mb-4" style={{ color: "#8b6a3f" }}>Recognition & Awards</h2>
             <p className="text-xl" style={{ color: "#9c7649" }}>Industry acknowledgment of our excellence</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
-            {awards.map((award, index) => (
-              <div key={index} className="group p-8 rounded-3xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2" style={{ backgroundColor: "rgba(183, 136, 82, 0.05)", border: "1px solid rgba(183, 136, 82, 0.2)" }}>
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="p-3 rounded-2xl" style={{ background: "linear-gradient(135deg, #b78852 0%, #c9955f 100%)" }}>
-                    <Award className="text-white" size={24} />
-                  </div>
-                  <div className="font-bold text-sm" style={{ color: "#b78852" }}>{award.year}</div>
+          
+          {loadingAwards ? (
+            <div className="text-center py-10">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2" style={{ borderColor: "#b78852" }}></div>
+              <p className="mt-4 text-lg" style={{ color: "#8b6a3f" }}>Loading Awards...</p>
+            </div>
+          ) : awards.length > 0 ? (
+            <div className="relative">
+              {/* Horizontal Scroller */}
+              <div className="overflow-x-auto pb-6" style={{ scrollbarWidth: 'thin', scrollbarColor: '#b78852 #f3f4f6' }}>
+                <div className="flex gap-6 min-w-max px-4">
+                  {/* Sort awards by year (latest first) */}
+                  {awards
+                    .sort((a, b) => b.year - a.year)
+                    .map((award, index) => (
+                    <div 
+                      key={award.id} 
+                      className={`group flex-shrink-0 w-80 p-6 rounded-3xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 ${
+                        index === 0 ? 'ring-2 ring-amber-400 shadow-xl scale-105' : ''
+                      }`}
+                      style={{ 
+                        backgroundColor: index === 0 ? "rgba(183, 136, 82, 0.08)" : "rgba(183, 136, 82, 0.05)", 
+                        border: index === 0 ? "2px solid #b78852" : "1px solid rgba(183, 136, 82, 0.2)" 
+                      }}
+                    >
+                      {/* Latest Award Badge */}
+                      {index === 0 && (
+                        <div className="absolute -top-3 -right-3 bg-gradient-to-r from-amber-400 to-orange-400 text-white px-4 py-2 rounded-full text-xs font-bold shadow-lg">
+                          Latest Award
+                        </div>
+                      )}
+                      
+                      {/* Award Image - Using regular img tag for better compatibility */}
+                      {award.image && (
+                        <div className="relative mb-6 rounded-2xl overflow-hidden shadow-lg group-hover:shadow-xl transition-all duration-300">
+                          <img
+                            src={award.image}
+                            alt={`${award.award_name} Award`}
+                            className="w-full h-48 object-contain bg-white group-hover:scale-105 transition-transform duration-300"
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                            }}
+                            style={{ backgroundColor: '#f8f9fa' }}
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
+                        </div>
+                      )}
+                      
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="p-3 rounded-2xl" style={{ background: "linear-gradient(135deg, #b78852 0%, #c9955f 100%)" }}>
+                          <Award className="text-white" size={20} />
+                        </div>
+                        <div className="font-bold text-lg" style={{ color: "#b78852" }}>{award.year}</div>
+                      </div>
+                      
+                      <h3 className="font-bold mb-2 text-lg leading-tight" style={{ color: "#8b6a3f" }}>
+                        {award.award_name}
+                      </h3>
+                      <p className="font-semibold text-sm" style={{ color: "#b78852" }}>
+                        {award.awarded_by}
+                      </p>
+                    </div>
+                  ))}
                 </div>
-                <h3 className="font-bold mb-2 text-lg" style={{ color: "#8b6a3f" }}>{award.award}</h3>
-                <p className="font-semibold text-sm mb-3" style={{ color: "#b78852" }}>{award.awardedBy}</p>
-                <p className="text-sm leading-relaxed" style={{ color: "#9c7649" }}>{award.description}</p>
               </div>
-            ))}
-          </div>
+              
+              {/* Scroll Indicator */}
+              <div className="text-center mt-6">
+                <p className="text-sm" style={{ color: "#9c7649" }}>
+                  ← Scroll to see all {awards.length} awards →
+                </p>
+              </div>
+              
+              {/* Custom scrollbar styles */}
+              <style jsx>{`
+                .overflow-x-auto::-webkit-scrollbar {
+                  height: 8px;
+                }
+                .overflow-x-auto::-webkit-scrollbar-track {
+                  background: #f3f4f6;
+                  border-radius: 10px;
+                }
+                .overflow-x-auto::-webkit-scrollbar-thumb {
+                  background: #b78852;
+                  border-radius: 10px;
+                }
+                .overflow-x-auto::-webkit-scrollbar-thumb:hover {
+                  background: #8b6a3f;
+                }
+              `}</style>
+            </div>
+          ) : (
+            <div className="text-center py-10">
+              <p className="text-gray-600">No awards found.</p>
+            </div>
+          )}
         </div>
 
         {/* CTA Section */}

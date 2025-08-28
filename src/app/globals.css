@@ -330,3 +330,17 @@ textarea:focus {
 .skip-link:focus {
   top: 6px;
 }
+
+@keyframes infinite-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Apply the animation */
+.animate-infinite-scroll {
+  animation: infinite-scroll 25s linear infinite;
+}

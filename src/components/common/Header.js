@@ -14,7 +14,7 @@ import {
   Newspaper,
   HelpCircle,
 } from "lucide-react";
-import SHREELogo from "../../../src/img/SHREE-LOGO.webp"; // Import the new logo
+import SHREELogo from "../../../src/img/shree-logo-new.png"; // Import the new logo
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -64,9 +64,9 @@ export default function Header() {
               <Image
                 src={SHREELogo} // Use the new logo import
                 alt='Shreedhar Instruments'
-                width={250}
-                height={64}
-                className='h-16 w-auto'
+                width={700}
+                height={705}
+                className='h-50 w-auto'
                 priority
               />
             </Link>
@@ -218,12 +218,12 @@ export default function Header() {
           {/* CTA Section */}
           <div className='hidden lg:flex items-center gap-4'>
             <a
-              href='tel:+917096033001'
+              href='tel:+919824510383'
               className='flex items-center gap-2 font-medium transition-all duration-300 hover:scale-105'
               style={{ color: "#b78852" }}
             >
               <Phone size={16} />
-              <span className='text-sm'>+91 7096033001</span>
+              <span className='text-sm'>+91 9824510383</span>
             </a>
             <Link
               href='/quote'
@@ -365,7 +365,7 @@ export default function Header() {
                   style={{ color: "#b78852" }}
                 >
                   <Phone size={16} />
-                  <span className='text-sm'>+91 7096033001</span>
+                  <span className='text-sm'>+91 9824510383</span>
                 </a>
                 <Link
                   href='/quote'

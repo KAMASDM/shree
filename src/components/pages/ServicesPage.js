@@ -472,18 +472,7 @@ export default function ServicesPage() {
 
           {/* Main Services Section */}
           <div className='mb-20'>
-            <div className='text-center mb-12'>
-              <h2
-                className='text-3xl md:text-4xl font-bold mb-4'
-                style={{ color: "#8b6a3f" }}
-              >
-                Our Core Services
-              </h2>
-              <p className='max-w-2xl mx-auto' style={{ color: "#9c7649" }}>
-                Comprehensive solutions tailored to meet your analytical
-                instrument needs
-              </p>
-            </div>
+      
 
             {loading && (
               <div className='text-center py-20'>
@@ -581,53 +570,7 @@ export default function ServicesPage() {
             </div>
           </div>
 
-          {/* Emergency Support Section */}
-          <div className='mb-20'>
-            <div
-              className='p-10 rounded-3xl shadow-lg relative overflow-hidden'
-              style={{
-                background:
-                  "linear-gradient(135deg, #d4b896 0%, #b78852 50%, #a0784a 100%)",
-                color: "white",
-              }}
-            >
-              <div
-                className='absolute inset-0'
-                style={{ backgroundColor: "rgba(255, 255, 255, 0.1)" }}
-              ></div>
-              <div className='relative z-10'>
-                <div className='text-center mb-8'>
-                  <h2 className='text-3xl font-bold mb-4'>
-                    Need Emergency Service Support?
-                  </h2>
-                  <p className='max-w-2xl mx-auto text-lg leading-relaxed opacity-90'>
-                    Critical equipment down? Our emergency response team is
-                    available 24/7 to minimize downtime and get your operations
-                    back on track.
-                  </p>
-                </div>
-                <div className='flex flex-col sm:flex-row gap-4 justify-center'>
-                  <button
-                    onClick={() => handleServiceRequest("emergency-support")}
-                    className='bg-red-500 text-white px-8 py-4 rounded-xl font-semibold hover:bg-red-600 shadow-lg hover:shadow-xl transition-all duration-300'
-                  >
-                    Emergency Service Request
-                  </button>
-                  <a
-                    href='tel:+917096033001'
-                    className='bg-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 flex items-center gap-2 justify-center'
-                    style={{
-                      color: "#8b6a3f",
-                      backgroundColor: "rgba(255, 255, 255, 0.95)",
-                    }}
-                  >
-                    <Phone size={20} />
-                    Call Emergency: +91 7096033001
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
+         
 
           {/* Service Process */}
           <div className='mb-20'>

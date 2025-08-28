@@ -6,7 +6,7 @@ const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://sweekarme.in/s
 // Create axios instance with default config
 const apiClient = axios.create({
   baseURL: BASE_URL,
-  timeout: 30000, // 30 seconds timeout
+  timeout: 60000, // Increased to 60 seconds
   headers: {
     'Content-Type': 'application/json',
   },
@@ -53,7 +53,7 @@ apiClient.interceptors.response.use(
 
 // Cache implementation
 const cache = new Map();
-const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+const CACHE_DURATION = 10 * 60 * 1000; // Increased to 10 minutes
 
 function getCacheKey(url, params = {}) {
   return `${url}?${new URLSearchParams(params).toString()}`;
@@ -75,9 +75,31 @@ function setCachedData(key, data) {
   });
 }
 
+// Retry logic with exponential backoff
+async function withRetry(apiCall, maxRetries = 2, baseDelay = 1000) {
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      return await apiCall();
+    } catch (error) {
+      if (attempt === maxRetries) {
+        throw error;
+      }
+      
+      // Only retry on timeout or network errors
+      if (error.code === 'ECONNABORTED' || !error.response || error.response?.status >= 500) {
+        const delay = baseDelay * Math.pow(2, attempt);
+        console.log(`API call failed, retrying in ${delay}ms... (attempt ${attempt + 1}/${maxRetries + 1})`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      } else {
+        throw error; // Don't retry on client errors (4xx)
+      }
+    }
+  }
+}
+
 // API service methods
 export const apiService = {
-  // Products API
+  // Products API with optimization
   async getAllProducts(params = {}) {
     const cacheKey = getCacheKey('/products/all/', params);
     const cachedData = await getCachedData(cacheKey);
@@ -87,7 +109,12 @@ export const apiService = {
     }
     
     try {
-      const response = await apiClient.get('/products/all/', { params });
+      const response = await withRetry(() => 
+        apiClient.get('/products/all/', { 
+          params,
+          timeout: 45000 // Shorter timeout for products
+        })
+      );
       const data = response.data || [];
       setCachedData(cacheKey, data);
       return { data, fromCache: false };
@@ -110,7 +137,9 @@ export const apiService = {
     }
     
     try {
-      const response = await apiClient.get(`/products/all/${slug}/`);
+      const response = await withRetry(() => 
+        apiClient.get(`/products/all/${slug}/`)
+      );
       const data = response.data;
       setCachedData(cacheKey, data);
       return { data, fromCache: false };
@@ -123,8 +152,32 @@ export const apiService = {
     }
   },
 
+  // Optimized featured products - try cache first, then limited fetch
   async getFeaturedProducts() {
-    return this.getAllProducts({ is_featured: true });
+    const cacheKey = getCacheKey('/products/featured/');
+    const cachedData = await getCachedData(cacheKey);
+    
+    if (cachedData) {
+      return { data: cachedData, fromCache: true };
+    }
+
+    try {
+      // First try to get all products and filter
+      const response = await withRetry(() => 
+        apiClient.get('/products/all/', { 
+          params: { is_featured: true },
+          timeout: 45000
+        })
+      );
+      
+      const featuredProducts = response.data?.filter(product => product.is_featured) || [];
+      setCachedData(cacheKey, featuredProducts);
+      return { data: featuredProducts, fromCache: false };
+    } catch (error) {
+      console.error('Failed to fetch featured products:', error);
+      // Return empty array instead of throwing to prevent homepage crash
+      return { data: [], fromCache: false, error: error.message };
+    }
   },
 
   async getProductsByCategory(category) {
@@ -141,7 +194,9 @@ export const apiService = {
     }
     
     try {
-      const response = await apiClient.get('/blogs/posts/', { params });
+      const response = await withRetry(() => 
+        apiClient.get('/blogs/posts/', { params })
+      );
       const data = response.data || [];
       setCachedData(cacheKey, data);
       return { data, fromCache: false };
@@ -164,7 +219,9 @@ export const apiService = {
     }
     
     try {
-      const response = await apiClient.get(`/blogs/posts/${slug}/`);
+      const response = await withRetry(() => 
+        apiClient.get(`/blogs/posts/${slug}/`)
+      );
       const data = response.data;
       setCachedData(cacheKey, data);
       return { data, fromCache: false };
@@ -187,7 +244,9 @@ export const apiService = {
     }
     
     try {
-      const response = await apiClient.get('/services/');
+      const response = await withRetry(() => 
+        apiClient.get('/services/')
+      );
       const data = response.data || [];
       setCachedData(cacheKey, data);
       return { data, fromCache: false };
@@ -197,7 +256,7 @@ export const apiService = {
     }
   },
 
-  // Partners API
+  // Partners API with better error handling
   async getPartners() {
     const cacheKey = getCacheKey('/core/partners/');
     const cachedData = await getCachedData(cacheKey);
@@ -207,13 +266,18 @@ export const apiService = {
     }
     
     try {
-      const response = await apiClient.get('/core/partners/');
+      const response = await withRetry(() => 
+        apiClient.get('/core/partners/', {
+          timeout: 30000 // Shorter timeout for partners
+        })
+      );
       const data = response.data || [];
       setCachedData(cacheKey, data);
       return { data, fromCache: false };
     } catch (error) {
       console.error('Failed to fetch partners:', error);
-      throw new Error(error.message || 'Failed to fetch partners');
+      // Return empty array to prevent homepage crash
+      return { data: [], fromCache: false, error: error.message };
     }
   },
 
@@ -227,7 +291,9 @@ export const apiService = {
     }
     
     try {
-      const response = await apiClient.get('/core/office-locations/');
+      const response = await withRetry(() => 
+        apiClient.get('/core/office-locations/')
+      );
       const data = response.data || [];
       setCachedData(cacheKey, data);
       return { data, fromCache: false };
@@ -237,7 +303,7 @@ export const apiService = {
     }
   },
   
-  // Milestones API - ADDED
+  // Milestones API
   async getMilestones() {
     const cacheKey = getCacheKey('/core/milestones/');
     const cachedData = await getCachedData(cacheKey);
@@ -247,13 +313,37 @@ export const apiService = {
     }
     
     try {
-      const response = await apiClient.get('/core/milestones/');
+      const response = await withRetry(() => 
+        apiClient.get('/core/milestones/')
+      );
       const data = response.data || [];
       setCachedData(cacheKey, data);
       return { data, fromCache: false };
     } catch (error) {
       console.error('Failed to fetch milestones:', error);
       throw new Error(error.message || 'Failed to fetch milestones');
+    }
+  },
+
+  // Awards API
+  async getAwards() {
+    const cacheKey = getCacheKey('/core/awards/');
+    const cachedData = await getCachedData(cacheKey);
+    
+    if (cachedData) {
+      return { data: cachedData, fromCache: true };
+    }
+    
+    try {
+      const response = await withRetry(() => 
+        apiClient.get('/core/awards/')
+      );
+      const data = response.data || [];
+      setCachedData(cacheKey, data);
+      return { data, fromCache: false };
+    } catch (error) {
+      console.error('Failed to fetch awards:', error);
+      throw new Error(error.message || 'Failed to fetch awards');
     }
   },
 
@@ -267,7 +357,9 @@ export const apiService = {
     }
     
     try {
-      const response = await apiClient.get('/faqs/categories/');
+      const response = await withRetry(() => 
+        apiClient.get('/faqs/categories/')
+      );
       const data = response.data || [];
       setCachedData(cacheKey, data);
       return { data, fromCache: false };
@@ -290,7 +382,9 @@ export const apiService = {
     }
     
     try {
-      const response = await apiClient.get(`/products/faqs/product/${productSlug}/`);
+      const response = await withRetry(() => 
+        apiClient.get(`/products/faqs/product/${productSlug}/`)
+      );
       const data = response.data || [];
       setCachedData(cacheKey, data);
       return { data, fromCache: false };
@@ -300,7 +394,7 @@ export const apiService = {
     }
   },
 
-  // Testimonials API
+  // Testimonials API with better error handling
   async getTestimonials(params = {}) {
     const cacheKey = getCacheKey('/testimonials/', params);
     const cachedData = await getCachedData(cacheKey);
@@ -310,13 +404,16 @@ export const apiService = {
     }
     
     try {
-      const response = await apiClient.get('/testimonials/', { params });
+      const response = await withRetry(() => 
+        apiClient.get('/testimonials/', { params })
+      );
       const data = response.data || [];
       setCachedData(cacheKey, data);
       return { data, fromCache: false };
     } catch (error) {
       console.error('Failed to fetch testimonials:', error);
-      throw new Error(error.message || 'Failed to fetch testimonials');
+      // Return empty array to prevent homepage crash
+      return { data: [], fromCache: false, error: error.message };
     }
   },
 
@@ -375,7 +472,9 @@ export const apiService = {
     }
     
     try {
-      const response = await apiClient.get('/core/hero-sections/');
+      const response = await withRetry(() => 
+        apiClient.get('/core/hero-sections/')
+      );
       const data = response.data || [];
       setCachedData(cacheKey, data);
       return { data, fromCache: false };
@@ -395,7 +494,9 @@ export const apiService = {
     }
     
     try {
-      const response = await apiClient.get('/hr/jobs/');
+      const response = await withRetry(() => 
+        apiClient.get('/hr/jobs/')
+      );
       const data = response.data || [];
       setCachedData(cacheKey, data);
       return { data, fromCache: false };
