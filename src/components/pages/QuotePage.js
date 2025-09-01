@@ -12,10 +12,23 @@ import {
 } from "lucide-react";
 import { apiService } from "../../lib/api";
 
+// The list of services you provided
+const serviceTypes = [
+  { value: "iq-oq-pq", label: "IQ/OQ/PQ Qualification Services" },
+  { value: "calibration", label: "Spare Enquiry" },
+  { value: "maintenance", label: "Preventive Maintenance" },
+  { value: "repair", label: "Breakdown Repair Support" },
+  { value: "training", label: "Technical Training Programs" },
+  { value: "consultation", label: "Compliance Consultation" },
+  { value: "amc", label: "Annual Maintenance Contract" },
+  { value: "relocation", label: "Instrument Relocation" },
+  { value: "general-inquiry", label: "General Inquiry" },
+];
+
 export default function QuotePage() {
   const [quoteType, setQuoteType] = useState("product");
   const [products, setProducts] = useState([]);
-  const [services, setServices] = useState([]);
+  // 'services' state is no longer needed as we are using a static list.
 
   const [formData, setFormData] = useState({
     name: "",
@@ -31,20 +44,17 @@ export default function QuotePage() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    // Fetches only the product list on component mount.
+    const fetchProducts = async () => {
       try {
-        const [productRes, serviceRes] = await Promise.all([
-          apiService.getAllProducts(),
-          apiService.getAllServices(),
-        ]);
+        const productRes = await apiService.getAllProducts();
         setProducts(productRes.data);
-        setServices(serviceRes.data);
       } catch (err) {
-        console.error("Failed to fetch data for quote form", err);
-        setError("Could not load products and services list.");
+        console.error("Failed to fetch products for quote form", err);
+        setError("Could not load the products list.");
       }
     };
-    fetchData();
+    fetchProducts();
   }, []);
 
   const handleInputChange = (e) => {
@@ -54,6 +64,7 @@ export default function QuotePage() {
 
   const handleQuoteTypeChange = (type) => {
     setQuoteType(type);
+    // Reset selected item when switching between quote types
     setFormData((prev) => ({ ...prev, selectedItem: "" }));
   };
 
@@ -61,14 +72,12 @@ export default function QuotePage() {
     e.preventDefault();
     setError(null);
 
-    let endpoint = "";
     let payload = {};
 
     if (quoteType === "product") {
-      endpoint = "https://sweekarme.in/shree/api/inquiries/product/";
       payload = {
         name: formData.name,
-        title: "Quote Inquiry", // Defaulting a title as the model requires it
+        title: "Product Quote Inquiry",
         company: formData.company,
         email: formData.email,
         phone: formData.phone,
@@ -79,10 +88,9 @@ export default function QuotePage() {
       };
     } else {
       // Service Inquiry
-      endpoint = "https://sweekarme.in/shree/api/inquiries/service/";
       payload = {
         name: formData.name,
-        title: "Quote Inquiry",
+        title: "Service Quote Inquiry",
         company: formData.company,
         email: formData.email,
         phone: formData.phone,
@@ -128,8 +136,6 @@ export default function QuotePage() {
       </div>
     );
   }
-
-  const itemList = quoteType === "product" ? products : services;
 
   return (
     <div className='pt-32 pb-20 bg-gray-50'>
@@ -231,11 +237,17 @@ export default function QuotePage() {
                 className='w-full px-4 py-3 border border-gray-300 rounded-lg'
               >
                 <option value=''>Choose an option...</option>
-                {itemList.map((item) => (
-                  <option key={item.id} value={item.name || item.title}>
-                    {item.name || item.title}
-                  </option>
-                ))}
+                {quoteType === "product"
+                  ? products.map((item) => (
+                      <option key={item.id} value={item.name}>
+                        {item.name}
+                      </option>
+                    ))
+                  : serviceTypes.map((item) => (
+                      <option key={item.value} value={item.label}>
+                        {item.label}
+                      </option>
+                    ))}
               </select>
             </div>
             {quoteType === "product" && (

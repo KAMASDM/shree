@@ -161,7 +161,7 @@ const PartnersSection = () => {
               `}</style>
               <div className="flex w-fit animate-partner-scroll">
                 {partnersToDisplay.map((partner, index) => (
-                  <div key={`${partner.id}-${index}`} className="flex-shrink-0 w-80 mx-4">
+                  <div key={`${partner.id}-${index}`} className="flex-shrink-0 w-72 sm:w-80 mx-4"> {/* UPDATED */}
                     <div className="bg-white p-6 rounded-2xl shadow-lg border border-amber-100 hover:shadow-xl hover:border-amber-300 transition-all duration-300 h-full">
                       <div className="flex items-center justify-center h-20 mb-6">
                         <img
@@ -550,7 +550,7 @@ const FeaturedProductsSection = () => {
               `}</style>
               <div className="flex w-fit animate-product-scroll">
                 {productsToDisplay.map((product, index) => (
-                  <div key={`${product.id}-${index}`} className="flex-shrink-0 w-80 mx-4">
+                  <div key={`${product.id}-${index}`} className="flex-shrink-0 w-72 sm:w-80 mx-4"> {/* UPDATED */}
                     <ProductCard product={product} />
                   </div>
                 ))}
@@ -673,7 +673,7 @@ const ClientsSection = () => {
             {clientsToDisplay.map((client, index) => (
               <div
                 key={`${client.id}-${index}`}
-                className="flex-shrink-0 w-48 h-24 flex items-center justify-center mx-6"
+                className="flex-shrink-0 w-36 sm:w-48 h-24 flex items-center justify-center mx-6"  /* UPDATED */
               >
                 <img
                   src={client.logo}
@@ -705,4 +705,3 @@ export default function Page() {
     </>
   );
 }
-
