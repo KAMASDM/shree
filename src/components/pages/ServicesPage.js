@@ -579,7 +579,7 @@ export default function ServicesPage() {
                 className='text-3xl md:text-4xl font-bold mb-4'
                 style={{ color: "#8b6a3f" }}
               >
-                Our Service Process
+                Our Service Approach
               </h2>
               <p className='max-w-2xl mx-auto' style={{ color: "#9c7649" }}>
                 A streamlined approach to ensure quality service delivery at
@@ -628,44 +628,46 @@ export default function ServicesPage() {
           </div>
 
           {/* Continuous Service Improvement Section */}
-          <div className='mb-20'>
-            <div
-              className='p-8 md:p-12 rounded-3xl shadow-lg text-center'
-              style={{
-                backgroundColor: "rgba(59, 130, 246, 0.05)",
-                border: "1px solid rgba(59, 130, 246, 0.2)",
-              }}
-            >
-              <div className='flex justify-center mb-6'>
+                <div className='mb-20'>
                 <div
-                  className='p-4 rounded-full'
-                  style={{ backgroundColor: "rgba(59, 130, 246, 0.1)" }}
+                  className='p-8 md:p-12 rounded-3xl shadow-lg text-center'
+                  style={{
+                  backgroundColor: "rgba(59, 130, 246, 0.05)",
+                  border: "1px solid rgba(59, 130, 246, 0.2)",
+                  }}
                 >
-                  <ThumbsUp size={32} className='text-blue-600' />
+                  <div className='flex justify-center mb-6'>
+                  <div
+                    className='p-4 rounded-full'
+                    style={{ backgroundColor: "rgba(59, 130, 246, 0.1)" }}
+                  >
+                    <ThumbsUp size={32} className='text-blue-600' />
+                  </div>
+                  </div>
+                  <h2
+                  className='text-3xl md:text-4xl font-bold mb-4'
+                  style={{ color: "#8b6a3f" }}
+                  >
+                  Continuous Service Improvement (CSAT)
+                  </h2>
+                  <p className='text-lg mb-8 max-w-3xl mx-auto' style={{ color: "#9c7649" }}>
+                  We actively <strong>seek customer feedback</strong> to enhance our services and maintain our position as a trusted service partner. Every suggestion helps us improve turnaround time, service quality, and customer satisfaction.
+                  </p>
+                  <a
+                  href="https://forms.office.com/r/76nLJLuMYk"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className='text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 inline-block'
+                  style={{
+                    background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)",
+                  }}
+                  >
+                  Share Your Feedback
+                  </a>
                 </div>
-              </div>
-              <h2
-                className='text-3xl md:text-4xl font-bold mb-4'
-                style={{ color: "#8b6a3f" }}
-              >
-                Continuous Service Improvement (CSAT)
-              </h2>
-              <p className='text-lg mb-8 max-w-3xl mx-auto' style={{ color: "#9c7649" }}>
-                We actively <strong>seek customer feedback</strong> to enhance our services and maintain our position as a trusted service partner. Every suggestion helps us improve turnaround time, service quality, and customer satisfaction.
-              </p>
-              <button
-                onClick={handleFeedbackRequest}
-                className='text-white px-8 py-4 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300'
-                style={{
-                  background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)",
-                }}
-              >
-                Share Your Feedback
-              </button>
-            </div>
-          </div>
+                </div>
 
-          {/* Call to Action */}
+                {/* Call to Action */}
           <div className='text-center'>
             <div
               className='p-12 rounded-3xl shadow-lg'

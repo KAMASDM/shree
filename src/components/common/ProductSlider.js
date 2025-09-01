@@ -1,61 +1,108 @@
 // src/components/common/ProductSlider.js
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { ChevronLeft, ChevronRight, Star, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import axios from "axios";
+
+// ✨ Reusable Product Card Component
+function ProductCard({ product }) {
+  return (
+    <Link
+      href={`/products/${product.slug}`}
+      className="relative block w-full h-full group"
+    >
+      <div className="relative z-10 w-full h-full overflow-hidden transition-all duration-500 bg-white rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-1">
+        {/* Product Image */}
+        <div className="relative w-full h-48 overflow-hidden">
+          <Image
+            src={product.main_image || "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=300&fit=crop"}
+            alt={product.name}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
+            loading="lazy"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent"></div>
+          <span
+            className="absolute px-3 py-1 text-xs font-semibold text-white shadow-lg top-3 left-3 rounded-full backdrop-blur-sm"
+            style={{ backgroundColor: "rgba(183, 136, 82, 0.8)" }}
+          >
+            {product.category_name}
+          </span>
+        </div>
+
+        {/* Product Content */}
+        <div className="p-4">
+          <h3
+            className="mb-2 text-base font-bold leading-tight line-clamp-2"
+            style={{ color: "#8b6a3f" }}
+          >
+            {product.name}
+          </h3>
+          {product.brand && (
+            <span
+              className="inline-block px-2 py-0.5 mb-3 text-xs font-medium rounded-full"
+              style={{ backgroundColor: "rgba(183, 136, 82, 0.1)", color: "#8b6a3f" }}
+            >
+              {product.brand.name || product.brand}
+            </span>
+          )}
+          <div
+            className="w-full py-2 mt-auto text-sm font-semibold text-center text-white transition-all duration-300 rounded-lg shadow-md group-hover:shadow-lg flex items-center justify-center gap-1.5"
+            style={{ background: "linear-gradient(135deg, #b78852 0%, #c9955f 100%)" }}
+          >
+            <span>View Details</span>
+            <ArrowRight size={14} className="transition-transform duration-300 group-hover:translate-x-1" />
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+}
 
 export default function ProductSlider({ currentProduct, title = "Related Products" }) {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isHovering, setIsHovering] = useState(false);
   const sliderRef = useRef(null);
+  const intervalRef = useRef(null);
 
+  //  fetching logic remains the same
   useEffect(() => {
     const fetchRelatedProducts = async () => {
       try {
         setLoading(true);
-        // Fetch all products
         const response = await axios.get("https://sweekarme.in/shree/api/products/all/");
         const allProducts = response.data;
-
-        // Filter products with similar applications
         const currentApplications = currentProduct.applications || [];
-        const relatedProducts = allProducts.filter(product => {
-          // Exclude the current product
-          if (product.id === currentProduct.id) return false;
-          
-          // Check if product has any similar applications
-          const productApplications = product.applications || [];
+        
+        let relatedProducts = allProducts.filter(p => {
+          if (p.id === currentProduct.id) return false;
+          const productApplications = p.applications || [];
           return currentApplications.some(currentApp => {
             const currentAppName = typeof currentApp === 'string' ? currentApp : currentApp.app || currentApp.name;
             return productApplications.some(prodApp => {
               const prodAppName = typeof prodApp === 'string' ? prodApp : prodApp.app || prodApp.name;
-              return prodAppName && currentAppName && 
-                     prodAppName.toLowerCase().includes(currentAppName.toLowerCase()) ||
-                     currentAppName.toLowerCase().includes(prodAppName.toLowerCase());
+              return prodAppName?.toLowerCase().includes(currentAppName?.toLowerCase()) || currentAppName?.toLowerCase().includes(prodAppName?.toLowerCase());
             });
           });
         });
-
-        // If no products with similar applications, show products from same category
-        let finalProducts = relatedProducts;
-        if (finalProducts.length === 0) {
-          finalProducts = allProducts.filter(product => 
-            product.id !== currentProduct.id && 
-            product.category_name === currentProduct.category_name
-          );
+        
+        if (relatedProducts.length < 4) {
+          const categoryProducts = allProducts.filter(p => p.id !== currentProduct.id && p.category_name === currentProduct.category_name && !relatedProducts.find(rp => rp.id === p.id));
+          relatedProducts = [...relatedProducts, ...categoryProducts];
         }
 
-        // If still no products, show random products (excluding current)
-        if (finalProducts.length === 0) {
-          finalProducts = allProducts.filter(product => product.id !== currentProduct.id);
+        if (relatedProducts.length < 4) {
+          const randomProducts = allProducts.filter(p => p.id !== currentProduct.id && !relatedProducts.find(rp => rp.id === p.id));
+          relatedProducts = [...relatedProducts, ...randomProducts];
         }
-
-        // Limit to 8 products for performance
-        setProducts(finalProducts.slice(0, 8));
+        
+        setProducts(relatedProducts.slice(0, 12));
       } catch (err) {
         setError("Failed to load related products");
         console.error("Error fetching related products:", err);
@@ -63,256 +110,131 @@ export default function ProductSlider({ currentProduct, title = "Related Product
         setLoading(false);
       }
     };
-
-    if (currentProduct) {
-      fetchRelatedProducts();
-    }
+    if (currentProduct) fetchRelatedProducts();
   }, [currentProduct]);
 
-  const scrollToSlide = (index) => {
-    setCurrentSlide(index);
-    if (sliderRef.current) {
-      const slideWidth = sliderRef.current.children[0]?.offsetWidth || 0;
-      const gap = 24; // 1.5rem gap
-      sliderRef.current.scrollTo({
-        left: index * (slideWidth + gap),
-        behavior: 'smooth'
-      });
+  const scrollToSlide = useCallback((index) => {
+    const slider = sliderRef.current;
+    if (!slider) return;
+    const slide = slider.children[index];
+    if (slide) {
+      const sliderRect = slider.getBoundingClientRect();
+      const slideRect = slide.getBoundingClientRect();
+      const scrollLeft = slideRect.left - sliderRect.left + slider.scrollLeft - (sliderRect.width - slideRect.width) / 2;
+      
+      slider.scrollTo({ left: scrollLeft, behavior: 'smooth' });
     }
-  };
+  }, []);
 
-  const nextSlide = () => {
-    const nextIndex = currentSlide + 1 >= products.length ? 0 : currentSlide + 1;
-    scrollToSlide(nextIndex);
-  };
+  const nextSlide = useCallback(() => {
+    setCurrentSlide(prev => (prev + 1) % products.length);
+  }, [products.length]);
 
-  const prevSlide = () => {
-    const prevIndex = currentSlide - 1 < 0 ? products.length - 1 : currentSlide - 1;
-    scrollToSlide(prevIndex);
-  };
+  // ✨ Autoplay functionality
+  useEffect(() => {
+    if (!isHovering && products.length > 0) {
+      intervalRef.current = setInterval(nextSlide, 5000);
+    }
+    return () => clearInterval(intervalRef.current);
+  }, [isHovering, products, nextSlide]);
+
+  useEffect(() => {
+    scrollToSlide(currentSlide);
+  }, [currentSlide, scrollToSlide]);
+
+  // 📱 Intersection Observer to track visible slide
+  useEffect(() => {
+    const slider = sliderRef.current;
+    if (!slider) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const index = parseInt(entry.target.dataset.index, 10);
+            setCurrentSlide(index);
+          }
+        });
+      },
+      { root: slider, threshold: 0.5 }
+    );
+
+    Array.from(slider.children).forEach((child, index) => {
+      child.dataset.index = index;
+      observer.observe(child);
+    });
+
+    return () => observer.disconnect();
+  }, [loading, products.length]);
 
   if (loading) {
-    return (
-      <div 
-        className="p-8 rounded-3xl shadow-sm mb-8"
-        style={{ 
-          backgroundColor: "rgba(255, 255, 255, 0.9)", 
-          border: "1px solid rgba(183, 136, 82, 0.15)" 
-        }}
-      >
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold" style={{ color: "#8b6a3f" }}>
-            {title}
-          </h2>
-        </div>
-        <div className="flex gap-6 overflow-hidden">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="flex-shrink-0 w-72 animate-pulse">
-              <div className="bg-gray-300 h-48 rounded-xl mb-4"></div>
-              <div className="h-4 bg-gray-300 rounded w-3/4 mb-2"></div>
-              <div className="h-4 bg-gray-300 rounded w-1/2"></div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
+    return <div className="py-12"><div className="w-24 h-4 mx-auto mb-4 bg-gray-200 rounded-lg animate-pulse"></div><div className="h-72 bg-gray-200 rounded-lg animate-pulse"></div></div>;
   }
 
-  if (error || products.length === 0) {
-    return null; // Don't show the slider if there are no related products
-  }
+  if (error || products.length === 0) return null;
 
   return (
-    <div 
-      className="p-8 rounded-3xl shadow-sm mb-8"
-      style={{ 
-        backgroundColor: "rgba(255, 255, 255, 0.9)", 
-        border: "1px solid rgba(183, 136, 82, 0.15)" 
-      }}
-    >
-      {/* Header */}
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold" style={{ color: "#8b6a3f" }}>
-          {title}
-        </h2>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={prevSlide}
-            className="p-2 rounded-full transition-all duration-300 hover:scale-110"
-            style={{ backgroundColor: "rgba(183, 136, 82, 0.1)", color: "#b78852" }}
-            aria-label="Previous products"
+    <div className="py-12 my-8" onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* 🎨 Redesigned Header */}
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold tracking-tight" style={{ color: "#8b6a3f" }}>
+            {title}
+          </h2>
+          <p className="mt-2 text-lg" style={{ color: "#9c7649" }}>
+            Discover instruments with similar applications and capabilities.
+          </p>
+        </div>
+
+        <div className="relative group">
+          {/* 📱 Fully Responsive Slider with Scroll Snap */}
+          <div
+            ref={sliderRef}
+            className="flex gap-6 p-4 -m-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide"
           >
-            <ChevronLeft size={20} />
+            {products.map((product, index) => (
+              <div key={product.id} className="flex-shrink-0 w-[85%] sm:w-[45%] md:w-1/3 lg:w-1/4 snap-center">
+                <ProductCard product={product} />
+              </div>
+            ))}
+          </div>
+
+          {/* 🎨 Improved Navigation Arrows */}
+          <button
+            onClick={() => setCurrentSlide(prev => (prev - 1 + products.length) % products.length)}
+            className="absolute top-1/2 left-0 -translate-y-1/2 z-20 p-2 bg-white/80 backdrop-blur-sm rounded-full shadow-lg transition-all opacity-0 group-hover:opacity-100 hover:scale-110 disabled:opacity-30"
+            aria-label="Previous"
+            disabled={currentSlide === 0}
+          >
+            <ChevronLeft style={{ color: "#b78852" }} />
           </button>
           <button
             onClick={nextSlide}
-            className="p-2 rounded-full transition-all duration-300 hover:scale-110"
-            style={{ backgroundColor: "rgba(183, 136, 82, 0.1)", color: "#b78852" }}
-            aria-label="Next products"
+            className="absolute top-1/2 right-0 -translate-y-1/2 z-20 p-2 bg-white/80 backdrop-blur-sm rounded-full shadow-lg transition-all opacity-0 group-hover:opacity-100 hover:scale-110 disabled:opacity-30"
+            aria-label="Next"
+            disabled={currentSlide === products.length - 1}
           >
-            <ChevronRight size={20} />
+            <ChevronRight style={{ color: "#b78852" }} />
           </button>
         </div>
-      </div>
 
-      {/* Slider Container */}
-      <div className="relative overflow-hidden">
-        <div 
-          ref={sliderRef}
-          className="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth"
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-        >
-          {products.map((product, index) => (
-            <Link
-              href={`/products/${product.slug}`}
-              key={product.id}
-              className="flex-shrink-0 w-72 group"
-            >
-              <div
-                className="rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 hover:-translate-y-2 active:scale-95"
-                style={{
-                  backgroundColor: "rgba(255, 255, 255, 0.9)",
-                  border: "1px solid rgba(183, 136, 82, 0.15)",
-                  backdropFilter: "blur(10px)"
-                }}
-              >
-                {/* Product Image */}
-                <div className="relative overflow-hidden">
-                  <Image
-                    src={product.main_image || "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=300&fit=crop"}
-                    alt={product.name}
-                    width={288}
-                    height={192}
-                    className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-500"
-                    loading="lazy"
-                  />
-
-                  {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-
-                  {/* Category Badge */}
-                  <div className="absolute top-3 left-3">
-                    <span
-                      className="px-3 py-1 rounded-full text-xs font-semibold text-white shadow-lg backdrop-blur-sm"
-                      style={{ backgroundColor: "rgba(183, 136, 82, 0.9)" }}
-                    >
-                      {product.category_name}
-                    </span>
-                  </div>
-
-                  {/* Star Icon */}
-                  <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <div
-                      className="p-2 rounded-full backdrop-blur-sm"
-                      style={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}
-                    >
-                      <Star size={14} style={{ color: "#b78852" }} />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Product Content */}
-                <div className="p-6">
-                  <h3
-                    className="text-lg font-bold mb-3 group-hover:opacity-80 transition-all duration-300 line-clamp-2 leading-tight"
-                    style={{ color: "#8b6a3f" }}
-                  >
-                    {product.name}
-                  </h3>
-
-                  <div
-                    className="mb-4 line-clamp-2 leading-relaxed text-sm"
-                    style={{ color: "#9c7649" }}
-                    dangerouslySetInnerHTML={{ __html: product.short_description }}
-                  />
-
-                  {/* Brand Badge */}
-                  {product.brand && (
-                    <div className="mb-4">
-                      <span
-                        className="text-xs font-medium px-3 py-1 rounded-full"
-                        style={{
-                          backgroundColor: "rgba(183, 136, 82, 0.1)",
-                          color: "#8b6a3f"
-                        }}
-                      >
-                        {product.brand.name || product.brand}
-                      </span>
-                    </div>
-                  )}
-
-                  {/* Action Button */}
-                  <div
-                    className="w-full py-3 text-center rounded-xl font-semibold shadow-md group-hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-2 text-white text-sm"
-                    style={{
-                      background: "linear-gradient(135deg, #b78852 0%, #c9955f 100%)"
-                    }}
-                  >
-                    <span>View Details</span>
-                    <ArrowRight
-                      size={14}
-                      className="group-hover:translate-x-1 transition-transform duration-300"
-                    />
-                  </div>
-                </div>
-
-                {/* Bottom Accent Line */}
-                <div
-                  className="h-1 w-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"
-                  style={{
-                    background: "linear-gradient(90deg, #b78852 0%, #c9955f 100%)"
-                  }}
-                ></div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
-
-      {/* Dots Indicator */}
-      {products.length > 1 && (
-        <div className="flex justify-center mt-6 gap-2">
-          {products.slice(0, Math.ceil(products.length / 4)).map((_, index) => (
+        {/* 🎨 Redesigned Dot Indicators */}
+        <div className="flex justify-center mt-8 gap-2">
+          {products.map((_, index) => (
             <button
               key={index}
-              onClick={() => scrollToSlide(index * 4)}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                Math.floor(currentSlide / 4) === index
-                  ? "w-8 scale-125"
-                  : "hover:scale-110"
-              }`}
-              style={{
-                backgroundColor: Math.floor(currentSlide / 4) === index
-                  ? "#b78852"
-                  : "rgba(183, 136, 82, 0.3)"
-              }}
-              aria-label={`Go to slide ${index + 1}`}
+              onClick={() => setCurrentSlide(index)}
+              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${currentSlide === index ? 'scale-125' : 'hover:scale-110'}`}
+              style={{ backgroundColor: currentSlide === index ? "#b78852" : "rgba(183, 136, 82, 0.3)" }}
+              aria-label={`Go to product ${index + 1}`}
             />
           ))}
         </div>
-      )}
-
-      {/* View All Products Link */}
-      <div className="text-center mt-6">
-        <Link
-          href="/products"
-          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
-          style={{
-            backgroundColor: "rgba(183, 136, 82, 0.1)",
-            color: "#8b6a3f",
-            border: "1px solid rgba(183, 136, 82, 0.3)"
-          }}
-        >
-          View All Products
-          <ArrowRight size={16} />
-        </Link>
       </div>
-
-      <style jsx>{`
+       <style jsx>{`
         .scrollbar-hide::-webkit-scrollbar {
           display: none;
         }
-        
         .line-clamp-2 {
           display: -webkit-box;
           -webkit-line-clamp: 2;

@@ -108,11 +108,11 @@ export default function ContactPage() {
       description: 'Local branch offices for customer support'
     },
     'GO': { 
-      label: 'Service Center', 
+      label: 'Our Local Service Locations', 
       icon: MapPin, 
       color: '#e0b975',
       bgGradient: 'linear-gradient(135deg, #e0b975 0%, #eccc80 100%)',
-      description: 'Service points for local assistance'
+      description: 'Service Locations for local assistance'
     }
   };
 
@@ -712,7 +712,7 @@ export default function ContactPage() {
                 })}
 
                 {/* Summary Stats */}
-                <div className='mt-16 bg-gradient-to-r from-amber-50 to-orange-50 rounded-3xl p-6 md:p-8'>
+                {/* <div className='mt-16 bg-gradient-to-r from-amber-50 to-orange-50 rounded-3xl p-6 md:p-8'>
                   <div className='text-center mb-8'>
                     <h3 className='text-xl md:text-2xl font-bold mb-2' style={{ color: "#8b6a3f" }}>
                       Our Network at a Glance
@@ -745,7 +745,7 @@ export default function ContactPage() {
                       );
                     })}
                   </div>
-                </div>
+                </div> */}
               </div>
             )}
           </div>

@@ -18,7 +18,9 @@ import {
   Zap,
   Star,
   MapPin,
-  Heart
+  Heart,
+  ChevronRight,
+  Quote
 } from "lucide-react";
 import { apiService } from '../../lib/api';
 
@@ -134,10 +136,10 @@ export default function AboutPage() {
 
   // Calculate dynamic statistics
   const statistics = [
-    { number: "28+", label: "Years", description: "Industry Leadership" },
+    { number: "27+", label: "Years", description: "Industry Leadership" },
     { number: "800+", label: "Customers", description: "Trusted Partners" },
     { number: "10,000+", label: "Installations", description: "Successful Projects" },
-    { number: `${officeLocations.length}+`, label: "Offices", description: "Pan-India Presence" }
+    { number: `${officeLocations.length > 0 ? officeLocations.length : '5'}+`, label: "Offices", description: "Pan-India Presence" }
   ];
 
   // Extract text from HTML content
@@ -149,132 +151,107 @@ export default function AboutPage() {
   };
 
   return (
-    <div className="pt-16 pb-20" style={{ background: "linear-gradient(135deg, #fefcf8 0%, #fdf8f0 50%, #fcf4e8 100%)" }}>
+    <div className="pt-16 pb-20 bg-gradient-to-b from-amber-50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Hero Section */}
-        <div className="relative text-center mb-24 overflow-hidden">
-          <div className="absolute inset-0 rounded-3xl" style={{ backgroundColor: "rgba(183, 136, 82, 0.03)" }}></div>
-          <div className="relative z-10 py-16">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-6" style={{ backgroundColor: "rgba(183, 136, 82, 0.1)", color: "#8b6a3f" }}>
+        {/* 1. Hero Section */}
+        <section className="relative py-16 md:py-24 mb-16 md:mb-24">
+          <div className="absolute inset-0 bg-gradient-to-r from-amber-100/20 to-orange-100/20 rounded-3xl"></div>
+          <div className="relative z-10 text-center">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-6 bg-amber-100 text-amber-800">
               <Star size={16} />
               Trusted Since 1998
             </div>
             
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight" style={{ color: "#8b6a3f" }}>
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight text-amber-900">
               Shreedhar<br />
-              <span className="text-4xl md:text-6xl" style={{ color: "#b78852" }}>Instruments</span>
+              <span className="text-3xl md:text-5xl text-amber-700">Instruments</span>
             </h1>
             
-            <p className="text-xl md:text-2xl max-w-4xl mx-auto mb-8 leading-relaxed" style={{ color: "#9c7649" }}>
-              The <span className="font-bold" style={{ color: "#8b6a3f" }}>most trusted, reliable and ethical</span> organization 
+            <p className="text-lg md:text-xl max-w-4xl mx-auto mb-8 leading-relaxed text-amber-800">
+              The <span className="font-bold text-amber-900">most trusted, reliable and ethical</span> organization 
               in analytical instruments for pharmaceutical industry. 
-              <span className="block mt-2 text-lg">28+ years of excellence serving pharmaceutical and biopharma sectors</span>
+              <span className="block mt-2 text-base md:text-lg">27+ years of excellence serving pharmaceutical and biopharma sectors</span>
             </p>
             
-            <div className="flex flex-wrap justify-center gap-4 mb-8">
+            {/* <div className="flex flex-wrap justify-center gap-3 mb-8">
               {[
-                { label: "Since 1998", icon: Calendar, bgColor: "rgba(183, 136, 82, 0.1)", textColor: "#8b6a3f" },
-                { label: "800+ Customers", icon: Users, bgColor: "rgba(34, 197, 94, 0.1)", textColor: "#166534" },
-                { label: "10,000+ Installations", icon: CheckCircle, bgColor: "rgba(59, 130, 246, 0.1)", textColor: "#1e40af" }
+                { label: "Since 1998", icon: Calendar, bgColor: "bg-amber-100", textColor: "text-amber-800" },
+                { label: "800+ Customers", icon: Users, bgColor: "bg-green-100", textColor: "text-green-800" },
+                { label: "10,000+ Installations", icon: CheckCircle, bgColor: "bg-blue-100", textColor: "text-blue-800" }
               ].map((badge, i) => (
-                <div key={i} className="flex items-center gap-2 px-6 py-3 rounded-full font-medium shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105" style={{ backgroundColor: badge.bgColor, color: badge.textColor }}>
-                  <badge.icon size={18} />
+                <div key={i} className={`flex items-center gap-2 px-4 py-2 rounded-full font-medium shadow-sm transition-all duration-300 ${badge.bgColor} ${badge.textColor}`}>
+                  <badge.icon size={16} />
                   {badge.label}
+                </div>
+              ))}
+            </div> */}
+          </div>
+        </section>
+
+        {/* 2. Statistics (Impact Numbers) */}
+        <section className="relative mb-16 md:mb-24 overflow-hidden rounded-3xl bg-gradient-to-r from-amber-700 to-amber-900 text-white p-8 md:p-12">
+          <div className="absolute inset-0 opacity-10">
+            <div className="w-full h-full" style={{ backgroundImage: `radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 2px, transparent 2px)`, backgroundSize: '60px 60px' }}></div>
+          </div>
+          <div className="relative z-10">
+            <div className="text-center mb-8 md:mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Impact in Numbers</h2>
+              <p className="text-amber-100">Serving To Leading Pharma Companies across India and Globally</p>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+              {statistics.map((stat, index) => (
+                <div key={index} className="text-center group">
+                  <div className="text-3xl md:text-5xl font-bold mb-3 group-hover:scale-110 transition-transform duration-300 text-amber-100">
+                    {stat.number}
+                  </div>
+                  <div className="font-semibold mb-1">{stat.label}</div>
+                  <div className="text-sm text-amber-200">{stat.description}</div>
                 </div>
               ))}
             </div>
           </div>
-        </div>
-
-        {/* Mission, Vision, Goal - Now Dynamic */}
-        <div className="grid lg:grid-cols-3 gap-8 mb-24">
-          {loadingCompanyInfo ? (
-            // Loading skeleton
-            [...Array(3)].map((_, i) => (
-              <div key={i} className="p-8 rounded-3xl shadow-lg animate-pulse" style={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}>
-                <div className="w-16 h-16 rounded-2xl mb-6" style={{ backgroundColor: "rgba(183, 136, 82, 0.2)" }}></div>
-                <div className="h-6 rounded mb-4" style={{ backgroundColor: "rgba(183, 136, 82, 0.2)" }}></div>
-                <div className="space-y-2">
-                  <div className="h-4 rounded" style={{ backgroundColor: "rgba(183, 136, 82, 0.1)" }}></div>
-                  <div className="h-4 rounded w-3/4" style={{ backgroundColor: "rgba(183, 136, 82, 0.1)" }}></div>
-                </div>
-              </div>
-            ))
-          ) : (
-            [
-              { 
-                icon: Eye, 
-                title: "Our Vision", 
-                content: companyInfo?.vision ? stripHtml(companyInfo.vision) : "To become and remain as the most preferred partner to our customers and principals.", 
-                iconBg: "linear-gradient(135deg, #b78852 0%, #c9955f 100%)",
-              },
-              { 
-                icon: Target, 
-                title: "Our Mission", 
-                content: companyInfo?.mission ? stripHtml(companyInfo.mission) : "We aim to excel and to be the leading player for our chosen markets.", 
-                iconBg: "linear-gradient(135deg, #c9955f 0%, #d4a06a 100%)",
-              },
-              { 
-                icon: Award, 
-                title: "Our Goal", 
-                content: companyInfo?.goal ? stripHtml(companyInfo.goal) : "To be recognized as the MOST TRUSTED, RELIABLE AND ETHICAL organization in our business sector.", 
-                iconBg: "linear-gradient(135deg, #d4a06a 0%, #dfa975 100%)",
-              }
-            ].map((item, i) => (
-              <div key={i} className="group relative p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2" style={{ backgroundColor: "rgba(255, 255, 255, 0.9)", border: "1px solid rgba(183, 136, 82, 0.15)" }}>
-                <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{ backgroundColor: "rgba(255, 255, 255, 0.4)" }}></div>
-                <div className="relative z-10">
-                  <div className="inline-flex p-4 rounded-2xl mb-6 shadow-lg" style={{ background: item.iconBg }}>
-                    <item.icon className="text-white" size={32} />
-                  </div>
-                  <h3 className="text-2xl font-bold mb-4" style={{ color: "#8b6a3f" }}>{item.title}</h3>
-                  <p className="italic text-lg leading-relaxed" style={{ color: "#9c7649" }}>&ldquo;{item.content}&rdquo;</p>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
-
-        {/* Company Story with Dynamic Content */}
-        <div className="grid lg:grid-cols-2 gap-16 items-center mb-24">
+        </section>
+        
+        {/* 3. Three Decades of Innovation (Company Story) */}
+        <section className="grid lg:grid-cols-2 gap-12 items-center mb-16 md:mb-24">
           <div className="order-2 lg:order-1">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-6" style={{ backgroundColor: "rgba(183, 136, 82, 0.1)", color: "#8b6a3f" }}>
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium mb-6 bg-amber-100 text-amber-800">
               <Microscope size={16} />
               Our Journey
             </div>
-            <h2 className="text-4xl font-bold mb-6 leading-tight" style={{ color: "#8b6a3f" }}>
-              Three Decades of <span style={{ color: "#b78852" }}> Innovation</span>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-amber-900">
+              Three Decades of <span className="text-amber-700"> Innovation</span>
             </h2>
-            <div className="space-y-6 leading-relaxed" style={{ color: "#9c7649" }}>
+            <div className="space-y-6 leading-relaxed text-amber-800">
               {loadingCompanyInfo ? (
                 <div className="space-y-4">
                   {[...Array(3)].map((_, i) => (
-                    <div key={i} className="p-6 rounded-2xl animate-pulse" style={{ backgroundColor: "rgba(183, 136, 82, 0.1)" }}>
-                      <div className="h-4 rounded mb-2" style={{ backgroundColor: "rgba(183, 136, 82, 0.2)" }}></div>
-                      <div className="h-3 rounded" style={{ backgroundColor: "rgba(183, 136, 82, 0.15)" }}></div>
+                    <div key={i} className="p-6 rounded-2xl animate-pulse bg-amber-50">
+                      <div className="h-4 rounded mb-2 bg-amber-100"></div>
+                      <div className="h-3 rounded bg-amber-100"></div>
                     </div>
                   ))}
                 </div>
               ) : (
                 <>
-                  <div className="p-6 rounded-2xl shadow-sm" style={{ backgroundColor: "rgba(255, 255, 255, 0.9)", border: "1px solid rgba(183, 136, 82, 0.15)" }}>
-                    <h4 className="font-bold mb-2 flex items-center gap-2" style={{ color: "#8b6a3f" }}>
+                  <div className="p-6 rounded-2xl shadow-sm bg-white border border-amber-100">
+                    <h4 className="font-bold mb-2 flex items-center gap-2 text-amber-900">
                       <CheckCircle className="text-green-500" size={20} />
                       Founded by Visionary Leadership
                     </h4>
                     <p>{companyInfo?.history ? stripHtml(companyInfo.history) : "Started in 1998 by Mr. Jayant Joshi, partnering with global technology leaders to deliver cutting-edge solutions for pharmaceutical and biopharma manufacturing."}</p>
                   </div>
-                  <div className="p-6 rounded-2xl shadow-sm" style={{ backgroundColor: "rgba(255, 255, 255, 0.9)", border: "1px solid rgba(183, 136, 82, 0.15)" }}>
-                    <h4 className="font-bold mb-2 flex items-center gap-2" style={{ color: "#8b6a3f" }}>
-                      <Shield size={20} style={{ color: "#b78852" }} />
+                  <div className="p-6 rounded-2xl shadow-sm bg-white border border-amber-100">
+                    <h4 className="font-bold mb-2 flex items-center gap-2 text-amber-900">
+                      <Shield size={20} className="text-amber-600" />
                       Regulatory Excellence
                     </h4>
-                    <p>28+ years of expertise serving the most stringent regulatory environments across India, establishing ourselves as the leading distributor of analytical instruments.</p>
+                    <p>27+ years of expertise serving the most stringent regulatory environments across India, establishing ourselves as the leading distributor of analytical instruments.</p>
                   </div>
-                  <div className="p-6 rounded-2xl shadow-sm" style={{ backgroundColor: "rgba(255, 255, 255, 0.9)", border: "1px solid rgba(183, 136, 82, 0.15)" }}>
-                    <h4 className="font-bold mb-2 flex items-center gap-2" style={{ color: "#8b6a3f" }}>
-                      <Zap size={20} style={{ color: "#c9955f" }} />
+                  <div className="p-6 rounded-2xl shadow-sm bg-white border border-amber-100">
+                    <h4 className="font-bold mb-2 flex items-center gap-2 text-amber-900">
+                      <Zap size={20} className="text-amber-500" />
                       Customer-Centric Innovation
                     </h4>
                     <p>{companyInfo?.usp ? stripHtml(companyInfo.usp) : "Our approach ensures technically superior solutions with comprehensive after-sales service, from IQ/OQ qualification to preventive maintenance and rapid breakdown support."}</p>
@@ -284,137 +261,122 @@ export default function AboutPage() {
             </div>
           </div>
           <div className="order-1 lg:order-2 relative">
-            <div className="absolute inset-0 rounded-3xl transform rotate-3 opacity-20" style={{ backgroundColor: "#b78852" }}></div>
-            <div className="relative p-2 rounded-3xl shadow-2xl" style={{ backgroundColor: "rgba(255, 255, 255, 0.9)" }}>
+            <div className="absolute inset-0 rounded-3xl transform rotate-3 opacity-20 bg-amber-600"></div>
+            <div className="relative p-2 rounded-3xl shadow-xl bg-white">
               <Image
                 src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&h=400&fit=crop"
                 alt="Shreedhar Instruments Facilities"
                 width={600}
                 height={400}
-                className="w-full h-80 object-cover rounded-2xl"
+                className="w-full h-64 md:h-80 object-cover rounded-2xl"
                 priority
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent rounded-2xl"></div>
-              <div className="absolute bottom-6 left-6 right-6">
-                <div className="backdrop-blur-md p-6 rounded-2xl shadow-lg" style={{ backgroundColor: "rgba(255, 255, 255, 0.95)" }}>
-                  <h4 className="font-bold mb-2 flex items-center gap-2" style={{ color: "#8b6a3f" }}>
-                    <Globe size={20} style={{ color: "#b78852" }} />
+              <div className="absolute bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-6">
+                <div className="backdrop-blur-md p-4 md:p-6 rounded-2xl shadow-lg bg-white/95">
+                  <h4 className="font-bold mb-2 flex items-center gap-2 text-amber-900">
+                    <Globe size={20} className="text-amber-600" />
                     Pan-India Excellence
                   </h4>
-                  <p className="text-sm" style={{ color: "#9c7649" }}>{officeLocations.length}+ offices serving pharmaceutical companies nationwide with unmatched service quality</p>
+                  <p className="text-sm text-amber-800">{officeLocations.length > 0 ? officeLocations.length : '5'}+ offices serving pharmaceutical companies nationwide with unmatched service quality</p>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* Statistics - Now Dynamic */}
-        <div className="relative mb-24 overflow-hidden">
-          <div className="absolute inset-0 rounded-3xl" style={{ background: "linear-gradient(135deg, #8b6a3f 0%, #b78852 50%, #c9955f 100%)" }}></div>
-          <div className="absolute inset-0 opacity-30">
-            <div className="w-full h-full" style={{ backgroundImage: `radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 2px, transparent 2px)`, backgroundSize: '60px 60px' }}></div>
-          </div>
-          <div className="relative z-10 p-12 text-white">
-            <div className="text-center mb-12">
-              <h2 className="text-4xl font-bold mb-4">Our Impact in Numbers</h2>
-              <p className="text-lg" style={{ color: "rgba(255, 255, 255, 0.8)" }}>Trusted by the pharmaceutical industry across India and beyond</p>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {statistics.map((stat, index) => (
-                <div key={index} className="text-center group">
-                  <div className="text-5xl font-bold mb-3 group-hover:scale-110 transition-transform duration-300" style={{ color: "#fef3c7" }}>
-                    {stat.number}
-                  </div>
-                  <div className="font-semibold mb-1" style={{ color: "rgba(255, 255, 255, 0.9)" }}>{stat.label}</div>
-                  <div className="text-sm" style={{ color: "rgba(255, 255, 255, 0.7)" }}>{stat.description}</div>
+        {/* 4. Mission, Vision, Goal */}
+        <section className="grid lg:grid-cols-3 gap-6 md:gap-8 mb-16 md:mb-24">
+          {loadingCompanyInfo ? (
+            // Loading skeleton
+            [...Array(3)].map((_, i) => (
+              <div key={i} className="p-6 md:p-8 rounded-3xl shadow-lg animate-pulse bg-white">
+                <div className="w-12 h-12 md:w-16 md:h-16 rounded-2xl mb-6 bg-amber-100"></div>
+                <div className="h-6 rounded mb-4 bg-amber-100"></div>
+                <div className="space-y-2">
+                  <div className="h-4 rounded bg-amber-50"></div>
+                  <div className="h-4 rounded w-3/4 bg-amber-50"></div>
                 </div>
-              ))}
-            </div>
-          </div>
-        </div>
+              </div>
+            ))
+          ) : (
+            [
+              { 
+                icon: Eye, 
+                title: "Our Vision", 
+                content: companyInfo?.vision ? stripHtml(companyInfo.vision) : "To become and remain as the most preferred partner to our customers and principals.", 
+                gradient: "from-amber-600 to-amber-800",
+              },
+              { 
+                icon: Target, 
+                title: "Our Mission", 
+                content: companyInfo?.mission ? stripHtml(companyInfo.mission) : "We aim to excel and to be the leading player for our chosen markets.", 
+                gradient: "from-amber-700 to-amber-900",
+              },
+              { 
+                icon: Award, 
+                title: "Our Goal", 
+                content: companyInfo?.goal ? stripHtml(companyInfo.goal) : "To be recognized as the MOST TRUSTED, RELIABLE AND ETHICAL organization in our business sector.", 
+                gradient: "from-amber-800 to-amber-950",
+              }
+            ].map((item, i) => (
+              <div key={i} className="group relative p-6 md:p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 bg-white border border-amber-100">
+                <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-amber-50/30 to-orange-50/30"></div>
+                <div className="relative z-10">
+                  <div className={`inline-flex p-3 md:p-4 rounded-2xl mb-6 shadow-lg bg-gradient-to-r ${item.gradient}`}>
+                    <item.icon className="text-white" size={24} />
+                  </div>
+                  <h3 className="text-xl md:text-2xl font-bold mb-4 text-amber-900">{item.title}</h3>
+                  <p className="italic text-amber-800 leading-relaxed">&ldquo;{item.content}&rdquo;</p>
+                </div>
+              </div>
+            ))
+          )}
+        </section>
 
-        {/* Core Values */}
-        <div className="mb-24">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4" style={{ color: "#8b6a3f" }}>Our Core Values</h2>
-            <p className="text-xl" style={{ color: "#9c7649" }}>The principles that guide everything we do</p>
+        {/* 5. Core Values */}
+        <section className="mb-16 md:mb-24">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-amber-900">Our Core Values</h2>
+            <p className="text-lg text-amber-800">The principles that guide everything we do</p>
           </div>
-          <div className="grid md:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-3 gap-6">
             {coreValues.map((value, index) => (
-              <div key={index} className="group p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-1" style={{ backgroundColor: "rgba(255, 255, 255, 0.9)", border: "1px solid rgba(183, 136, 82, 0.15)" }}>
-                <div className="text-6xl mb-6 group-hover:scale-110 transition-transform duration-300">{value.icon}</div>
-                <h3 className="text-2xl font-bold mb-4" style={{ color: "#8b6a3f" }}>{value.title}</h3>
-                <p className="leading-relaxed" style={{ color: "#9c7649" }}>{value.description}</p>
+              <div key={index} className="group p-6 md:p-8 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 bg-white border border-amber-100">
+                <div className="text-5xl mb-6 group-hover:scale-110 transition-transform duration-300">{value.icon}</div>
+                <h3 className="text-xl md:text-2xl font-bold mb-4 text-amber-900">{value.title}</h3>
+                <p className="leading-relaxed text-amber-800">{value.description}</p>
               </div>
             ))}
           </div>
-        </div>
+        </section>
 
-        {/* Client Showcase */}
-        {clients.length > 0 && (
-          <div className="mb-24">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold mb-4" style={{ color: "#8b6a3f" }}>Trusted by Leading Companies</h2>
-              <p className="text-xl" style={{ color: "#9c7649" }}>Our valued clients across pharmaceutical and biopharma industry</p>
-            </div>
-            {loadingClients ? (
-              <div className="text-center py-10">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2" style={{ borderColor: "#b78852" }}></div>
-                <p className="mt-4 text-lg" style={{ color: "#8b6a3f" }}>Loading Clients...</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8">
-                {clients.map((client, index) => (
-                  <div key={client.id} className="group p-4 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1" style={{ backgroundColor: "rgba(255, 255, 255, 0.9)", border: "1px solid rgba(183, 136, 82, 0.15)" }}>
-                    <div className="aspect-square flex items-center justify-center">
-                      <img
-                        src={client.logo}
-                        alt={`${client.name} logo`}
-                        className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-300"
-                        style={{ filter: 'grayscale(100%)', transition: 'filter 0.3s' }}
-                        onMouseEnter={(e) => e.target.style.filter = 'grayscale(0%)'}
-                        onMouseLeave={(e) => e.target.style.filter = 'grayscale(100%)'}
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                        }}
-                      />
-                    </div>
-                    <h4 className="text-center text-sm font-medium mt-3 group-hover:text-amber-700 transition-colors" style={{ color: "#8b6a3f" }}>
-                      {client.name}
-                    </h4>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Milestones - Already Integrated */}
-        <div className="mb-24">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4" style={{ color: "#8b6a3f" }}>Our Growth Journey</h2>
-            <p className="text-xl" style={{ color: "#9c7649" }}>Key milestones that shaped our success</p>
+        {/* 6. Our Growth Journey (Milestones) */}
+        <section className="mb-16 md:mb-24">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-amber-900">Our Growth Journey</h2>
+            <p className="text-lg text-amber-800">Key milestones that shaped our success</p>
           </div>
           <div className="relative">
-            <div className="absolute left-8 top-0 bottom-0 w-1 rounded-full hidden md:block" style={{ background: "linear-gradient(to bottom, #b78852 0%, #c9955f 50%, #d4a06a 100%)" }}></div>
+            <div className="absolute left-4 md:left-8 top-0 bottom-0 w-1 rounded-full hidden md:block bg-gradient-to-b from-amber-600 to-amber-800"></div>
             {loadingMilestones ? (
               <div className="text-center py-10">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2" style={{ borderColor: "#b78852" }}></div>
-                <p className="mt-4 text-lg" style={{ color: "#8b6a3f" }}>Loading Journey...</p>
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-amber-600"></div>
+                <p className="mt-4 text-lg text-amber-800">Loading Journey...</p>
               </div>
             ) : milestones.length > 0 ? (
               <div className="space-y-8">
                 {milestones.map((milestone, index) => (
-                  <div key={milestone.id || index} className="relative flex items-center gap-8 group">
-                    <div className="hidden md:flex absolute left-6 w-5 h-5 rounded-full border-4 transition-colors duration-300 z-10" style={{ backgroundColor: "rgba(255, 255, 255, 0.9)", borderColor: "#b78852" }}></div>
-                    <div className="md:ml-20 p-8 rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300 w-full" style={{ backgroundColor: "rgba(255, 255, 255, 0.9)", border: "1px solid rgba(183, 136, 82, 0.15)" }}>
+                  <div key={milestone.id || index} className="relative flex items-center gap-6 group">
+                    <div className="hidden md:flex absolute left-3 w-4 h-4 rounded-full border-4 transition-colors duration-300 z-10 bg-white border-amber-600"></div>
+                    <div className="md:ml-12 p-6 rounded-2xl shadow-lg group-hover:shadow-xl transition-all duration-300 w-full bg-white border border-amber-100">
                       <div className="flex items-start justify-between mb-4">
-                        <div className="text-white px-6 py-3 rounded-xl font-bold text-lg" style={{ background: "linear-gradient(135deg, #b78852 0%, #c9955f 100%)" }}>
+                        <div className="text-white px-4 py-2 rounded-xl font-bold text-base bg-gradient-to-r from-amber-600 to-amber-800">
                           {milestone.year}
                         </div>
-                        <Calendar className="transition-colors duration-300" style={{ color: "#b78852" }} size={24} />
+                        <Calendar className="text-amber-600 transition-colors duration-300" size={20} />
                       </div>
-                      <h3 className="text-xl font-bold mb-2" style={{ color: "#8b6a3f" }}>{milestone.description}</h3>
+                      <h3 className="text-lg font-bold mb-2 text-amber-900">{milestone.description}</h3>
                     </div>
                   </div>
                 ))}
@@ -425,23 +387,22 @@ export default function AboutPage() {
               </div>
             )}
           </div>
-        </div>
-
-        {/* Awards - Auto-Scrolling with Improved Visibility */}
-        <div className="mb-24">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold mb-4" style={{ color: "#8b6a3f" }}>Recognition & Awards</h2>
-            <p className="text-xl" style={{ color: "#9c7649" }}>Industry acknowledgment of our excellence</p>
+        </section>
+        
+        {/* 7. Award Recognition */}
+        <section className="mb-16 md:mb-24">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-amber-900">Recognition & Awards</h2>
+            <p className="text-lg text-amber-800">Industry acknowledgment of our excellence</p>
           </div>
           
           {loadingAwards ? (
             <div className="text-center py-10">
-              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2" style={{ borderColor: "#b78852" }}></div>
-              <p className="mt-4 text-lg" style={{ color: "#8b6a3f" }}>Loading Awards...</p>
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-amber-600"></div>
+              <p className="mt-4 text-lg text-amber-800">Loading Awards...</p>
             </div>
           ) : awards.length > 0 ? (
             <div className="relative">
-              {/* Auto-Scrolling Container */}
               <div className="relative w-full overflow-hidden py-4">
                 <style jsx>{`
                   @keyframes awards-scroll {
@@ -464,33 +425,25 @@ export default function AboutPage() {
                   className={`flex space-x-6 ${awards.length > 3 ? 'animate-awards-scroll' : 'justify-center'}`}
                   style={{
                     maskImage: awards.length > 3 
-                      ? 'linear-gradient(to right, transparent 0, #000 128px, #000 calc(100% - 128px), transparent 100%)'
+                      ? 'linear-gradient(to right, transparent 0, #000 64px, #000 calc(100% - 64px), transparent 100%)'
                       : 'none'
                   }}
                 >
-                  {/* Duplicate awards for smooth infinite scroll if more than 3 */}
                   {(awards.length > 3 ? [...awards, ...awards] : awards)
                     .sort((a, b) => b.year - a.year)
                     .map((award, index) => (
                     <div 
                       key={`${award.id}-${index}`} 
-                      className={`group flex-shrink-0 w-80 p-6 rounded-3xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 relative ${
-                        awards.length <= 3 && index === 0 ? 'ring-2 ring-amber-400 shadow-xl scale-105' : ''
+                      className={`group flex-shrink-0 w-72 p-6 rounded-3xl hover:shadow-xl transition-all duration-300 relative ${
+                        awards.length <= 3 && index === 0 ? 'ring-2 ring-amber-400 shadow-lg scale-105' : 'bg-white border border-amber-100'
                       }`}
-                      style={{ 
-                        backgroundColor: awards.length <= 3 && index === 0 ? "rgba(183, 136, 82, 0.08)" : "rgba(255, 255, 255, 0.95)", 
-                        border: awards.length <= 3 && index === 0 ? "2px solid #b78852" : "1px solid rgba(183, 136, 82, 0.2)",
-                        boxShadow: "0 10px 25px rgba(0, 0, 0, 0.1)"
-                      }}
                     >
-                      {/* Latest Award Badge - only show on first award when not scrolling */}
                       {awards.length <= 3 && index === 0 && (
-                        <div className="absolute -top-3 -right-3 bg-gradient-to-r from-amber-400 to-orange-400 text-white px-4 py-2 rounded-full text-xs font-bold shadow-lg z-10">
+                        <div className="absolute -top-3 -right-3 bg-gradient-to-r from-amber-400 to-orange-400 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg z-10">
                           Latest Award
                         </div>
                       )}
                       
-                      {/* Award Image with better styling */}
                       {award.image && (
                         <div className="relative mb-6 rounded-2xl overflow-hidden shadow-lg group-hover:shadow-xl transition-all duration-300 bg-white">
                           <div className="aspect-[4/3] flex items-center justify-center p-4">
@@ -502,12 +455,12 @@ export default function AboutPage() {
                                 e.target.parentElement.innerHTML = `
                                   <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-amber-50 to-orange-50 rounded-lg">
                                     <div class="text-center">
-                                      <div class="w-16 h-16 mx-auto mb-3 rounded-full bg-gradient-to-r from-amber-400 to-orange-400 flex items-center justify-center">
-                                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <div class="w-12 h-12 mx-auto mb-2 rounded-full bg-gradient-to-r from-amber-400 to-orange-400 flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                         </svg>
                                       </div>
-                                      <p class="text-sm font-medium text-amber-700">Award Certificate</p>
+                                      <p class="text-xs font-medium text-amber-700">Award Certificate</p>
                                     </div>
                                   </div>
                                 `;
@@ -519,26 +472,24 @@ export default function AboutPage() {
                         </div>
                       )}
                       
-                      {/* Award Details */}
                       <div className="space-y-4">
-                        <div className="flex items-center gap-4">
-                          <div className="p-3 rounded-2xl shadow-sm" style={{ background: "linear-gradient(135deg, #b78852 0%, #c9955f 100%)" }}>
-                            <Award className="text-white" size={20} />
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 rounded-2xl shadow-sm bg-gradient-to-r from-amber-600 to-amber-800">
+                            <Award className="text-white" size={16} />
                           </div>
-                          <div className="font-bold text-xl" style={{ color: "#b78852" }}>{award.year}</div>
+                          <div className="font-bold text-base text-amber-700">{award.year}</div>
                         </div>
                         
                         <div className="space-y-2">
-                          <h3 className="font-bold text-lg leading-tight line-clamp-2" style={{ color: "#8b6a3f" }}>
+                          <h3 className="font-bold text-base leading-tight line-clamp-2 text-amber-900">
                             {award.award_name}
                           </h3>
-                          <p className="font-semibold text-sm" style={{ color: "#b78852" }}>
+                          <p className="font-semibold text-sm text-amber-700">
                             Awarded by: {award.awarded_by}
                           </p>
                         </div>
 
-                        {/* Award Category Badge */}
-                        <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium" style={{ backgroundColor: "rgba(183, 136, 82, 0.1)", color: "#8b6a3f" }}>
+                        <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
                           Excellence Award
                         </div>
                       </div>
@@ -547,16 +498,15 @@ export default function AboutPage() {
                 </div>
               </div>
               
-              {/* Enhanced Scroll Indicators */}
               <div className="text-center mt-8 space-y-4">
-                <div className="flex items-center justify-center gap-4">
+                <div className="flex items-center justify-center gap-4 flex-wrap">
                   <div className="flex items-center gap-2">
                     <Award size={16} className="text-amber-600" />
-                    <span className="text-sm font-medium" style={{ color: "#8b6a3f" }}>
+                    <span className="text-sm font-medium text-amber-800">
                       {awards.length} Awards Earned
                     </span>
                   </div>
-                  <span className="text-gray-400">•</span>
+                  <span className="text-gray-400 hidden sm:inline">•</span>
                   <div className="flex items-center gap-2">
                     <span className="text-xs bg-amber-100 px-3 py-1 rounded-full text-amber-800 font-medium">
                       {awards.length > 3 ? 'Auto-scrolling' : 'Static Display'}
@@ -565,135 +515,117 @@ export default function AboutPage() {
                 </div>
                 
                 {awards.length > 3 && (
-                  <p className="text-xs" style={{ color: "#9c7649" }}>
+                  <p className="text-xs text-amber-700">
                     Hover to pause • Showcasing our commitment to excellence
                   </p>
                 )}
               </div>
 
-              {/* Awards Stats */}
-              <div className="mt-12 bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-8">
-                <div className="text-center mb-6">
-                  <h3 className="text-2xl font-bold mb-2" style={{ color: "#8b6a3f" }}>
-                    Award Statistics
-                  </h3>
-                  <p className="text-sm" style={{ color: "#9c7649" }}>
-                    Recognition across the years
-                  </p>
-                </div>
-                
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                  {[
-                    { 
-                      stat: awards.length.toString(), 
-                      title: "Total Awards", 
-                      description: "Industry recognition",
-                      icon: Award
-                    },
-                    { 
-                      stat: new Set(awards.map(a => a.awarded_by)).size.toString(), 
-                      title: "Award Bodies", 
-                      description: "Different organizations",
-                      icon: Building
-                    },
-                    { 
-                      stat: awards.length > 0 ? Math.max(...awards.map(a => a.year)) - Math.min(...awards.map(a => a.year)) + 1 : "0", 
-                      title: "Years Span", 
-                      description: "Consistent excellence",
-                      icon: Calendar
-                    },
-                    { 
-                      stat: awards.length > 0 ? new Date().getFullYear() - Math.min(...awards.map(a => a.year)) : "0", 
-                      title: "Legacy Years", 
-                      description: "Since first award",
-                      icon: Star
-                    }
-                  ].map((metric, index) => (
-                    <div key={index} className="text-center">
-                      <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl mb-3" style={{ backgroundColor: "rgba(183, 136, 82, 0.1)" }}>
-                        <metric.icon size={20} style={{ color: "#b78852" }} />
-                      </div>
-                      <div className="text-2xl font-bold mb-1" style={{ color: "#8b6a3f" }}>
-                        {metric.stat}
-                      </div>
-                      <h4 className="text-sm font-semibold mb-1" style={{ color: "#b78852" }}>
-                        {metric.title}
-                      </h4>
-                      <p className="text-xs" style={{ color: "#9c7649" }}>
-                        {metric.description}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
+             
             </div>
           ) : (
             <div className="text-center py-10">
               <p className="text-gray-600">No awards found.</p>
             </div>
           )}
-        </div>
+        </section>
+        
+        {/* 8. Client Logos */}
+        {clients.length > 0 && (
+          <section className="mb-16 md:mb-24">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-amber-900">Trusted by Leading Companies</h2>
+              <p className="text-lg text-amber-800">Our valued clients across pharmaceutical and biopharma industry</p>
+            </div>
+            {loadingClients ? (
+              <div className="text-center py-10">
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-amber-600"></div>
+                <p className="mt-4 text-lg text-amber-800">Loading Clients...</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6">
+                {clients.map((client, index) => (
+                  <div key={client.id} className="group p-3 md:p-4 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 bg-white border border-amber-100">
+                    <div className="aspect-square flex items-center justify-center">
+                      <img
+                        src={client.logo}
+                        alt={`${client.name} logo`}
+                        className="max-w-full max-h-12 object-contain group-hover:scale-110 transition-transform duration-300"
+                        style={{ filter: 'grayscale(100%)', transition: 'filter 0.3s' }}
+                        onMouseEnter={(e) => e.target.style.filter = 'grayscale(0%)'}
+                        onMouseLeave={(e) => e.target.style.filter = 'grayscale(100%)'}
+                        onError={(e) => { e.target.style.display = 'none'; }}
+                      />
+                    </div>
+                    <h4 className="text-center text-xs font-medium mt-3 group-hover:text-amber-700 transition-colors text-amber-800 truncate">
+                      {client.name}
+                    </h4>
+                  </div>
+                ))}
+              </div>
+            )}
+          </section>
+        )}
 
-        {/* Testimonials Section */}
+        {/* 9. Testimonials */}
         {testimonials.length > 0 && (
-          <div className="mb-24">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-bold mb-4" style={{ color: "#8b6a3f" }}>What Our Clients Say</h2>
-              <p className="text-xl" style={{ color: "#9c7649" }}>Trusted testimonials from pharmaceutical industry leaders</p>
+          <section className="mb-16 md:mb-24">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-amber-900">What Our Clients Say</h2>
+              <p className="text-lg text-amber-800">Trusted testimonials from pharmaceutical industry leaders</p>
             </div>
             
             {loadingTestimonials ? (
               <div className="text-center py-10">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2" style={{ borderColor: "#b78852" }}></div>
-                <p className="mt-4 text-lg" style={{ color: "#8b6a3f" }}>Loading Testimonials...</p>
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-amber-600"></div>
+                <p className="mt-4 text-lg text-amber-800">Loading Testimonials...</p>
               </div>
             ) : (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {testimonials.map((testimonial, index) => (
-                  <div key={testimonial.id} className="group p-8 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2" style={{ backgroundColor: "rgba(255, 255, 255, 0.9)", border: "1px solid rgba(183, 136, 82, 0.15)" }}>
-                    <div className="flex text-yellow-400 mb-6">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} size={18} fill="currentColor" />
-                      ))}
+                  <div key={testimonial.id} className="group p-6 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 bg-white border border-amber-100">
+                    <div className="flex text-amber-400 mb-6">
+                      {[...Array(5)].map((_, i) => ( <Star key={i} size={16} fill="currentColor" /> ))}
                     </div>
-                    <p className="text-lg mb-6 italic leading-relaxed" style={{ color: "#9c7649" }}>
+                    <p className="text-base mb-6 italic leading-relaxed text-amber-800">
                       {testimonial.testimonial_text}
                     </p>
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold" style={{ background: "linear-gradient(135deg, #b78852 0%, #c9955f 100%)" }}>
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold bg-gradient-to-r from-amber-600 to-amber-800">
                         {testimonial.client_name.charAt(0)}
                       </div>
                       <div>
-                        <div className="font-bold" style={{ color: "#8b6a3f" }}>{testimonial.client_name}</div>
-                        <div className="text-sm" style={{ color: "#b78852" }}>{testimonial.company}</div>
+                        <div className="font-bold text-amber-900">{testimonial.client_name}</div>
+                        <div className="text-xs text-amber-700">{testimonial.company}</div>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
             )}
-          </div>
+          </section>
         )}
 
-        {/* CTA Section - With Dynamic USP */}
-        <div className="relative overflow-hidden rounded-3xl p-12 text-center text-white" style={{ background: "linear-gradient(135deg, #8b6a3f 0%, #b78852 50%, #c9955f 100%)" }}>
-          <div className="absolute inset-0 opacity-20">
+        {/* 10. Our Commitment to Excellence (CTA Section) */}
+        <section className="relative overflow-hidden rounded-3xl p-8 md:p-12 text-center text-white bg-gradient-to-r from-amber-700 to-amber-900">
+          <div className="absolute inset-0 opacity-10">
             <div className="w-full h-full" style={{ backgroundImage: `radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1) 1px, transparent 1px)`, backgroundSize: '50px 50px' }}></div>
           </div>
           <div className="relative z-10 max-w-4xl mx-auto">
-            <h2 className="text-4xl font-bold mb-6">Our Commitment to Excellence</h2>
-            <p className="text-xl mb-8 leading-relaxed italic" style={{ color: "rgba(255, 255, 255, 0.9)" }}>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">Our Commitment to Excellence</h2>
+            <p className="text-lg mb-6 leading-relaxed italic text-amber-100">
               {companyInfo?.usp ? `"${stripHtml(companyInfo.usp)}"` : '"We commit to deliver the technically best solution complemented by after-sales service. From IQ/OQ qualification and calibration to preventive maintenance and rapid breakdown support, we ensure maximum uptime and process reliability."'}
             </p>
-            <p className="mb-8" style={{ color: "rgba(255, 255, 255, 0.8)" }}>
+            <p className="mb-8 text-amber-200">
               This level of all-India leadership and unmatched service quality has earned us a loyal brand reputation, making us the most preferred partner in the pharmaceutical analytical instruments sector.
             </p>
-            <div className="inline-flex items-center gap-3 text-white px-8 py-4 rounded-2xl font-semibold hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer" style={{ background: "linear-gradient(135deg, #d4a06a 0%, #dfa975 100%)" }}>
+            <button className="inline-flex items-center gap-2 text-white px-6 py-3 rounded-2xl font-semibold hover:shadow-xl transition-all duration-300 bg-gradient-to-r from-amber-500 to-amber-700 hover:from-amber-600 hover:to-amber-800">
               Partner With Us
-              <ArrowRight size={20} />
-            </div>
+              <ArrowRight size={18} />
+            </button>
           </div>
-        </div>
+        </section>
+
       </div>
     </div>
   );

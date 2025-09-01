@@ -244,7 +244,7 @@ const PartnersSection = () => {
           
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { icon: <TrendingUp size={20} />, title: "Market Leadership", stat: "28+ Years", description: "Industry experience" },
+              { icon: <TrendingUp size={20} />, title: "Market Leadership", stat: "27+ Years", description: "Industry experience" },
               { icon: <Shield size={20} />, title: "Service Excellence", stat: "24/7 Support", description: "Always available" },
               { icon: <CheckCircle size={20} />, title: "Regulatory Knowledge", stat: "100% Compliant", description: "FDA standards" },
               { icon: <Users size={20} />, title: "Customer Relations", stat: "800+ Customers", description: "Trusted nationwide" }
@@ -690,7 +690,7 @@ const TestimonialsSection = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-amber-800 mb-4">
-              Trusted by Leading Pharma Companies
+              Serving To Leading Pharma Companies
             </h2>
             <p className="text-xl text-gray-600">
               Our customer-centric approach has earned us loyalty across the
@@ -726,7 +726,7 @@ const TestimonialsSection = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-amber-800 mb-4">
-            Trusted by Leading Pharma Companies
+            Serving To Leading Pharma Companies
           </h2>
           <p className="text-xl text-gray-600">
             Our customer-centric approach has earned us loyalty across the
