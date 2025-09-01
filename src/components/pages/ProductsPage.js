@@ -24,12 +24,14 @@ export default function ProductsPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  // ✨ CHANGED: Default category is now "Pharmaceutical"
+  const [selectedCategory, setSelectedCategory] = useState("Pharmaceutical");
   const [selectedApplications, setSelectedApplications] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [categories, setCategories] = useState([]);
   const [showMobileFilters, setShowMobileFilters] = useState(false);
-  const [showApplications, setShowApplications] = useState(false);
+  // ✨ CHANGED: Show applications by default since a category is pre-selected
+  const [showApplications, setShowApplications] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -37,7 +39,20 @@ export default function ProductsPage() {
         const response = await axios.get(
           "https://sweekarme.in/shree/api/products/all/"
         );
-        const productsData = response?.data;
+        let productsData = response?.data;
+
+        // ✨ NEW: Sort products to show new items first
+        if (Array.isArray(productsData)) {
+          productsData.sort((a, b) => {
+            // Primary sort: `is_new: true` comes before `is_new: false`
+            if (a.is_new && !b.is_new) return -1;
+            if (!a.is_new && b.is_new) return 1;
+            
+            // Secondary sort (optional but good practice): newest items first
+            return new Date(b.created_at) - new Date(a.created_at);
+          });
+        }
+        
         setProducts(productsData);
 
         // Extract unique categories
@@ -160,6 +175,8 @@ export default function ProductsPage() {
       "Testing Solutions": <Zap size={20} />,
       "Quality Control": <Package size={20} />,
       "Research Tools": <Globe size={20} />,
+      // Added Pharmaceutical icon
+      "Pharmaceutical": <FlaskConical size={20} />,
       default: <Grid3X3 size={20} />,
     };
     return iconMap[categoryName] || iconMap["default"];

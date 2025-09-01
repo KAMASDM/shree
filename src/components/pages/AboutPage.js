@@ -1,4 +1,3 @@
-// src/components/pages/AboutPage.js
 "use client";
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
@@ -23,6 +22,7 @@ import {
   Quote
 } from "lucide-react";
 import { apiService } from '../../lib/api';
+import Decade from '../../img/shree-decade.jpeg';
 
 export default function AboutPage() {
   // State for API data
@@ -145,10 +145,14 @@ export default function AboutPage() {
   // Extract text from HTML content
   const stripHtml = (html) => {
     if (!html) return '';
+    if (typeof document === 'undefined') return html; // Return as-is in SSR
     const tmp = document.createElement("div");
     tmp.innerHTML = html;
     return tmp.textContent || tmp.innerText || "";
   };
+
+  const awardsToDisplay = awards.length > 0 ? Array(5).fill([...awards]).flat() : [];
+  const clientsToDisplay = clients.length > 0 ? Array(5).fill([...clients]).flat() : [];
 
   return (
     <div className="pt-16 pb-20 bg-gradient-to-b from-amber-50 to-white">
@@ -173,19 +177,6 @@ export default function AboutPage() {
               in analytical instruments for pharmaceutical industry. 
               <span className="block mt-2 text-base md:text-lg">27+ years of excellence serving pharmaceutical and biopharma sectors</span>
             </p>
-            
-            {/* <div className="flex flex-wrap justify-center gap-3 mb-8">
-              {[
-                { label: "Since 1998", icon: Calendar, bgColor: "bg-amber-100", textColor: "text-amber-800" },
-                { label: "800+ Customers", icon: Users, bgColor: "bg-green-100", textColor: "text-green-800" },
-                { label: "10,000+ Installations", icon: CheckCircle, bgColor: "bg-blue-100", textColor: "text-blue-800" }
-              ].map((badge, i) => (
-                <div key={i} className={`flex items-center gap-2 px-4 py-2 rounded-full font-medium shadow-sm transition-all duration-300 ${badge.bgColor} ${badge.textColor}`}>
-                  <badge.icon size={16} />
-                  {badge.label}
-                </div>
-              ))}
-            </div> */}
           </div>
         </section>
 
@@ -264,7 +255,7 @@ export default function AboutPage() {
             <div className="absolute inset-0 rounded-3xl transform rotate-3 opacity-20 bg-amber-600"></div>
             <div className="relative p-2 rounded-3xl shadow-xl bg-white">
               <Image
-                src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&h=400&fit=crop"
+                src={Decade}
                 alt="Shreedhar Instruments Facilities"
                 width={600}
                 height={400}
@@ -403,47 +394,31 @@ export default function AboutPage() {
             </div>
           ) : awards.length > 0 ? (
             <div className="relative">
-              <div className="relative w-full overflow-hidden py-4">
+              <div className="relative w-full overflow-hidden py-4"
+                style={{
+                  maskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)'
+                }}
+              >
                 <style jsx>{`
                   @keyframes awards-scroll {
-                    0% {
-                      transform: translateX(0);
-                    }
-                    100% {
-                      transform: translateX(-50%);
-                    }
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(-50%); }
                   }
                   .animate-awards-scroll {
-                    animation: awards-scroll 40s linear infinite;
+                    animation: awards-scroll 80s linear infinite;
                   }
                   .animate-awards-scroll:hover {
                     animation-play-state: paused;
                   }
                 `}</style>
-                
-                <div 
-                  className={`flex space-x-6 ${awards.length > 3 ? 'animate-awards-scroll' : 'justify-center'}`}
-                  style={{
-                    maskImage: awards.length > 3 
-                      ? 'linear-gradient(to right, transparent 0, #000 64px, #000 calc(100% - 64px), transparent 100%)'
-                      : 'none'
-                  }}
-                >
-                  {(awards.length > 3 ? [...awards, ...awards] : awards)
+                <div className="flex w-fit animate-awards-scroll">
+                  {awardsToDisplay
                     .sort((a, b) => b.year - a.year)
                     .map((award, index) => (
                     <div 
                       key={`${award.id}-${index}`} 
-                      className={`group flex-shrink-0 w-72 p-6 rounded-3xl hover:shadow-xl transition-all duration-300 relative ${
-                        awards.length <= 3 && index === 0 ? 'ring-2 ring-amber-400 shadow-lg scale-105' : 'bg-white border border-amber-100'
-                      }`}
+                      className="group flex-shrink-0 w-72 p-6 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 bg-white border border-amber-100 mx-4"
                     >
-                      {awards.length <= 3 && index === 0 && (
-                        <div className="absolute -top-3 -right-3 bg-gradient-to-r from-amber-400 to-orange-400 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg z-10">
-                          Latest Award
-                        </div>
-                      )}
-                      
                       {award.image && (
                         <div className="relative mb-6 rounded-2xl overflow-hidden shadow-lg group-hover:shadow-xl transition-all duration-300 bg-white">
                           <div className="aspect-[4/3] flex items-center justify-center p-4">
@@ -497,31 +472,6 @@ export default function AboutPage() {
                   ))}
                 </div>
               </div>
-              
-              <div className="text-center mt-8 space-y-4">
-                <div className="flex items-center justify-center gap-4 flex-wrap">
-                  <div className="flex items-center gap-2">
-                    <Award size={16} className="text-amber-600" />
-                    <span className="text-sm font-medium text-amber-800">
-                      {awards.length} Awards Earned
-                    </span>
-                  </div>
-                  <span className="text-gray-400 hidden sm:inline">•</span>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs bg-amber-100 px-3 py-1 rounded-full text-amber-800 font-medium">
-                      {awards.length > 3 ? 'Auto-scrolling' : 'Static Display'}
-                    </span>
-                  </div>
-                </div>
-                
-                {awards.length > 3 && (
-                  <p className="text-xs text-amber-700">
-                    Hover to pause • Showcasing our commitment to excellence
-                  </p>
-                )}
-              </div>
-
-             
             </div>
           ) : (
             <div className="text-center py-10">
@@ -543,25 +493,39 @@ export default function AboutPage() {
                 <p className="mt-4 text-lg text-amber-800">Loading Clients...</p>
               </div>
             ) : (
-              <div className="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 md:gap-6">
-                {clients.map((client, index) => (
-                  <div key={client.id} className="group p-3 md:p-4 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 bg-white border border-amber-100">
-                    <div className="aspect-square flex items-center justify-center">
+              <div className="relative w-full overflow-hidden py-4"
+                style={{
+                  maskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)'
+                }}
+              >
+                <style jsx>{`
+                  @keyframes client-scroll {
+                    0% { transform: translateX(0); }
+                    100% { transform: translateX(-50%); }
+                  }
+                  .animate-client-scroll {
+                    animation: client-scroll 80s linear infinite;
+                  }
+                  .animate-client-scroll:hover {
+                    animation-play-state: paused;
+                  }
+                `}</style>
+                <div className="flex w-fit animate-client-scroll">
+                  {clientsToDisplay.map((client, index) => (
+                    <div
+                      key={`${client.id}-${index}`}
+                      className="flex-shrink-0 w-48 h-24 flex items-center justify-center mx-6"
+                    >
                       <img
                         src={client.logo}
                         alt={`${client.name} logo`}
-                        className="max-w-full max-h-12 object-contain group-hover:scale-110 transition-transform duration-300"
-                        style={{ filter: 'grayscale(100%)', transition: 'filter 0.3s' }}
-                        onMouseEnter={(e) => e.target.style.filter = 'grayscale(0%)'}
-                        onMouseLeave={(e) => e.target.style.filter = 'grayscale(100%)'}
+                        className="max-h-16 max-w-full object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+                        loading="lazy"
                         onError={(e) => { e.target.style.display = 'none'; }}
                       />
                     </div>
-                    <h4 className="text-center text-xs font-medium mt-3 group-hover:text-amber-700 transition-colors text-amber-800 truncate">
-                      {client.name}
-                    </h4>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             )}
           </section>

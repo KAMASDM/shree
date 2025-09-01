@@ -90,7 +90,8 @@ const PartnersSection = () => {
   }
 
   // Create duplicated partners for smooth infinite scrolling
-  const partnersToDisplay = partners.length > 3 ? [...partners, ...partners] : partners;
+  const partnersToDisplay = partners.length > 0 ? Array(5).fill([...partners]).flat() : [];
+
 
   return (
     <section className="py-12 md:py-16 bg-white">
@@ -109,35 +110,27 @@ const PartnersSection = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center mb-16">
             {partners.map((partner) => (
               <div key={partner.id} className="bg-white p-6 rounded-2xl shadow-lg border border-amber-100 hover:shadow-xl hover:border-amber-300 transition-all duration-300">
-                {/* Partner Logo */}
                 <div className="flex items-center justify-center h-20 mb-6">
                   <img
                     src={partner.logo}
                     alt={`${partner.name} logo`}
                     className="max-w-full max-h-full object-contain"
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                    }}
+                    onError={(e) => { e.target.style.display = 'none'; }}
                   />
                 </div>
-                
-                {/* Partner Details */}
                 <div className="text-center space-y-3">
                   <h3 className="text-lg font-bold text-amber-800">{partner.name}</h3>
-                  
                   <div className="flex items-center justify-center gap-2">
                     <span className="px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-medium">
                       {partner.partner_type_display}
                     </span>
                     <span className="text-xs text-gray-500">{partner.country}</span>
                   </div>
-                  
                   {partner.recognition_level && (
                     <div className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded">
                       {partner.recognition_level}
                     </div>
                   )}
-                  
                   <div className="text-xs text-gray-600">
                     <div>Partnership: {partner.partnership_duration_years} years</div>
                     <div>Since {new Date(partner.partnership_since).getFullYear()}</div>
@@ -149,62 +142,49 @@ const PartnersSection = () => {
         ) : (
           // Horizontal scroller for more than 3 partners
           <div className="relative mb-16">
-            <div className="relative w-full overflow-hidden py-4">
+            <div className="relative w-full overflow-hidden py-4"
+              style={{
+                maskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)'
+              }}
+            >
               <style jsx>{`
                 @keyframes partner-scroll {
-                  0% {
-                    transform: translateX(0);
-                  }
-                  100% {
-                    transform: translateX(-50%);
-                  }
+                  0% { transform: translateX(0); }
+                  100% { transform: translateX(-50%); }
                 }
                 .animate-partner-scroll {
-                  animation: partner-scroll 40s linear infinite;
+                  animation: partner-scroll 120s linear infinite;
                 }
                 .animate-partner-scroll:hover {
                   animation-play-state: paused;
                 }
               `}</style>
-              <div 
-                className="flex space-x-6 animate-partner-scroll"
-                style={{
-                  maskImage: 'linear-gradient(to right, transparent 0, #000 128px, #000 calc(100% - 128px), transparent 100%)'
-                }}
-              >
+              <div className="flex w-fit animate-partner-scroll">
                 {partnersToDisplay.map((partner, index) => (
-                  <div key={`${partner.id}-${index}`} className="flex-shrink-0 w-80">
+                  <div key={`${partner.id}-${index}`} className="flex-shrink-0 w-80 mx-4">
                     <div className="bg-white p-6 rounded-2xl shadow-lg border border-amber-100 hover:shadow-xl hover:border-amber-300 transition-all duration-300 h-full">
-                      {/* Partner Logo */}
                       <div className="flex items-center justify-center h-20 mb-6">
                         <img
                           src={partner.logo}
                           alt={`${partner.name} logo`}
                           className="max-w-full max-h-full object-contain"
                           loading="lazy"
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                          }}
+                          onError={(e) => { e.target.style.display = 'none'; }}
                         />
                       </div>
-                      
-                      {/* Partner Details */}
                       <div className="text-center space-y-3">
                         <h3 className="text-lg font-bold text-amber-800">{partner.name}</h3>
-                        
                         <div className="flex items-center justify-center gap-2">
                           <span className="px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-medium">
                             {partner.partner_type_display}
                           </span>
                           <span className="text-xs text-gray-500">{partner.country}</span>
                         </div>
-                        
                         {partner.recognition_level && (
                           <div className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded">
                             {partner.recognition_level}
                           </div>
                         )}
-                        
                         <div className="text-xs text-gray-600 space-y-1">
                           <div className="flex items-center justify-center gap-1">
                             <Calendar size={12} />
@@ -217,16 +197,6 @@ const PartnersSection = () => {
                   </div>
                 ))}
               </div>
-            </div>
-            
-            {/* Scroll Indicator */}
-            <div className="text-center mt-6">
-              <p className="text-sm flex items-center justify-center gap-2 text-gray-600">
-                <Users size={16} className="text-amber-600" />
-                {partners.length} trusted global partners
-                <span className="mx-2">•</span>
-                <span className="text-xs bg-amber-100 px-2 py-1 rounded-full text-amber-800">Auto-scrolling</span>
-              </p>
             </div>
           </div>
         )}
@@ -493,9 +463,7 @@ const FeaturedProductsSection = () => {
       try {
         setLoading(true);
         const { data } = await apiService.getFeaturedProducts();
-        // Log the data to debug
-        console.log('Featured products:', data);
-        setFeaturedProducts(Array.isArray(data) ? data : []); // Show all featured products
+        setFeaturedProducts(Array.isArray(data) ? data : []);
       } catch (err) {
         console.error("Failed to fetch featured products:", err);
         setError(err.message || "Failed to load featured products");
@@ -540,8 +508,7 @@ const FeaturedProductsSection = () => {
     );
   }
 
-  // Create duplicated products for smooth infinite scrolling if we have more than 3
-  const productsToDisplay = featuredProducts.length > 3 ? [...featuredProducts, ...featuredProducts] : featuredProducts;
+  const productsToDisplay = featuredProducts.length > 0 ? Array(5).fill([...featuredProducts]).flat() : [];
 
   return (
     <section className="py-20 bg-gray-50">
@@ -557,59 +524,41 @@ const FeaturedProductsSection = () => {
         </div>
         
         {featuredProducts.length <= 3 ? (
-          // Static grid for 3 or fewer products
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
             {featuredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
         ) : (
-          // Horizontal scroller for more than 3 products
           <div className="relative">
-            <div className="relative w-full overflow-hidden py-4">
+            <div className="relative w-full overflow-hidden py-4"
+              style={{
+                maskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)'
+              }}
+            >
               <style jsx>{`
                 @keyframes product-scroll {
-                  0% {
-                    transform: translateX(0);
-                  }
-                  100% {
-                    transform: translateX(-50%);
-                  }
+                  0% { transform: translateX(0); }
+                  100% { transform: translateX(-50%); }
                 }
                 .animate-product-scroll {
-                  animation: product-scroll 45s linear infinite;
+                  animation: product-scroll 120s linear infinite;
                 }
                 .animate-product-scroll:hover {
                   animation-play-state: paused;
                 }
               `}</style>
-              <div 
-                className="flex space-x-6 animate-product-scroll"
-                style={{
-                  maskImage: 'linear-gradient(to right, transparent 0, #000 128px, #000 calc(100% - 128px), transparent 100%)'
-                }}
-              >
+              <div className="flex w-fit animate-product-scroll">
                 {productsToDisplay.map((product, index) => (
-                  <div key={`${product.id}-${index}`} className="flex-shrink-0 w-80">
+                  <div key={`${product.id}-${index}`} className="flex-shrink-0 w-80 mx-4">
                     <ProductCard product={product} />
                   </div>
                 ))}
               </div>
             </div>
-            
-            {/* Scroll Indicator */}
-            <div className="text-center mt-6">
-              <p className="text-sm flex items-center justify-center gap-2 text-gray-600">
-                <Star size={16} className="text-amber-600" />
-                {featuredProducts.length} featured instruments available
-                <span className="mx-2">•</span>
-                <span className="text-xs bg-amber-100 px-2 py-1 rounded-full text-amber-800">Auto-scrolling</span>
-              </p>
-            </div>
           </div>
         )}
         
-        {/* Products Stats */}
         <div className="mt-16 bg-white rounded-2xl p-8 shadow-sm">
           <div className="text-center mb-8">
             <h3 className="text-2xl md:text-3xl font-bold mb-4 text-amber-800">
@@ -649,170 +598,90 @@ const FeaturedProductsSection = () => {
   );
 };
 
-const TestimonialsSection = () => {
-  const [testimonials, setTestimonials] = useState([]);
+const ClientsSection = () => {
+  const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchTestimonials = async () => {
+    const fetchClients = async () => {
       try {
         setLoading(true);
-        const { data } = await apiService.getTestimonials({ is_featured: true });
-        setTestimonials(Array.isArray(data) ? data : []);
+        const { data, error: apiError } = await apiService.getClients();
+        if (apiError) {
+            console.warn('Clients API warning:', apiError);
+        }
+        setClients(Array.isArray(data) ? data : []);
       } catch (err) {
-        console.error("Failed to fetch testimonials:", err);
-        setError(err.message || "Failed to load testimonials");
-        setTestimonials([]); // Set empty array on error
+        console.error("Failed to fetch clients:", err);
+        setError(err.message || "Failed to load clients");
+        setClients([]);
       } finally {
         setLoading(false);
       }
     };
-    fetchTestimonials();
+    fetchClients();
   }, []);
 
   if (loading) {
     return (
       <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-10 w-10 border-b-2 border-amber-600 mb-4"></div>
-            <p className="text-lg font-semibold text-gray-600">Loading testimonials...</p>
-          </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="inline-block animate-spin rounded-full h-10 w-10 border-b-2 border-amber-600 mb-4"></div>
+          <p className="text-lg font-semibold text-gray-600">Loading Our Esteemed Clients...</p>
         </div>
       </section>
     );
   }
 
-  if (error || testimonials.length === 0) {
-    return (
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-amber-800 mb-4">
-              Serving To Leading Pharma Companies
-            </h2>
-            <p className="text-xl text-gray-600">
-              Our customer-centric approach has earned us loyalty across the
-              industry
-            </p>
-          </div>
-          
-          <div className="text-center py-12">
-            {error ? (
-              <div>
-                <p className="text-gray-600 mb-4">Unable to load testimonials at this time.</p>
-                <button 
-                  onClick={() => window.location.reload()}
-                  className="px-6 py-2 bg-amber-600 text-white rounded-lg font-semibold hover:bg-amber-700 transition-colors"
-                >
-                  Retry Loading
-                </button>
-              </div>
-            ) : (
-              <p className="text-gray-600">No testimonials available at this time.</p>
-            )}
-          </div>
-        </div>
-      </section>
-    );
+  if (error || clients.length === 0) {
+    return null; 
   }
 
-  // Create duplicated testimonials for smooth infinite scrolling
-  const testimonialsToDisplay = testimonials.length > 3 ? [...testimonials, ...testimonials] : testimonials;
+  const clientsToDisplay = clients.length > 0 ? Array(5).fill([...clients]).flat() : [];
 
   return (
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-amber-800 mb-4">
-            Serving To Leading Pharma Companies
+            Trusted by Industry Leaders
           </h2>
           <p className="text-xl text-gray-600">
-            Our customer-centric approach has earned us loyalty across the
-            industry
+            We are proud to partner with leading companies in the pharmaceutical sector.
           </p>
         </div>
         
-        <div className="relative w-full overflow-hidden py-4">
+        <div className="relative w-full overflow-hidden py-4"
+          style={{
+            maskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)'
+          }}
+        >
           <style jsx>{`
-            @keyframes testimonial-scroll {
-              0% {
-                transform: translateX(0);
-              }
-              100% {
-                transform: translateX(-50%);
-              }
+            @keyframes client-scroll {
+              0% { transform: translateX(0); }
+              100% { transform: translateX(-50%); }
             }
-            .animate-testimonial-scroll {
-              animation: testimonial-scroll 35s linear infinite;
+            .animate-client-scroll {
+              animation: client-scroll 80s linear infinite;
             }
-            .animate-testimonial-scroll:hover {
+            .animate-client-scroll:hover {
               animation-play-state: paused;
             }
           `}</style>
-          <div 
-            className={`flex space-x-6 ${testimonials.length > 3 ? 'animate-testimonial-scroll' : 'justify-center'}`}
-            style={{
-              maskImage: testimonials.length > 3 
-                ? 'linear-gradient(to right, transparent 0, #000 128px, #000 calc(100% - 128px), transparent 100%)'
-                : 'none'
-            }}
-          >
-            {testimonialsToDisplay.map((testimonial, index) => (
+          <div className="flex w-fit animate-client-scroll">
+            {clientsToDisplay.map((client, index) => (
               <div
-                key={`${testimonial.id}-${index}`}
-                className="flex-shrink-0 w-80 bg-amber-50 p-6 rounded-2xl border-l-4 border-amber-500 shadow-lg hover:shadow-xl transition-shadow"
+                key={`${client.id}-${index}`}
+                className="flex-shrink-0 w-48 h-24 flex items-center justify-center mx-6"
               >
-                <div className="flex text-yellow-400 mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} size={16} fill="currentColor" />
-                  ))}
-                </div>
-                <p className="text-gray-700 mb-4 italic text-sm leading-relaxed">
-                  {`"${testimonial.testimonial_text}"`}
-                </p>
-                <div>
-                  <div className="font-semibold text-amber-800 text-sm">
-                    {testimonial.client_name}
-                  </div>
-                  <div className="text-xs text-amber-600">
-                    {testimonial.company}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Testimonials Stats */}
-        <div className="mt-16 bg-amber-50 rounded-2xl p-8">
-          <div className="text-center mb-8">
-            <h3 className="text-2xl md:text-3xl font-bold mb-4 text-amber-800">
-              Customer Success Metrics
-            </h3>
-            <p className="text-base max-w-2xl mx-auto text-gray-600">
-              Numbers that speak to our commitment to pharmaceutical excellence
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {[
-              { stat: "500+", title: "Happy Customers", description: "Satisfied clients nationwide" },
-              { stat: "98%", title: "Success Rate", description: "Customer satisfaction" },
-              { stat: "24/7", title: "Support", description: "Technical assistance" },
-              { stat: "15+", title: "Years", description: "Industry experience" }
-            ].map((metric, index) => (
-              <div key={index} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-amber-800 mb-2">
-                  {metric.stat}
-                </div>
-                <h4 className="text-lg font-semibold text-amber-800 mb-1">
-                  {metric.title}
-                </h4>
-                <p className="text-sm text-gray-600">
-                  {metric.description}
-                </p>
+                <img
+                  src={client.logo}
+                  alt={`${client.name} logo`}
+                  className="max-h-16 max-w-full object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+                  loading="lazy"
+                  onError={(e) => { e.target.style.display = 'none'; }}
+                />
               </div>
             ))}
           </div>
@@ -821,6 +690,7 @@ const TestimonialsSection = () => {
     </section>
   );
 };
+
 
 export default function Page() {
   return (
@@ -831,7 +701,8 @@ export default function Page() {
       <TargetMarketsSection />
       <UniqueValuePropositionSection />
       <FeaturedProductsSection />
-      <TestimonialsSection />
+      <ClientsSection />
     </>
   );
 }
+

@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Image from "next/image"; // ✨ NEW: Import the Next.js Image component
 import {
   Phone,
   Mail,
@@ -11,9 +12,10 @@ import {
   MessageSquare,
   Clock,
   ExternalLink,
-  Image as ImageIcon,
+  ImageIcon,
 } from "lucide-react";
 import { apiService } from "../../lib/api";
+import mapImage from "../../img/shree-map.png"; // ✨ NEW: Import your map image
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -72,7 +74,8 @@ export default function ContactPage() {
     try {
       await apiService.submitLead(payload);
       setIsSubmitted(true)
-    } catch (err) {
+    } catch (err)
+{
       setError("An error occurred. Please try again.");
       console.error("Submission Error:", err);
     }
@@ -391,9 +394,25 @@ export default function ContactPage() {
                 </button>
               </form>
             </div>
-
-            {/* Head Office Info with Image */}
+            
+            {/* ✨ MODIFIED: Right column now contains the map, head office, and stats */}
             <div className='space-y-8'>
+              {/* ✨ NEW: Added map image here */}
+              <div
+                className='rounded-3xl shadow-xl overflow-hidden'
+                style={{
+                  border: "1px solid rgba(183, 136, 82, 0.15)",
+                }}
+              >
+                <Image
+                  src={mapImage}
+                  alt='Shreedhar Instruments office locations map across India'
+                  className='w-full h-auto'
+                  priority
+                />
+              </div>
+
+              {/* Head Office Info */}
               {headOffice && (
                 <div
                   className='rounded-3xl shadow-xl overflow-hidden'
@@ -534,7 +553,7 @@ export default function ContactPage() {
               </div>
             </div>
           </div>
-
+          
           {/* Office Locations by Type with Images */}
           <div className='mt-20'>
             <div className='text-center mb-16'>
@@ -710,42 +729,6 @@ export default function ContactPage() {
                     </div>
                   );
                 })}
-
-                {/* Summary Stats */}
-                {/* <div className='mt-16 bg-gradient-to-r from-amber-50 to-orange-50 rounded-3xl p-6 md:p-8'>
-                  <div className='text-center mb-8'>
-                    <h3 className='text-xl md:text-2xl font-bold mb-2' style={{ color: "#8b6a3f" }}>
-                      Our Network at a Glance
-                    </h3>
-                    <p style={{ color: "#9c7649" }}>
-                      Strategically located offices to serve you better
-                    </p>
-                  </div>
-                  <div className='grid grid-cols-2 md:grid-cols-4 gap-6'>
-                    {Object.entries(groupedOffices).map(([officeType, offices]) => {
-                      if (offices.length === 0) return null;
-                      const config = officeTypeConfig[officeType];
-                      const IconComponent = config.icon;
-                      
-                      return (
-                        <div key={officeType} className='text-center'>
-                          <div
-                            className='w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3 shadow-md'
-                            style={{ background: config.bgGradient }}
-                          >
-                            <IconComponent className='text-white' size={20} />
-                          </div>
-                          <div className='text-xl md:text-2xl font-bold mb-1' style={{ color: config.color }}>
-                            {offices.length}
-                          </div>
-                          <div className='text-xs md:text-sm font-medium' style={{ color: "#9c7649" }}>
-                            {config.label}{offices.length > 1 ? 's' : ''}
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div> */}
               </div>
             )}
           </div>

@@ -122,7 +122,7 @@ export default function Footer({ setCurrentPage, setSelectedProduct }) {
               </p>
 
               {/* Compliance badges in compact format */}
-              <div className='space-y-2'>
+              {/* <div className='space-y-2'>
                 <p className='text-xs font-semibold' style={{ color: "#c4955e" }}>
                   Key Certifications:
                 </p>
@@ -136,7 +136,7 @@ export default function Footer({ setCurrentPage, setSelectedProduct }) {
                     </span>
                   ))}
                 </div>
-              </div>
+              </div> */}
 
               {/* Contact Info Inline */}
               <div className='grid sm:grid-cols-2 gap-3 text-xs'>
@@ -257,7 +257,7 @@ export default function Footer({ setCurrentPage, setSelectedProduct }) {
               <div className='flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-gray-400 text-xs text-center sm:text-left'>
                 <p>&copy; 2025 Shreedhar Instruments. All rights reserved.</p>
                 <span className='hidden sm:block text-gray-600'>|</span>
-                <p>Established 1998 | 28+ Years of Excellence</p>
+                <p>Established 1998 | 27+ Years of Excellence</p>
               </div>
               
               {/* Legal links */}
@@ -277,12 +277,12 @@ export default function Footer({ setCurrentPage, setSelectedProduct }) {
             </div>
 
             {/* Compliance statement - More compact */}
-            <div className='mt-3 p-2 bg-gray-800 rounded text-center'>
+            {/* <div className='mt-3 p-2 bg-gray-800 rounded text-center'>
               <p className='text-gray-400 text-xs'>
                 All products meet FDA, USP, EP, and WHO regulatory requirements.
                 21 CFR Part 11 compliant systems available for pharmaceutical applications.
               </p>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

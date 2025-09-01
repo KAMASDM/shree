@@ -484,53 +484,48 @@ export const apiService = {
     }
   },
 
-// Clients API  
-async getClients() {
-  const cacheKey = getCacheKey('/core/clients/');
-  const cachedData = await getCachedData(cacheKey);
-  
-  if (cachedData) {
-    return { data: cachedData, fromCache: true };
-  }
-  
-  try {
-    const response = await withRetry(() => 
-      apiClient.get('/core/clients/')
-    );
-    const data = response.data || [];
-    setCachedData(cacheKey, data);
-    return { data, fromCache: false };
-  } catch (error) {
-    console.error('Failed to fetch clients:', error);
-    return { data: [], fromCache: false, error: error.message };
-  }
-},
+  // ✨ NEW: Clients API Method
+  async getClients() {
+    const cacheKey = getCacheKey('/core/clients/');
+    const cachedData = await getCachedData(cacheKey);
+    
+    if (cachedData) {
+      return { data: cachedData, fromCache: true };
+    }
+    
+    try {
+      const response = await withRetry(() => 
+        apiClient.get('/core/clients/')
+      );
+      const data = response.data || [];
+      setCachedData(cacheKey, data);
+      return { data, fromCache: false };
+    } catch (error) {
+      console.error('Failed to fetch clients:', error);
+      return { data: [], fromCache: false, error: error.message };
+    }
+  },
 
-
-
-async getCompanyInfo() {
-  const cacheKey = getCacheKey('/core/company-info/');
-  const cachedData = await getCachedData(cacheKey);
-  
-  if (cachedData) {
-    return { data: cachedData, fromCache: true };
-  }
-  
-  try {
-    const response = await withRetry(() => 
-      apiClient.get('/core/company-info/')
-    );
-    const data = response.data || [];
-    setCachedData(cacheKey, data);
-    return { data, fromCache: false };
-  } catch (error) {
-    console.error('Failed to fetch company info:', error);
-    return { data: [], fromCache: false, error: error.message };
-  }
-},
-
-
-
+  async getCompanyInfo() {
+    const cacheKey = getCacheKey('/core/company-info/');
+    const cachedData = await getCachedData(cacheKey);
+    
+    if (cachedData) {
+      return { data: cachedData, fromCache: true };
+    }
+    
+    try {
+      const response = await withRetry(() => 
+        apiClient.get('/core/company-info/')
+      );
+      const data = response.data || [];
+      setCachedData(cacheKey, data);
+      return { data, fromCache: false };
+    } catch (error) {
+      console.error('Failed to fetch company info:', error);
+      return { data: [], fromCache: false, error: error.message };
+    }
+  },
 
   // Career/Jobs API
   async getJobs() {

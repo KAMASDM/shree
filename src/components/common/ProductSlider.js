@@ -1,7 +1,6 @@
-// src/components/common/ProductSlider.js
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
-import { ChevronLeft, ChevronRight, Star, ArrowRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import axios from "axios";
@@ -71,7 +70,6 @@ export default function ProductSlider({ currentProduct, title = "Related Product
   const sliderRef = useRef(null);
   const intervalRef = useRef(null);
 
-  //  fetching logic remains the same
   useEffect(() => {
     const fetchRelatedProducts = async () => {
       try {
@@ -130,7 +128,6 @@ export default function ProductSlider({ currentProduct, title = "Related Product
     setCurrentSlide(prev => (prev + 1) % products.length);
   }, [products.length]);
 
-  // ✨ Autoplay functionality
   useEffect(() => {
     if (!isHovering && products.length > 0) {
       intervalRef.current = setInterval(nextSlide, 5000);
@@ -142,17 +139,18 @@ export default function ProductSlider({ currentProduct, title = "Related Product
     scrollToSlide(currentSlide);
   }, [currentSlide, scrollToSlide]);
 
-  // 📱 Intersection Observer to track visible slide
   useEffect(() => {
     const slider = sliderRef.current;
-    if (!slider) return;
+    if (!slider || products.length === 0) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const index = parseInt(entry.target.dataset.index, 10);
-            setCurrentSlide(index);
+            if (!isNaN(index)) {
+              setCurrentSlide(index);
+            }
           }
         });
       },
@@ -176,7 +174,6 @@ export default function ProductSlider({ currentProduct, title = "Related Product
   return (
     <div className="py-12 my-8" onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* 🎨 Redesigned Header */}
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold tracking-tight" style={{ color: "#8b6a3f" }}>
             {title}
@@ -186,20 +183,19 @@ export default function ProductSlider({ currentProduct, title = "Related Product
           </p>
         </div>
 
-        <div className="relative group">
-          {/* 📱 Fully Responsive Slider with Scroll Snap */}
+        {/* The slider container now has the 'slider-container' class */}
+        <div className="relative group slider-container">
           <div
             ref={sliderRef}
             className="flex gap-6 p-4 -m-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide"
           >
-            {products.map((product, index) => (
+            {products.map((product) => (
               <div key={product.id} className="flex-shrink-0 w-[85%] sm:w-[45%] md:w-1/3 lg:w-1/4 snap-center">
                 <ProductCard product={product} />
               </div>
             ))}
           </div>
 
-          {/* 🎨 Improved Navigation Arrows */}
           <button
             onClick={() => setCurrentSlide(prev => (prev - 1 + products.length) % products.length)}
             className="absolute top-1/2 left-0 -translate-y-1/2 z-20 p-2 bg-white/80 backdrop-blur-sm rounded-full shadow-lg transition-all opacity-0 group-hover:opacity-100 hover:scale-110 disabled:opacity-30"
@@ -218,7 +214,6 @@ export default function ProductSlider({ currentProduct, title = "Related Product
           </button>
         </div>
 
-        {/* 🎨 Redesigned Dot Indicators */}
         <div className="flex justify-center mt-8 gap-2">
           {products.map((_, index) => (
             <button
@@ -240,6 +235,29 @@ export default function ProductSlider({ currentProduct, title = "Related Product
           -webkit-line-clamp: 2;
           -webkit-box-orient: vertical;
           overflow: hidden;
+        }
+
+        /* ✨ NEW CSS FOR FADE EFFECT ✨ */
+        .slider-container {
+            position: relative;
+        }
+        .slider-container::before,
+        .slider-container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 10%; /* Adjust width of the fade */
+            z-index: 10; /* Ensures the fade is above the slider cards */
+            pointer-events: none; /* Allows clicks to pass through the fade */
+        }
+        .slider-container::before {
+            left: 0;
+            background: linear-gradient(to right, white, transparent);
+        }
+        .slider-container::after {
+            right: 0;
+            background: linear-gradient(to left, white, transparent);
         }
       `}</style>
     </div>
