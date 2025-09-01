@@ -564,8 +564,8 @@ export default function ProductDetailPage() {
                   <div className="flex items-center gap-3 p-4 rounded-xl transition-all duration-300 hover:scale-105" style={{ backgroundColor: "rgba(255, 255, 255, 0.8)", border: "1px solid rgba(183, 136, 82, 0.15)" }}>
                     <Award className="text-purple-500" size={20} />
                     <div>
-                      <div className="font-semibold text-sm" style={{ color: "#8b6a3f" }}>Quality Assured</div>
-                      <div className="text-xs" style={{ color: "#9c7649" }}>2-year comprehensive warranty</div>
+                      <div className="font-semibold text-sm" style={{ color: "#8b6a3f" }}>Export Quality</div>
+                      <div className="text-xs" style={{ color: "#9c7649" }}>Products manufactured to international standards</div>
                     </div>
                   </div>
                 </div>

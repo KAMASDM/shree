@@ -1,6 +1,7 @@
 // src/components/common/Footer.js
 "use client";
 
+import { useState, useEffect } from "react";
 import {
   Facebook,
   Twitter,
@@ -13,10 +14,29 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import SHREELogo from "../../../src/img/SHREE-LOGO.webp"; // Import the new logo
-
+import SHREELogo from "../../../src/img/SHREE-LOGO.webp";
+import { apiService } from "../../lib/api";
 
 export default function Footer({ setCurrentPage, setSelectedProduct }) {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch products on mount
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await apiService.getAllProducts();
+        // Get first 8 products for footer display
+        setProducts(response.data.slice(0, 8));
+      } catch (error) {
+        console.error("Failed to fetch products for footer:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
+
   const navigation = [
     { name: "Home", key: "home", path: "/" },
     { name: "About Us", key: "about", path: "/about" },
@@ -25,14 +45,6 @@ export default function Footer({ setCurrentPage, setSelectedProduct }) {
     { name: "Careers", key: "careers", path: "/careers" },
     { name: "News", key: "news", path: "/news" },
     { name: "Contact", key: "contact", path: "/contact" },
-  ];
-
-  const productCategories = [
-    { name: "Particle Counters", path: "/products" },
-    { name: "Environmental Monitors", path: "/products" },
-    { name: "Analytical Balances", path: "/products" },
-    { name: "Airborne Monitors", path: "/products" },
-    { name: "Cleanroom Systems", path: "/products" },
   ];
 
   const complianceStandards = [
@@ -46,46 +58,71 @@ export default function Footer({ setCurrentPage, setSelectedProduct }) {
     { name: "Privacy Policy", path: "/privacy" },
     { name: "Terms of Service", path: "/terms" },
     { name: "Quality Policy", path: "/quality" },
-    { name: "Sitemap", path: "/sitemap.xml" }, // Fixed sitemap link
+    { name: "Sitemap", path: "/sitemap.xml" },
+  ];
+
+  const socialLinks = [
+    {
+      icon: <Facebook size={18} />,
+      color: "hover:text-blue-400",
+      name: "Facebook",
+      url: "https://www.facebook.com/shreedharinstruments"
+    },
+    {
+      icon: <Twitter size={18} />,
+      color: "hover:text-sky-400",
+      name: "Twitter",
+      url: "https://twitter.com/shreedhargroup"
+    },
+    {
+      icon: <Linkedin size={18} />,
+      color: "hover:text-blue-400",
+      name: "LinkedIn",
+      url: "https://www.linkedin.com/company/shreedhar-instruments"
+    },
+    {
+      icon: <Instagram size={18} />,
+      color: "hover:text-pink-400",
+      name: "Instagram", 
+      url: "https://www.instagram.com/shreedharinstruments"
+    },
   ];
 
   return (
     <footer className='bg-gray-900 text-white'>
-      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12'>
-        {/* Main footer content */}
-        <div className='grid md:grid-cols-5 gap-8'>
-          {/* Company Info */}
-          <div className='md:col-span-2 space-y-4'>
+      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
+        {/* Main footer content - Compact Grid Layout */}
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8'>
+          
+          {/* Company Info - Takes more space */}
+          <div className='lg:col-span-2 space-y-3'>
             <div className='flex items-center gap-3'>
-              <Image
-                src={SHREELogo}
+               <Image
+                src={SHREELogo} // Use the new logo import
                 alt='Shreedhar Instruments'
-                width={200}
-                height={48}
-                className='h-22 w-65'
+                width={700}
+                height={705}
+                className='h-80 w-auto'
                 priority
-                onError={(e) => {
-                  // Fallback if image fails to load
-                  e.target.style.display = 'none';
-                }}
               />
             </div>
-            <p className='text-gray-400 leading-relaxed max-w-md'>
+            
+            <p className='text-gray-400 text-sm leading-relaxed max-w-md'>
               Most trusted, reliable and ethical partner for FDA compliant
               analytical instruments in pharmaceutical industry since 1998.
               Serving 800+ customers with 10,000+ installations across India.
             </p>
 
-            {/* Key certifications */}
+            {/* Compliance badges in compact format */}
             <div className='space-y-2'>
-              <p className='text-sm font-semibold' style={{ color: "#c4955e" }}>
+              <p className='text-xs font-semibold' style={{ color: "#c4955e" }}>
                 Key Certifications:
               </p>
-              <div className='flex flex-wrap gap-2'>
+              <div className='flex flex-wrap gap-1'>
                 {complianceStandards?.map((standard, index) => (
                   <span
                     key={index}
-                    className='bg-gray-800 text-gray-300 px-2 py-1 rounded text-xs'
+                    className='bg-gray-800 text-gray-300 px-2 py-0.5 rounded text-xs'
                   >
                     {standard}
                   </span>
@@ -93,142 +130,71 @@ export default function Footer({ setCurrentPage, setSelectedProduct }) {
               </div>
             </div>
 
-            {/* Social Media */}
-            <div className='flex gap-4 pt-4'>
-              {[
-                {
-                  icon: <Facebook size={20} />,
-                  color: "hover:text-blue-400",
-                  name: "Facebook",
-                  url: "https://www.facebook.com/shreedharinstruments"
-                },
-                {
-                  icon: <Twitter size={20} />,
-                  color: "hover:text-sky-400",
-                  name: "Twitter",
-                  url: "https://twitter.com/shreedhargroup"
-                },
-                {
-                  icon: <Linkedin size={20} />,
-                  color: "hover:text-blue-400",
-                  name: "LinkedIn",
-                  url: "https://www.linkedin.com/company/shreedhar-instruments"
-                },
-                {
-                  icon: <Instagram size={20} />,
-                  color: "hover:text-pink-400",
-                  name: "Instagram", 
-                  url: "https://www.instagram.com/shreedharinstruments"
-                },
-              ]?.map((social, index) => (
-                <a
-                  key={index}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`text-gray-400 ${social.color} transition-colors p-2 hover:bg-gray-800 rounded`}
-                  aria-label={`Follow us on ${social.name}`}
-                >
-                  {social.icon}
-                </a>
-              ))}
+            {/* Contact Info Inline */}
+            <div className='grid sm:grid-cols-2 gap-3 text-xs'>
+              <div className='space-y-1'>
+                <div className='flex items-start gap-2'>
+                  <MapPin className='flex-shrink-0 mt-0.5' style={{ color: "#c4955e" }} size={14} />
+                  <div className='text-gray-400'>
+                    <p>15, Shreejikrupa Society</p>
+                    <p>Vadodara, Gujarat 390023</p>
+                  </div>
+                </div>
+              </div>
+              <div className='space-y-1'>
+                <div className='flex items-center gap-2'>
+                  <Phone className='flex-shrink-0' style={{ color: "#c4955e" }} size={14} />
+                  <p className='text-gray-400'>(0265) 2323041</p>
+                </div>
+                <div className='flex items-center gap-2'>
+                  <Mail className='flex-shrink-0' style={{ color: "#c4955e" }} size={14} />
+                  <p className='text-gray-400'>sales@shreedhargroup.com</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Social Media Inline */}
+            <div className='flex items-center gap-3 pt-2'>
+              <span className='text-xs font-semibold' style={{ color: "#c4955e" }}>Follow Us:</span>
+              <div className='flex gap-2'>
+                {socialLinks?.map((social, index) => (
+                  <a
+                    key={index}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`text-gray-400 ${social.color} transition-colors p-1 hover:bg-gray-800 rounded`}
+                    aria-label={`Follow us on ${social.name}`}
+                  >
+                    {social.icon}
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Quick Links - Compact */}
           <div>
-            <h4
-              className='text-lg font-semibold mb-4'
-              style={{ color: "#c4955e" }}
-            >
+            <h4 className='text-base font-semibold mb-3' style={{ color: "#c4955e" }}>
               Quick Links
             </h4>
-            <div className='space-y-2'>
+            <div className='space-y-1'>
               {navigation.map((item) => (
                 <Link
                   key={item.key}
                   href={item.path}
-                  className='block text-gray-400 hover:text-white transition-colors text-sm hover:text-golden-brown-light'
+                  className='block text-gray-400 hover:text-white transition-colors text-xs hover:text-golden-brown-light'
                 >
                   {item.name}
                 </Link>
               ))}
             </div>
-          </div>
-
-          {/* Products */}
-          <div>
-            <h4
-              className='text-lg font-semibold mb-4'
-              style={{ color: "#c4955e" }}
-            >
-              Products
-            </h4>
-            <div className='space-y-2'>
-              {productCategories.map((category, index) => (
-                <Link
-                  key={index}
-                  href={category.path}
-                  className='block text-gray-400 hover:text-white transition-colors text-sm hover:text-golden-brown-light'
-                >
-                  {category.name}
-                </Link>
-              ))}
-            </div>
-          </div>
-
-          {/* Contact Info */}
-          <div>
-            <h4
-              className='text-lg font-semibold mb-4'
-              style={{ color: "#c4955e" }}
-            >
-              Head Office
-            </h4>
-            <div className='space-y-3 text-sm'>
-              <div className='flex items-start gap-2'>
-                <MapPin
-                  className='flex-shrink-0 mt-0.5'
-                  style={{ color: "#c4955e" }}
-                  size={16}
-                />
-                <div className='text-gray-400'>
-                  <p>15, Shreejikrupa Society</p>
-                  <p>Vadodara, Gujarat 390023</p>
-                </div>
-              </div>
-              <div className='flex items-center gap-2'>
-                <Phone
-                  className='flex-shrink-0'
-                  style={{ color: "#c4955e" }}
-                  size={16}
-                />
-                <div className='text-gray-400'>
-                  <p>(0265) 2323041</p>
-                  <p>+91 9824510383</p>
-                </div>
-              </div>
-              <div className='flex items-center gap-2'>
-                <Mail
-                  className='flex-shrink-0'
-                  style={{ color: "#c4955e" }}
-                  size={16}
-                />
-                <div className='text-gray-400'>
-                  
-                  <p>sales@shreedhargroup.com</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Awards badge */}
-            <div className='mt-4 p-3 bg-gray-800 rounded-lg'>
-              <div className='flex items-center gap-2 mb-1'>
-                <Award style={{ color: "#c4955e" }} size={16} />
-                <span
-                  className='font-semibold text-sm'
-                  style={{ color: "#c4955e" }}
-                >
+            
+            {/* Awards badge compact */}
+            <div className='mt-4 p-2 bg-gray-800 rounded'>
+              <div className='flex items-center gap-1 mb-1'>
+                <Award style={{ color: "#c4955e" }} size={14} />
+                <span className='font-semibold text-xs' style={{ color: "#c4955e" }}>
                   Latest Award
                 </span>
               </div>
@@ -236,24 +202,72 @@ export default function Footer({ setCurrentPage, setSelectedProduct }) {
               <p className='text-gray-400 text-xs'>Beckman Coulter</p>
             </div>
           </div>
+
+          {/* Products - Dynamic List */}
+          <div>
+            <h4 className='text-base font-semibold mb-3' style={{ color: "#c4955e" }}>
+              Our Products
+            </h4>
+            <div className='space-y-1'>
+              {loading ? (
+                <div className='space-y-1'>
+                  {[...Array(6)].map((_, i) => (
+                    <div key={i} className='h-4 bg-gray-800 rounded animate-pulse'></div>
+                  ))}
+                </div>
+              ) : products.length > 0 ? (
+                <>
+                  {products.map((product) => (
+                    <Link
+                      key={product.id}
+                      href={`/products/${product.slug}`}
+                      className='block text-gray-400 hover:text-white transition-colors text-xs hover:text-golden-brown-light line-clamp-1'
+                      title={product.name}
+                    >
+                      {product.name}
+                    </Link>
+                  ))}
+                  <Link
+                    href="/products"
+                    className='block text-xs font-medium mt-2 hover:text-white transition-colors'
+                    style={{ color: "#c4955e" }}
+                  >
+                    View All Products →
+                  </Link>
+                </>
+              ) : (
+                <div className='space-y-1 text-gray-500 text-xs'>
+                  <p>Particle Counters</p>
+                  <p>Environmental Monitors</p>
+                  <p>Analytical Balances</p>
+                  <p>Airborne Monitors</p>
+                  <p>Cleanroom Systems</p>
+                  <Link href="/products" className='block mt-2 hover:text-white transition-colors' style={{ color: "#c4955e" }}>
+                    View All Products →
+                  </Link>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
 
-        {/* Bottom section */}
-        <div className='border-t border-gray-800 mt-12 pt-8'>
-          <div className='flex flex-col md:flex-row justify-between items-center text-gray-400'>
-            <div className='flex items-center gap-4 text-sm'>
+        {/* Bottom section - More Compact */}
+        <div className='border-t border-gray-800 mt-6 pt-4'>
+          <div className='flex flex-col lg:flex-row justify-between items-center gap-3'>
+            {/* Copyright and establishment info */}
+            <div className='flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-gray-400 text-xs text-center sm:text-left'>
               <p>&copy; 2025 Shreedhar Instruments. All rights reserved.</p>
-              <span className='hidden md:block'>|</span>
-              <p className='hidden md:block'>
-                Established 1998 | 28+ Years of Excellence
-              </p>
+              <span className='hidden sm:block text-gray-600'>|</span>
+              <p>Established 1998 | 28+ Years of Excellence</p>
             </div>
-            <div className='flex flex-wrap gap-4 md:gap-6 mt-4 md:mt-0 text-sm justify-center'>
+            
+            {/* Legal links */}
+            <div className='flex flex-wrap gap-3 lg:gap-4 text-xs justify-center'>
               {legalLinks.map((link, index) => (
                 <Link
                   key={index}
                   href={link.path}
-                  className='hover:text-white transition-colors hover:text-golden-brown-light'
+                  className='text-gray-400 hover:text-white transition-colors hover:text-golden-brown-light'
                   target={link.name === "Sitemap" ? "_blank" : "_self"}
                   rel={link.name === "Sitemap" ? "noopener noreferrer" : ""}
                 >
@@ -263,16 +277,25 @@ export default function Footer({ setCurrentPage, setSelectedProduct }) {
             </div>
           </div>
 
-          {/* Compliance statement */}
-          <div className='mt-4 p-3 bg-gray-800 rounded-lg text-center'>
+          {/* Compliance statement - More compact */}
+          <div className='mt-3 p-2 bg-gray-800 rounded text-center'>
             <p className='text-gray-400 text-xs'>
               All products meet FDA, USP, EP, and WHO regulatory requirements.
-              21 CFR Part 11 compliant systems available for pharmaceutical
-              applications.
+              21 CFR Part 11 compliant systems available for pharmaceutical applications.
             </p>
           </div>
         </div>
       </div>
+      
+      {/* Add line-clamp utility */}
+      <style jsx>{`
+        .line-clamp-1 {
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+      `}</style>
     </footer>
   );
 }
