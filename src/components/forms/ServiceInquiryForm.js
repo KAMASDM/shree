@@ -31,7 +31,7 @@ export default function ServiceInquiryForm({ selectedService, onClose }) {
 
   const serviceTypes = [
     { value: "iq-oq-pq", label: "IQ/OQ/PQ Qualification Services" },
-    { value: "calibration", label: "NABL Calibration Services" },
+    { value: "calibration", label: "Spare Enquiry" },
     { value: "maintenance", label: "Preventive Maintenance" },
     { value: "repair", label: "Breakdown Repair Support" },
     { value: "training", label: "Technical Training Programs" },

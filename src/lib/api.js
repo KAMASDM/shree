@@ -394,9 +394,9 @@ export const apiService = {
     }
   },
 
-  // Testimonials API with better error handling
+  // FIXED: Testimonials API - now calls the correct core endpoint
   async getTestimonials(params = {}) {
-    const cacheKey = getCacheKey('/testimonials/', params);
+    const cacheKey = getCacheKey('/core/testimonials/', params);
     const cachedData = await getCachedData(cacheKey);
     
     if (cachedData) {
@@ -405,7 +405,7 @@ export const apiService = {
     
     try {
       const response = await withRetry(() => 
-        apiClient.get('/testimonials/', { params })
+        apiClient.get('/core/testimonials/', { params })
       );
       const data = response.data || [];
       setCachedData(cacheKey, data);
@@ -483,6 +483,54 @@ export const apiService = {
       throw new Error(error.message || 'Failed to fetch hero sections');
     }
   },
+
+// Clients API  
+async getClients() {
+  const cacheKey = getCacheKey('/core/clients/');
+  const cachedData = await getCachedData(cacheKey);
+  
+  if (cachedData) {
+    return { data: cachedData, fromCache: true };
+  }
+  
+  try {
+    const response = await withRetry(() => 
+      apiClient.get('/core/clients/')
+    );
+    const data = response.data || [];
+    setCachedData(cacheKey, data);
+    return { data, fromCache: false };
+  } catch (error) {
+    console.error('Failed to fetch clients:', error);
+    return { data: [], fromCache: false, error: error.message };
+  }
+},
+
+
+
+async getCompanyInfo() {
+  const cacheKey = getCacheKey('/core/company-info/');
+  const cachedData = await getCachedData(cacheKey);
+  
+  if (cachedData) {
+    return { data: cachedData, fromCache: true };
+  }
+  
+  try {
+    const response = await withRetry(() => 
+      apiClient.get('/core/company-info/')
+    );
+    const data = response.data || [];
+    setCachedData(cacheKey, data);
+    return { data, fromCache: false };
+  } catch (error) {
+    console.error('Failed to fetch company info:', error);
+    return { data: [], fromCache: false, error: error.message };
+  }
+},
+
+
+
 
   // Career/Jobs API
   async getJobs() {
