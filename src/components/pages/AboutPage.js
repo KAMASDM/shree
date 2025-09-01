@@ -263,7 +263,7 @@ export default function AboutPage() {
                 priority
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent rounded-2xl"></div>
-              <div className="absolute bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-6">
+              {/* <div className="absolute bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-6">
                 <div className="backdrop-blur-md p-4 md:p-6 rounded-2xl shadow-lg bg-white/95">
                   <h4 className="font-bold mb-2 flex items-center gap-2 text-amber-900">
                     <Globe size={20} className="text-amber-600" />
@@ -271,7 +271,7 @@ export default function AboutPage() {
                   </h4>
                   <p className="text-sm text-amber-800">{officeLocations.length > 0 ? officeLocations.length : '5'}+ offices serving pharmaceutical companies nationwide with unmatched service quality</p>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </section>
