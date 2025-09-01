@@ -481,7 +481,7 @@ export default function AboutPage() {
         </section>
         
         {/* 8. Client Logos */}
-        {clients.length > 0 && (
+        {/* {clients.length > 0 && (
           <section className="mb-16 md:mb-24">
             <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold mb-4 text-amber-900">Trusted by Leading Companies</h2>
@@ -529,7 +529,7 @@ export default function AboutPage() {
               </div>
             )}
           </section>
-        )}
+        )} */}
 
         {/* 9. Testimonials */}
         {testimonials.length > 0 && (
