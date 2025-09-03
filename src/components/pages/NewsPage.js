@@ -1,3 +1,5 @@
+// src/components/pages/NewsPage.js
+
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
@@ -30,10 +32,11 @@ export default function NewsPage() {
   const filteredPosts = blogPosts.filter(
     (post) => {
       const matchesSearch = post?.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          post?.excerpt?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          post?.category?.name?.toLowerCase().includes(searchTerm.toLowerCase());
+                          post?.excerpt?.toLowerCase().includes(searchTerm.toLowerCase());
       
-      const matchesTab = activeTab === "blogs" || (activeTab === "events" && post?.category?.name?.toLowerCase() === "event");
+      const isEvent = post.tags?.some(tag => tag.name.toLowerCase() === 'event');
+      
+      const matchesTab = (activeTab === "blogs" && !isEvent) || (activeTab === "events" && isEvent);
       
       return matchesSearch && matchesTab;
     }
@@ -182,7 +185,7 @@ export default function NewsPage() {
                       />
                       <div className="absolute top-3 left-3">
                         <span className='px-3 py-1 rounded-full text-xs font-semibold text-white backdrop-blur-sm' style={{ background: "linear-gradient(135deg, #b78852 0%, #c9955f 100%)" }}>
-                          {post.category.name}
+                          {post.category && post.category.name ? post.category.name : (post.tags?.some(tag => tag.name.toLowerCase() === 'event') ? 'Event' : 'Blog')}
                         </span>
                       </div>
                     </div>
@@ -193,7 +196,7 @@ export default function NewsPage() {
                           {new Date(post.published_date).toLocaleDateString()}
                         </span>
                         <span className='flex items-center gap-1'>
-                          <User size={14} /> {post.author_name}
+                          <User size={14} /> {post.author_name || "Admin"}
                         </span>
                       </div>
                       <h3 className='text-xl font-bold mb-3 group-hover:opacity-80 line-clamp-2' style={{ color: "#8b6a3f" }}>
