@@ -54,7 +54,7 @@ export default function CareerForm({ selectedJob, allJobs, onClose }) {
 
     try {
       const response = await axios.post(
-        "https://sweekarme.in/shree/api/hr/applications/",
+        "https://shreedhargroup.com/backend/api/hr/applications/",
         submissionData,
         {
           headers: { "Content-Type": "multipart/form-data" },

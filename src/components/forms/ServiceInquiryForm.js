@@ -66,7 +66,7 @@ export default function ServiceInquiryForm({ selectedService, onClose }) {
 
     try {
       const response = await axios.post(
-        "https://sweekarme.in/shree/api/inquiries/service/",
+        "https://shreedhargroup.com/backend/api/inquiries/service/",
         payload
       );
 
