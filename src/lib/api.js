@@ -1,7 +1,7 @@
 // src/lib/api.js
 import axios from 'axios';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://sweekarme.in/shree/api';
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://shreedhargroup.com/backend/api';
 
 // Create axios instance with default config
 const apiClient = axios.create({
