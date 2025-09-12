@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Play, Pause } from "lucide-react";
 import { apiService } from "../../lib/api";
+import Image from "next/image";
 
 export default function SimpleHeroSlider() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -149,11 +150,13 @@ export default function SimpleHeroSlider() {
               : "opacity-0 scale-105"
           }`}
         >
-          <img
+          <Image
             src={image.image}
             alt={image.alt_text || `Slide ${index + 1}`}
-            className='w-full h-full object-cover'
-            loading={index === 0 ? "eager" : "lazy"}
+            fill
+            priority={index === 0} 
+            className='object-cover'
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
           />
           {/* Modern Gradient Overlay */}
           <div className='absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent'></div>
