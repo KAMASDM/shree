@@ -124,30 +124,16 @@ export default function SimpleHeroSlider() {
       {heroData.slider_images.map((image, index) => (
         <div
           key={image.id || index}
-          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+          className={`absolute inset-0 transition-opacity duration-1000 ease-in-out bg-black ${
             index === currentSlide ? "opacity-100" : "opacity-0"
           }`}
         >
-          {/* MODIFICATION START: Replaced <img> with <picture> for responsive images */}
-          <picture className='w-full h-full'>
-            {/* This source tag tells the browser: "If the screen width is 768px or less,
-              use the mobile_image URL." 
-              This will only render if `image.mobile_image` exists in your data.
-            */}
-            {image.mobile_image && (
-              <source media='(max-width: 768px)' srcSet={image.mobile_image} />
-            )}
-            {/* This is the default image. It will be used on screens wider than 768px
-              or if the mobile_image is not provided. It also serves as a fallback.
-            */}
-            <img
-              src={image.image}
-              alt={image.alt_text || `Slide ${index + 1}`}
-              className='w-full h-full object-cover'
-              loading={index === 0 ? "eager" : "lazy"}
-            />
-          </picture>
-          {/* MODIFICATION END */}
+          <img
+            src={image.image}
+            alt={image.alt_text || `Slide ${index + 1}`}
+            className='w-full h-full object-contain'
+            loading={index === 0 ? "eager" : "lazy"}
+          />
           <div className='absolute inset-0 bg-black/20'></div>
         </div>
       ))}
@@ -202,8 +188,8 @@ export default function SimpleHeroSlider() {
   );
 
   return (
-    <div className='relative h-[60vh] md:h-[70vh] overflow-hidden mt-20 md:mt-24'>
-      <div className='relative h-full'>
+    <div className='relative h-[50vh] sm:h-[60vh] md:h-[70vh] overflow-hidden mt-16 sm:mt-20 md:mt-24'>
+      <div className='relative h-full flex items-center justify-center'>
         {heroData?.background_video_url
           ? renderVideoBackground()
           : renderImageSlider()}

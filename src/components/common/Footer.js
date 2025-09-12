@@ -144,7 +144,7 @@ export default function Footer({ setCurrentPage, setSelectedProduct }) {
                   <div className='flex items-start gap-2'>
                     <MapPin className='flex-shrink-0 mt-0.5' style={{ color: "#c4955e" }} size={14} />
                     <div className='text-gray-400'>
-                      <p>15, Shreejikrupa Society</p>
+                      <p>15, Shreejikrupa Society, Gotri</p>
                       <p>Vadodara, Gujarat 390023</p>
                     </div>
                   </div>
