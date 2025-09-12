@@ -52,7 +52,7 @@ export default function ProductInquiryForm({ product, onClose }) {
 
     try {
       const response = await axios.post(
-        "https://shreedhargroup.com/backend/api/inquiries/product/",
+        "https://sweekarme.in/shree/api/inquiries/product/",
         payload
       );
 

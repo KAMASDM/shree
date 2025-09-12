@@ -1,7 +1,7 @@
 // src/lib/api.js
 import axios from 'axios';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://shreedhargroup.com/backend/api';
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://sweekarme.in/shree/api';
 
 // Create axios instance with default config
 const apiClient = axios.create({
@@ -33,7 +33,7 @@ apiClient.interceptors.response.use(
   },
   (error) => {
     if (process.env.NODE_ENV === 'development') {
-      console.error('API Error:', error.response?.data || error.message);
+      console.error('API Error:', error?.response?.data ?? error?.message ?? 'Unknown error');
     }
     
     // Handle different error types
