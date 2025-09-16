@@ -99,10 +99,10 @@ export default function Footer({ setCurrentPage, setSelectedProduct }) {
               src={SHREELogo}
               alt='Shreedhar Instruments Logo'
               // ✅ Set a base size for layout spacing
-              width={100}
-              height={100}
+              width={350}
+              height={150}
               // ✅ Scale the logo visually without affecting layout
-              className='h-35 w-75 scale-120'
+              className='h-35 w-75 scale-150'
               priority
             />
           </Link>

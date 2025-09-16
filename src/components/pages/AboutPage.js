@@ -151,9 +151,6 @@ export default function AboutPage() {
     return tmp.textContent || tmp.innerText || "";
   };
 
-  const awardsToDisplay = awards.length > 0 ? Array(5).fill([...awards]).flat() : [];
-  const clientsToDisplay = clients.length > 0 ? Array(5).fill([...clients]).flat() : [];
-
   return (
     <div className="pt-16 pb-20 bg-gradient-to-b from-amber-50 to-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -263,15 +260,6 @@ export default function AboutPage() {
                 priority
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent rounded-2xl"></div>
-              {/* <div className="absolute bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-6">
-                <div className="backdrop-blur-md p-4 md:p-6 rounded-2xl shadow-lg bg-white/95">
-                  <h4 className="font-bold mb-2 flex items-center gap-2 text-amber-900">
-                    <Globe size={20} className="text-amber-600" />
-                    Pan-India Excellence
-                  </h4>
-                  <p className="text-sm text-amber-800">{officeLocations.length > 0 ? officeLocations.length : '5'}+ offices serving pharmaceutical companies nationwide with unmatched service quality</p>
-                </div>
-              </div> */}
             </div>
           </div>
         </section>
@@ -380,7 +368,7 @@ export default function AboutPage() {
           </div>
         </section>
         
-        {/* 7. Award Recognition */}
+        {/* 7. Award Recognition - With Horizontal Scroller */}
         <section className="mb-16 md:mb-24">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4 text-amber-900">Recognition & Awards</h2>
@@ -405,18 +393,17 @@ export default function AboutPage() {
                     100% { transform: translateX(-50%); }
                   }
                   .animate-awards-scroll {
-                    animation: awards-scroll 80s linear infinite;
+                    animation: awards-scroll 60s linear infinite;
                   }
                   .animate-awards-scroll:hover {
                     animation-play-state: paused;
                   }
                 `}</style>
                 <div className="flex w-fit animate-awards-scroll">
-                  {awardsToDisplay
-                    .sort((a, b) => b.year - a.year)
-                    .map((award, index) => (
+                  {/* Duplicate awards 3 times for smooth scrolling effect */}
+                  {Array(3).fill(awards.sort((a, b) => b.year - a.year)).flat().map((award, index) => (
                     <div 
-                      key={`${award.id}-${index}`} 
+                      key={`${award.id}-${Math.floor(index / awards.length)}-${index}`} 
                       className="group flex-shrink-0 w-72 p-6 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 bg-white border border-amber-100 mx-4"
                     >
                       {award.image && (
@@ -479,99 +466,9 @@ export default function AboutPage() {
             </div>
           )}
         </section>
-        
-        {/* 8. Client Logos */}
-        {/* {clients.length > 0 && (
-          <section className="mb-16 md:mb-24">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-amber-900">Trusted by Leading Companies</h2>
-              <p className="text-lg text-amber-800">Our valued clients across pharmaceutical and biopharma industry</p>
-            </div>
-            {loadingClients ? (
-              <div className="text-center py-10">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-amber-600"></div>
-                <p className="mt-4 text-lg text-amber-800">Loading Clients...</p>
-              </div>
-            ) : (
-              <div className="relative w-full overflow-hidden py-4"
-                style={{
-                  maskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)'
-                }}
-              >
-                <style jsx>{`
-                  @keyframes client-scroll {
-                    0% { transform: translateX(0); }
-                    100% { transform: translateX(-50%); }
-                  }
-                  .animate-client-scroll {
-                    animation: client-scroll 80s linear infinite;
-                  }
-                  .animate-client-scroll:hover {
-                    animation-play-state: paused;
-                  }
-                `}</style>
-                <div className="flex w-fit animate-client-scroll">
-                  {clientsToDisplay.map((client, index) => (
-                    <div
-                      key={`${client.id}-${index}`}
-                      className="flex-shrink-0 w-48 h-24 flex items-center justify-center mx-6"
-                    >
-                      <img
-                        src={client.logo}
-                        alt={`${client.name} logo`}
-                        className="max-h-16 max-w-full object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
-                        loading="lazy"
-                        onError={(e) => { e.target.style.display = 'none'; }}
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </section>
-        )} */}
 
-        {/* 9. Testimonials */}
-        {testimonials.length > 0 && (
-          <section className="mb-16 md:mb-24">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-amber-900">What Our Clients Say</h2>
-              <p className="text-lg text-amber-800">Trusted testimonials from pharmaceutical industry leaders</p>
-            </div>
-            
-            {loadingTestimonials ? (
-              <div className="text-center py-10">
-                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-amber-600"></div>
-                <p className="mt-4 text-lg text-amber-800">Loading Testimonials...</p>
-              </div>
-            ) : (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {testimonials.map((testimonial, index) => (
-                  <div key={testimonial.id} className="group p-6 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 bg-white border border-amber-100">
-                    <div className="flex text-amber-400 mb-6">
-                      {[...Array(5)].map((_, i) => ( <Star key={i} size={16} fill="currentColor" /> ))}
-                    </div>
-                    <p className="text-base mb-6 italic leading-relaxed text-amber-800">
-                      {testimonial.testimonial_text}
-                    </p>
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold bg-gradient-to-r from-amber-600 to-amber-800">
-                        {testimonial.client_name.charAt(0)}
-                      </div>
-                      <div>
-                        <div className="font-bold text-amber-900">{testimonial.client_name}</div>
-                        <div className="text-xs text-amber-700">{testimonial.company}</div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </section>
-        )}
-
-        {/* 10. Our Commitment to Excellence (CTA Section) */}
-        <section className="relative overflow-hidden rounded-3xl p-8 md:p-12 text-center text-white bg-gradient-to-r from-amber-700 to-amber-900">
+        {/* 9. Our Commitment to Excellence (CTA Section) */}
+        <section className="relative overflow-hidden rounded-3xl p-8 md:p-12 text-center text-white bg-gradient-to-r from-amber-700 to-amber-900 mb-16 md:mb-24">
           <div className="absolute inset-0 opacity-10">
             <div className="w-full h-full" style={{ backgroundImage: `radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1) 1px, transparent 1px)`, backgroundSize: '50px 50px' }}></div>
           </div>
@@ -589,6 +486,71 @@ export default function AboutPage() {
             </button>
           </div>
         </section>
+
+        {/* 10. Testimonials - Horizontal Scroller */}
+        {testimonials.length > 0 && (
+          <section className="mb-16 md:mb-24">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-amber-900">What Our Clients Say</h2>
+              <p className="text-lg text-amber-800">Trusted testimonials from pharmaceutical industry leaders</p>
+            </div>
+            
+            {loadingTestimonials ? (
+              <div className="text-center py-10">
+                <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-amber-600"></div>
+                <p className="mt-4 text-lg text-amber-800">Loading Testimonials...</p>
+              </div>
+            ) : (
+              <div className="relative">
+                <div className="relative w-full overflow-hidden py-4"
+                  style={{
+                    maskImage: 'linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)'
+                  }}
+                >
+                  <style jsx>{`
+                    @keyframes testimonials-scroll {
+                      0% { transform: translateX(0); }
+                      100% { transform: translateX(-50%); }
+                    }
+                    .animate-testimonials-scroll {
+                      animation: testimonials-scroll 50s linear infinite;
+                    }
+                    .animate-testimonials-scroll:hover {
+                      animation-play-state: paused;
+                    }
+                  `}</style>
+                  <div className="flex w-fit animate-testimonials-scroll">
+                    {/* Duplicate testimonials for smooth scrolling effect */}
+                    {Array(3).fill(testimonials).flat().map((testimonial, index) => (
+                      <div 
+                        key={`${testimonial.id}-${Math.floor(index / testimonials.length)}-${index}`} 
+                        className="group flex-shrink-0 w-80 p-6 rounded-3xl shadow-lg hover:shadow-xl transition-all duration-300 bg-white border border-amber-100 mx-4"
+                      >
+                        <div className="flex text-amber-400 mb-6">
+                          {[...Array(5)].map((_, i) => ( 
+                            <Star key={i} size={16} fill="currentColor" /> 
+                          ))}
+                        </div>
+                        <p className="text-base mb-6 italic leading-relaxed text-amber-800 line-clamp-4">
+                          "{testimonial.testimonial_text}"
+                        </p>
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg bg-gradient-to-r from-amber-600 to-amber-800">
+                            {testimonial.client_name.charAt(0)}
+                          </div>
+                          <div>
+                            <div className="font-bold text-amber-900">{testimonial.client_name}</div>
+                            <div className="text-sm text-amber-700">{testimonial.company}</div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+          </section>
+        )}
 
       </div>
     </div>
