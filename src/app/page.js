@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import Hero from "../components/sections/Hero";
 import ProductCard from "../components/common/ProductCard";
 import { apiService } from "../lib/api"; // Use the apiService
@@ -111,9 +112,11 @@ const PartnersSection = () => {
             {partners.map((partner) => (
               <div key={partner.id} className="bg-white p-6 rounded-2xl shadow-lg border border-amber-100 hover:shadow-xl hover:border-amber-300 transition-all duration-300">
                 <div className="flex items-center justify-center h-20 mb-6">
-                  <img
+                  <Image
                     src={partner.logo}
                     alt={`${partner.name} logo`}
+                    width={120}
+                    height={80}
                     className="max-w-full max-h-full object-contain"
                     onError={(e) => { e.target.style.display = 'none'; }}
                   />
@@ -164,9 +167,11 @@ const PartnersSection = () => {
                   <div key={`${partner.id}-${index}`} className="flex-shrink-0 w-72 sm:w-80 mx-4"> {/* UPDATED */}
                     <div className="bg-white p-6 rounded-2xl shadow-lg border border-amber-100 hover:shadow-xl hover:border-amber-300 transition-all duration-300 h-full">
                       <div className="flex items-center justify-center h-20 mb-6">
-                        <img
+                        <Image
                           src={partner.logo}
                           alt={`${partner.name} logo`}
+                          width={120}
+                          height={80}
                           className="max-w-full max-h-full object-contain"
                           loading="lazy"
                           onError={(e) => { e.target.style.display = 'none'; }}
@@ -675,9 +680,11 @@ const ClientsSection = () => {
                 key={`${client.id}-${index}`}
                 className="flex-shrink-0 w-36 sm:w-48 h-24 flex items-center justify-center mx-6"  /* UPDATED */
               >
-                <img
+                <Image
                   src={client.logo}
                   alt={`${client.name} logo`}
+                  width={120}
+                  height={64}
                   className="max-h-16 max-w-full object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
                   loading="lazy"
                   onError={(e) => { e.target.style.display = 'none'; }}

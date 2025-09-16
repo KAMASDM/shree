@@ -18,23 +18,23 @@ import SHREELogo from "../../../src/img/shree-logo-new.png";
 import { apiService } from "../../lib/api";
 
 export default function Footer({ setCurrentPage, setSelectedProduct }) {
-  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Fetch products on mount
+  // Fetch categories on mount
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchCategories = async () => {
       try {
-        const response = await apiService.getAllProducts();
-        // Get first 8 products for footer display
-        setProducts(response.data.slice(0, 8));
+        const response = await apiService.getProductCategories();
+        setCategories(response.data);
       } catch (error) {
-        console.error("Failed to fetch products for footer:", error);
+        console.error("Failed to fetch categories for footer:", error);
+        setCategories([]); // Set empty array on error
       } finally {
         setLoading(false);
       }
     };
-    fetchProducts();
+    fetchCategories();
   }, []);
 
   const navigation = [
@@ -102,7 +102,7 @@ export default function Footer({ setCurrentPage, setSelectedProduct }) {
               width={350}
               height={150}
               // ✅ Scale the logo visually without affecting layout
-              className='h-35 w-75 scale-150'
+              className='h-35 w-55 scale-150'
               priority
             />
           </Link>
@@ -121,30 +121,13 @@ export default function Footer({ setCurrentPage, setSelectedProduct }) {
                 Serving 800+ customers with 10,000+ installations across India.
               </p>
 
-              {/* Compliance badges in compact format */}
-              {/* <div className='space-y-2'>
-                <p className='text-xs font-semibold' style={{ color: "#c4955e" }}>
-                  Key Certifications:
-                </p>
-                <div className='flex flex-wrap gap-1'>
-                  {complianceStandards?.map((standard, index) => (
-                    <span
-                      key={index}
-                      className='bg-gray-800 text-gray-300 px-2 py-0.5 rounded text-xs'
-                    >
-                      {standard}
-                    </span>
-                  ))}
-                </div>
-              </div> */}
-
               {/* Contact Info Inline */}
               <div className='grid sm:grid-cols-2 gap-3 text-xs'>
                 <div className='space-y-1'>
                   <div className='flex items-start gap-2'>
                     <MapPin className='flex-shrink-0 mt-0.5' style={{ color: "#c4955e" }} size={14} />
                     <div className='text-gray-400'>
-                      <p>15, Shreejikrupa Society, Gotri,</p>
+                      <p>15, Shreejikrupa Society, Gotri Road,</p>
                       <p>Vadodara, Gujarat 390023</p>
                     </div>
                   </div>
@@ -197,33 +180,30 @@ export default function Footer({ setCurrentPage, setSelectedProduct }) {
                   </Link>
                 ))}
               </div>
-              
-              {/* Awards badge compact */}
-             
             </div>
 
-            {/* Products - Dynamic List */}
+            {/* Categories - Dynamic List */}
             <div>
               <h4 className='text-base font-semibold mb-3' style={{ color: "#c4955e" }}>
-                Our Products
+                Our Categories
               </h4>
               <div className='space-y-1'>
                 {loading ? (
                   <div className='space-y-1'>
-                    {[...Array(6)].map((_, i) => (
+                    {[...Array(3)].map((_, i) => (
                       <div key={i} className='h-4 bg-gray-800 rounded animate-pulse'></div>
                     ))}
                   </div>
-                ) : products.length > 0 ? (
+                ) : categories.length > 0 ? (
                   <>
-                    {products.map((product) => (
+                    {categories.map((category) => (
                       <Link
-                        key={product.id}
-                        href={`/products/${product.slug}`}
+                        key={category.id}
+                        href={`/products?category=${category.slug}`}
                         className='block text-gray-400 hover:text-white transition-colors text-xs hover:text-golden-brown-light line-clamp-1'
-                        title={product.name}
+                        title={category.name}
                       >
-                        {product.name}
+                        {category.name}
                       </Link>
                     ))}
                     <Link
@@ -236,12 +216,16 @@ export default function Footer({ setCurrentPage, setSelectedProduct }) {
                   </>
                 ) : (
                   <div className='space-y-1 text-gray-500 text-xs'>
-                    <p>Particle Counters</p>
-                    <p>Environmental Monitors</p>
-                    <p>Analytical Balances</p>
-                    <p>Airborne Monitors</p>
-                    <p>Cleanroom Systems</p>
-                    <Link href="/products" className='block mt-2 hover:text-white transition-colors' style={{ color: "#c4955e" }}>
+                    <Link href="/products?category=pharmaceutical" className='block hover:text-white transition-colors'>
+                      Pharmaceutical
+                    </Link>
+                    <Link href="/products?category=environmental-monitoring" className='block hover:text-white transition-colors'>
+                      Environmental Monitoring
+                    </Link>
+                    <Link href="/products?category=semiconductor-and-electronics" className='block hover:text-white transition-colors'>
+                      Semiconductor & Electronics
+                    </Link>
+                    <Link href="/products" className='block text-xs font-medium mt-2 hover:text-white transition-colors' style={{ color: "#c4955e" }}>
                       View All Products →
                     </Link>
                   </div>
@@ -275,14 +259,6 @@ export default function Footer({ setCurrentPage, setSelectedProduct }) {
                 ))}
               </div>
             </div>
-
-            {/* Compliance statement - More compact */}
-            {/* <div className='mt-3 p-2 bg-gray-800 rounded text-center'>
-              <p className='text-gray-400 text-xs'>
-                All products meet FDA, USP, EP, and WHO regulatory requirements.
-                21 CFR Part 11 compliant systems available for pharmaceutical applications.
-              </p>
-            </div> */}
           </div>
         </div>
       </div>

@@ -421,7 +421,7 @@ export default function ProductDetailPage() {
     };
 
     fetchProduct();
-  }, [slug]);
+  }, [slug, activeTab]);
 
   if (loading) {
     return (

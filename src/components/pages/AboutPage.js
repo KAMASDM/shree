@@ -532,7 +532,7 @@ export default function AboutPage() {
                           ))}
                         </div>
                         <p className="text-base mb-6 italic leading-relaxed text-amber-800 line-clamp-4">
-                          "{testimonial.testimonial_text}"
+                          {testimonial.testimonial_text}
                         </p>
                         <div className="flex items-center gap-3">
                           <div className="w-12 h-12 rounded-full flex items-center justify-center text-white font-bold text-lg bg-gradient-to-r from-amber-600 to-amber-800">

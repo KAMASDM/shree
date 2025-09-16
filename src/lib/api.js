@@ -152,6 +152,28 @@ export const apiService = {
     }
   },
 
+   async getProductCategories() {
+    const cacheKey = getCacheKey('/products/categories/');
+    const cachedData = await getCachedData(cacheKey);
+    
+    if (cachedData) {
+      return { data: cachedData, fromCache: true };
+    }
+    
+    try {
+      const response = await withRetry(() => 
+        apiClient.get('/products/categories/')
+      );
+      const data = response.data || [];
+      setCachedData(cacheKey, data);
+      return { data, fromCache: false };
+    } catch (error) {
+      console.error('Failed to fetch product categories:', error);
+      // Return empty array to prevent component crash
+      return { data: [], fromCache: false, error: error.message };
+    }
+  },
+
   // Optimized featured products - try cache first, then limited fetch
   async getFeaturedProducts() {
     const cacheKey = getCacheKey('/products/featured/');
