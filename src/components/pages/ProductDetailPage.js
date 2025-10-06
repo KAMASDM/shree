@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import axios from "axios";
+import { apiService } from "../../lib/api";
 import {
   ChevronLeft,
   Star,
@@ -102,21 +102,23 @@ const ProductFAQSection = ({ product }) => {
     const fetchFAQs = async () => {
       setLoading(true);
       try {
+        console.log('📋 Fetching FAQs for product:', product.slug);
+        
         // Fetch product-specific FAQs
-        const productFaqResponse = await axios.get(
-          `https://sweekarme.in/shree/api/products/faqs/product/${product.slug}/`
-        );
-        setProductFaqs(productFaqResponse.data || []);
+        const productFaqResponse = await apiService.getProductFAQs(product.slug);
+        const productFaqData = productFaqResponse?.data || productFaqResponse || [];
+        setProductFaqs(productFaqData);
+        console.log('✅ Product FAQs loaded:', productFaqData.length);
 
         // Fetch relevant global FAQs (limit to a few relevant categories)
-        const globalFaqResponse = await axios.get(
-          "https://sweekarme.in/shree/api/products/faqs/global_faqs/?category=general"
-        );
-        setGlobalFaqs(globalFaqResponse.data.slice(0, 5) || []); // Limit to 5 most relevant
+        const globalFaqResponse = await apiService.getGlobalFAQs('general');
+        const globalFaqData = globalFaqResponse?.data || globalFaqResponse || [];
+        setGlobalFaqs(globalFaqData.slice(0, 5)); // Limit to 5 most relevant
+        console.log('✅ Global FAQs loaded:', globalFaqData.length);
 
       } catch (err) {
         setError("Failed to load FAQs");
-        console.error("FAQ fetch error:", err);
+        console.error("💥 FAQ fetch error:", err);
       } finally {
         setLoading(false);
       }
@@ -384,10 +386,10 @@ export default function ProductDetailPage() {
       if (!slug) return;
       setLoading(true);
       try {
-        const response = await axios.get(
-          `https://sweekarme.in/shree/api/products/all/${slug}/`
-        );
-        const productData = response.data;
+        console.log('🔍 Fetching product details for slug:', slug);
+        const response = await apiService.getProductBySlug(slug);
+        const productData = response?.data || response;
+        console.log('📦 Product data loaded:', productData);
         setProduct(productData);
 
         // Define all possible tabs including FAQs

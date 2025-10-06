@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import axios from "axios";
+import { apiService } from "../../lib/api";
 
 // ✨ Reusable Product Card Component
 function ProductCard({ product }) {
@@ -74,8 +74,9 @@ export default function ProductSlider({ currentProduct, title = "Related Product
     const fetchRelatedProducts = async () => {
       try {
         setLoading(true);
-        const response = await axios.get("https://sweekarme.in/shree/api/products/all/");
-        const allProducts = response.data;
+        console.log('🔄 Fetching related products via API service...');
+        const response = await apiService.getAllProducts();
+        const allProducts = response?.data || response;
         const currentApplications = currentProduct.applications || [];
         
         let relatedProducts = allProducts.filter(p => {

@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import axios from "axios";
+import { apiService } from "../../lib/api";
 import {
   Send,
   User,
@@ -53,23 +53,17 @@ export default function CareerForm({ selectedJob, allJobs, onClose }) {
     submissionData.append("resume", resumeFile);
 
     try {
-      const response = await axios.post(
-        "https://sweekarme.in/shree/api/hr/applications/",
-        submissionData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      console.log('📤 Submitting job application via API service...');
+      const response = await apiService.submitJobApplication(submissionData);
+      console.log('✅ Job application submitted successfully:', response);
 
-      if (response.status === 201) {
-        setIsSubmitted(true);
-        setTimeout(() => {
-          onClose && onClose();
-        }, 4000);
-      }
+      setIsSubmitted(true);
+      setTimeout(() => {
+        onClose && onClose();
+      }, 4000);
     } catch (err) {
       setError("An error occurred. Please check all fields and try again.");
-      console.error("Submission Error:", err);
+      console.error("💥 Job application submission error:", err);
     }
   };
 

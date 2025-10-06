@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import axios from "axios";
 import {
   Search,
   Filter,
@@ -19,6 +18,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import ProductCard from "../common/ProductCard";
+import { apiService } from "../../lib/api";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
@@ -36,10 +36,12 @@ export default function ProductsPage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get(
-          "https://sweekarme.in/shree/api/products/all/"
-        );
-        let productsData = response?.data;
+        console.log('🔄 Fetching products via API service...');
+        const response = await apiService.getAllProducts();
+        console.log('📦 Products API response:', response);
+        
+        // Extract data from API service response
+        let productsData = response?.data || response;
 
         // ✨ NEW: Sort products to show new items first
         if (Array.isArray(productsData)) {
@@ -60,11 +62,12 @@ export default function ProductsPage() {
           ...new Set(productsData.map((product) => product.category_name)),
         ];
         setCategories(uniqueCategories);
+        console.log('✅ Products loaded successfully:', productsData.length, 'products');
       } catch (err) {
         setError(
-          "Failed to load products. Please make sure the backend server is running."
+          "Failed to load products. Please check your connection and try again."
         );
-        console.error(err);
+        console.error('💥 Products fetch error:', err);
       } finally {
         setLoading(false);
       }

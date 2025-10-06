@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import axios from "axios"; // Import axios for API calls
+import { apiService } from "../../lib/api"; // Import axios for API calls
 import {
   Send,
   User,
@@ -65,22 +65,19 @@ export default function ServiceInquiryForm({ selectedService, onClose }) {
     };
 
     try {
-      const response = await axios.post(
-        "https://sweekarme.in/shree/api/inquiries/service/",
-        payload
-      );
+      console.log('📤 Submitting service inquiry via API service...');
+      const response = await apiService.submitServiceInquiry(payload);
+      console.log('✅ Service inquiry submitted successfully:', response);
 
-      if (response.status === 201) {
-        setIsSubmitted(true);
-        setTimeout(() => {
-          onClose && onClose();
-        }, 4000);
-      }
+      setIsSubmitted(true);
+      setTimeout(() => {
+        onClose && onClose();
+      }, 4000);
     } catch (err) {
       setError(
         "An error occurred while submitting your inquiry. Please try again."
       );
-      console.error("Submission Error:", err);
+      console.error("💥 Service inquiry submission error:", err);
     }
   };
 

@@ -408,7 +408,7 @@ export const apiService = {
     if (cachedData) {
       return { data: cachedData, fromCache: true };
     }
-    
+
     try {
       const response = await withRetry(() => 
         apiClient.get(`/products/faqs/product/${productSlug}/`)
@@ -422,7 +422,28 @@ export const apiService = {
     }
   },
 
-  // FIXED: Testimonials API - now calls the correct core endpoint
+  async getGlobalFAQs(category = 'general') {
+    const cacheKey = getCacheKey(`/products/faqs/global_faqs/`, { category });
+    const cachedData = await getCachedData(cacheKey);
+    
+    if (cachedData) {
+      return { data: cachedData, fromCache: true };
+    }
+
+    try {
+      const response = await withRetry(() => 
+        apiClient.get('/products/faqs/global_faqs/', { 
+          params: { category }
+        })
+      );
+      const data = response.data || [];
+      setCachedData(cacheKey, data);
+      return { data, fromCache: false };
+    } catch (error) {
+      console.error('Failed to fetch global FAQs:', error);
+      throw new Error(error.message || 'Failed to fetch global FAQs');
+    }
+  },  // FIXED: Testimonials API - now calls the correct core endpoint
   async getTestimonials(params = {}) {
     const cacheKey = getCacheKey('/core/testimonials/', params);
     const cachedData = await getCachedData(cacheKey);

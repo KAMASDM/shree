@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import axios from "axios";
+import { apiService } from "../../lib/api";
 import {
   Send,
   User,
@@ -51,20 +51,17 @@ export default function ProductInquiryForm({ product, onClose }) {
     };
 
     try {
-      const response = await axios.post(
-        "https://sweekarme.in/shree/api/inquiries/product/",
-        payload
-      );
+      console.log('📤 Submitting product inquiry via API service...');
+      const response = await apiService.submitProductInquiry(payload);
+      console.log('✅ Product inquiry submitted successfully:', response);
 
-      if (response.status === 201) {
-        setIsSubmitted(true);
-        setTimeout(() => {
-          onClose && onClose();
-        }, 4000);
-      }
+      setIsSubmitted(true);
+      setTimeout(() => {
+        onClose && onClose();
+      }, 4000);
     } catch (err) {
       setError("An error occurred. Please check the form and try again.");
-      console.error("Submission Error:", err);
+      console.error("💥 Product inquiry submission error:", err);
     }
   };
 

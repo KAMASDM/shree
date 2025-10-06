@@ -48,11 +48,14 @@ export default function Hero() {
           
           // Show all events, not just upcoming ones for debugging
           const eventPosts = posts.filter(post => {
-            const hasEventTag = post.tags && (
-              post.tags.includes('event') ||
-              post.tags.includes('Event') ||
-              post.tags.includes('EVENT')
-            );
+            // Handle tags as array of objects with 'name' property
+            const hasEventTag = post.tags && Array.isArray(post.tags) && post.tags.some(tag => {
+              const tagName = typeof tag === 'object' ? tag.name : tag;
+              return tagName && (
+                tagName.toLowerCase() === 'event' ||
+                tagName.toLowerCase() === 'events'
+              );
+            });
             console.log(`📋 Post "${post.title}" - Event tag: ${hasEventTag}`, {
               tags: post.tags,
               hasEventTag
@@ -215,7 +218,7 @@ export default function Hero() {
             </div>
 
             {/* Client Logos */}
-            <div className='pt-6 md:pt-8'>
+            {/* <div className='pt-6 md:pt-8'>
               <p className='text-sm mb-3 md:mb-4 text-slate-400'>
                 Trusted by industry leaders
               </p>
@@ -231,7 +234,7 @@ export default function Hero() {
                   </div>
                 ))}
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* Right Content - Stats & Compliance */}
@@ -313,16 +316,27 @@ export default function Hero() {
                 </div>
                 
                 <div className="space-y-3">
+                  {/* Event Image */}
+                  {latestEvent.featured_image && (
+                    <div className="w-full h-32 md:h-40 rounded-lg overflow-hidden">
+                      <img
+                        src={latestEvent.featured_image}
+                        alt={latestEvent.title}
+                        className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                      />
+                    </div>
+                  )}
+                  
                   <h4 className="font-bold text-sm md:text-base leading-tight" style={{ color: "#8b6a3f" }}>
                     {latestEvent.title}
                   </h4>
                   
-                  {latestEvent.excerpt && (
+                  {(latestEvent.excerpt || latestEvent.meta_description) && (
                     <p className="text-xs md:text-sm text-gray-600 leading-relaxed line-clamp-2">
-                      {latestEvent.excerpt.length > 80 
-                        ? `${latestEvent.excerpt.substring(0, 80)}...`
-                        : latestEvent.excerpt
-                      }
+                      {(() => {
+                        const text = latestEvent.excerpt || latestEvent.meta_description || '';
+                        return text.length > 80 ? `${text.substring(0, 80)}...` : text;
+                      })()}
                     </p>
                   )}
                   
