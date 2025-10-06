@@ -703,11 +703,11 @@ export default function Page() {
   return (
     <>
       <Hero />
+      <FeaturedProductsSection />
       <PartnersSection />
       <WhyChooseUsSection />
       <TargetMarketsSection />
       <UniqueValuePropositionSection />
-      <FeaturedProductsSection />
       <ClientsSection />
     </>
   );

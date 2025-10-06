@@ -1,326 +1,440 @@
 "use client";
 import { useState, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Play, Pause } from "lucide-react";
+import {
+  ArrowRight,
+  Phone,
+  Award,
+  FlaskConical,
+  Shield,
+  Users,
+  Star,
+  CheckCircle,
+  Calendar,
+  Clock,
+  MapPin,
+} from "lucide-react";
+import Link from "next/link";
 import { apiService } from "../../lib/api";
-import Image from "next/image";
 
-export default function SimpleHeroSlider() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [heroData, setHeroData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
+export default function Hero() {
+  const [latestEvent, setLatestEvent] = useState(null);
+  const [eventLoading, setEventLoading] = useState(true);
 
-  // Detect mobile screen size
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 640); // sm breakpoint in Tailwind
-    };
-    
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
-  // Filter images based on device type
-  const getFilteredImages = () => {
-    if (!heroData?.slider_images) return [];
-    
-    if (isMobile) {
-      // On mobile: show only images with alt_text "mobile"
-      return heroData.slider_images.filter(image => 
-        image.alt_text?.toLowerCase() === 'mobile'
-      );
-    } else {
-      // On desktop/tablet: show images that are NOT mobile-specific
-      return heroData.slider_images.filter(image => 
-        image.alt_text?.toLowerCase() !== 'mobile'
-      );
-    }
-  };
-
-  const filteredImages = getFilteredImages();
-  useEffect(() => {
-    const fetchHeroData = async () => {
+    const fetchEvents = async () => {
+      console.log('🚀 Starting to fetch events...');
+      setEventLoading(true);
       try {
-        setLoading(true);
-        const response = await apiService.getHeroSections();
-        const activeHeroSection = response.data.find(
-          (section) => section.is_active
-        );
-
-        if (activeHeroSection) {
-          setHeroData(activeHeroSection);
+        console.log('📡 Calling getAllBlogPosts API...');
+        const response = await apiService.getAllBlogPosts();
+        console.log('📝 Raw API response:', response);
+        
+        // Extract the data from the API service response
+        const posts = response?.data || response;
+        console.log('📊 Extracted posts:', posts);
+        console.log('📊 Number of posts received:', posts?.length || 0);
+        
+        // Log each post's details for debugging
+        if (posts && posts.length > 0) {
+          posts.forEach((post, index) => {
+            console.log(`📄 Post ${index + 1}:`, {
+              title: post.title,
+              tags: post.tags,
+              published_date: post.published_date,
+              event_date: post.event_date,
+              full_post: post
+            });
+          });
+          
+          // Show all events, not just upcoming ones for debugging
+          const eventPosts = posts.filter(post => {
+            const hasEventTag = post.tags && (
+              post.tags.includes('event') ||
+              post.tags.includes('Event') ||
+              post.tags.includes('EVENT')
+            );
+            console.log(`📋 Post "${post.title}" - Event tag: ${hasEventTag}`, {
+              tags: post.tags,
+              hasEventTag
+            });
+            return hasEventTag;
+          });
+          
+          console.log('🎯 Filtered event posts:', eventPosts);
+          
+          if (eventPosts.length > 0) {
+            // Sort by date and get the most recent
+            const sortedEvents = eventPosts.sort((a, b) => {
+              const dateA = new Date(a.event_date || a.published_date || a.created_at);
+              const dateB = new Date(b.event_date || b.published_date || b.created_at);
+              return dateB - dateA; // Most recent first
+            });
+            
+            console.log('🔄 Sorted events:', sortedEvents);
+            setLatestEvent(sortedEvents[0]);
+            console.log('✅ Latest event set:', sortedEvents[0]);
+          } else {
+            console.log('❌ No events found in posts');
+            setLatestEvent(null);
+          }
         } else {
-          throw new Error("No active hero section found");
+          console.log('❌ No posts received from API');
+          setLatestEvent(null);
         }
-      } catch (err) {
-        console.error("Failed to fetch hero data:", err);
-        setError("Failed to load hero content");
+      } catch (error) {
+        console.error('💥 Error fetching events:', error);
+        setLatestEvent(null);
       } finally {
-        setLoading(false);
+        setEventLoading(false);
+        console.log('🏁 Event loading completed');
       }
     };
 
-    fetchHeroData();
+    fetchEvents();
   }, []);
 
-  // Auto-play functionality
-  useEffect(() => {
-    if (filteredImages.length > 1 && isAutoPlaying) {
-      const duration = filteredImages[currentSlide]?.display_duration * 1000 || 5000;
-      const interval = setInterval(() => {
-        setCurrentSlide((prev) => (prev + 1) % filteredImages.length);
-      }, duration);
-
-      return () => clearInterval(interval);
-    }
-  }, [filteredImages, currentSlide, isAutoPlaying]);
-
-  // Reset current slide when filtered images change (mobile/desktop switch)
-  useEffect(() => {
-    setCurrentSlide(0);
-  }, [isMobile]);
-
-  const goToSlide = (index) => {
-    setCurrentSlide(index);
-  };
-
-  const goToPrevious = () => {
-    if (filteredImages.length > 0) {
-      setCurrentSlide((prev) =>
-        prev === 0 ? filteredImages.length - 1 : prev - 1
-      );
-    }
-  };
-
-  const goToNext = () => {
-    if (filteredImages.length > 0) {
-      setCurrentSlide((prev) => (prev + 1) % filteredImages.length);
-    }
-  };
-
-  const toggleAutoPlay = () => {
-    setIsAutoPlaying(!isAutoPlaying);
-  };
-
-  if (loading) {
-    return (
-      <div className='w-full'>
-        {/* Consistent aspect ratio for loading state */}
-        <div className='relative w-full h-[70vh] sm:h-[65vh] md:h-[70vh] lg:h-[80vh] max-h-[800px] min-h-[500px] sm:min-h-[450px] md:min-h-[400px]'>
-          <div className='absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900'>
-            <div className='text-center space-y-4'>
-              <div className='relative'>
-                <div className='w-16 h-16 border-4 border-white/20 border-t-white rounded-full animate-spin mx-auto'></div>
-                <div className='w-12 h-12 border-4 border-transparent border-t-blue-500 rounded-full animate-spin absolute top-2 left-1/2 transform -translate-x-1/2'></div>
-              </div>
-              <div className='space-y-2'>
-                <h2 className='text-xl font-bold text-white'>Loading Experience</h2>
-                <p className='text-gray-300'>Preparing your visual journey...</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className='w-full'>
-        {/* Consistent aspect ratio for error state */}
-        <div className='relative w-full h-[70vh] sm:h-[65vh] md:h-[70vh] lg:h-[80vh] max-h-[800px] min-h-[500px] sm:min-h-[450px] md:min-h-[400px]'>
-          <div className='absolute inset-0 flex items-center justify-center bg-gradient-to-br from-red-900 via-red-800 to-gray-900'>
-            <div className='text-center space-y-6 p-8'>
-              <div className='w-20 h-20 mx-auto bg-red-500/20 rounded-full flex items-center justify-center'>
-                <div className='w-8 h-8 bg-red-500 rounded-full'></div>
-              </div>
-              <div className='space-y-4'>
-                <h2 className='text-2xl font-bold text-white'>Oops! Something went wrong</h2>
-                <p className='text-red-200 max-w-md mx-auto'>{error}</p>
-                <button
-                  onClick={() => window.location.reload()}
-                  className='px-8 py-3 bg-red-500 hover:bg-red-600 text-white rounded-full font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-red-500/25'
-                >
-                  Try Again
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  const renderVideoBackground = () => {
-    const videoId = heroData.background_video_url.split("v=")[1];
-    const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&showinfo=0&autohide=1&modestbranding=1&iv_load_policy=3&rel=0`;
-
-    return (
-      <div className='absolute inset-0 overflow-hidden'>
+  return (
+    <section className='relative min-h-screen flex items-center overflow-hidden'>
+      {/* Background YouTube Video */}
+      <div className='absolute inset-0 z-0'>
         <iframe
-          src={embedUrl}
-          frameBorder='0'
-          allow='autoplay; encrypted-media'
-          allowFullScreen
-          className='absolute top-1/2 left-1/2 w-full h-full min-w-full min-h-full object-cover transform -translate-x-1/2 -translate-y-1/2 scale-105'
+          className='w-full h-full object-cover'
+          src="https://youtu.be/jeVjfNQ_pAI?si=MMVJ8ap95-upXLak"
+          title="Pharmaceutical Laboratory Background"
+          allow="autoplay; encrypted-media"
+          style={{
+            minWidth: '100vw',
+            minHeight: '100vh',
+            width: 'auto',
+            height: 'auto',
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            pointerEvents: 'none'
+          }}
         ></iframe>
-        <div className='absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent'></div>
+        {/* Gradient Overlay */}
+        <div className='absolute inset-0 bg-gradient-to-r from-slate-900/85 via-slate-800/75 to-slate-900/85'></div>
+        <div className='absolute inset-0 bg-gradient-to-b from-transparent via-amber-900/10 to-amber-900/20'></div>
       </div>
-    );
-  };
 
-  const renderImageSlider = () => (
-    <div className='absolute inset-0'>
-      {/* Images */}
-      {heroData.slider_images.map((image, index) => (
-        <div
-          key={image.id || index}
-          className={`absolute inset-0 transition-all duration-1000 ease-in-out ${
-            index === currentSlide 
-              ? "opacity-100" 
-              : "opacity-0"
-          }`}
-        >
-          {/* Responsive Image Container */}
-          <div className='relative w-full h-full overflow-hidden'>
-            <Image
-              src={image.image}
-              alt={image.alt_text || `Slide ${index + 1}`}
-              fill
-              priority={index === 0} 
-              className='
-                object-cover
-                w-full 
-                h-full
-                transition-transform 
-                duration-1000 
-                ease-out
-                scale-100
-                hover:scale-105
-              '
-              sizes="
-                (max-width: 640px) 100vw,
-                (max-width: 768px) 100vw,
-                (max-width: 1024px) 100vw,
-                100vw
-              "
+      {/* Content */}
+      <div className='relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full'>
+        <div className='grid lg:grid-cols-12 gap-8 lg:gap-12 items-center py-20 min-h-screen'>
+          {/* Left Content */}
+          <div className='lg:col-span-8 space-y-6 md:space-y-8'>
+            {/* Trust Badge */}
+            <div 
+              className='inline-flex items-center gap-2 md:gap-3 rounded-full px-4 py-2 md:px-6 md:py-3 shadow-sm'
               style={{
-                objectPosition: 'center center',
-                objectFit: 'cover'
+                backgroundColor: "rgba(255, 200, 87, 0.1)",
+                border: "1px solid rgba(255, 200, 87, 0.3)",
+                backdropFilter: "blur(10px)"
               }}
-            />
-          </div>
-          
-          {/* Responsive Gradient Overlays */}
-          <div className='absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent'></div>
-          <div className='absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-black/30 hidden sm:block'></div>
-        </div>
-      ))}
-
-      {heroData.slider_images.length > 1 && (
-        <>
-          {/* Navigation Controls - Better mobile positioning */}
-          <button
-            onClick={goToPrevious}
-            className='absolute left-3 sm:left-4 lg:left-8 top-1/2 transform -translate-y-1/2 z-10 group'
-            aria-label='Previous image'
-          >
-            <div className='relative w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-black/40 backdrop-blur-sm border border-white/40 hover:bg-black/60 transition-all duration-300'>
-              <ChevronLeft className='w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-white group-hover:scale-110 transition-transform duration-300' />
+            >
+              <Award size={18} style={{ color: "#fbbf24" }} />
+              <span className='font-medium text-sm md:text-base text-amber-100'>
+                Trusted by 800+ Pharmaceutical Companies
+              </span>
             </div>
-          </button>
 
-          <button
-            onClick={goToNext}
-            className='absolute right-3 sm:right-4 lg:right-8 top-1/2 transform -translate-y-1/2 z-10 group'
-            aria-label='Next image'
-          >
-            <div className='relative w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 flex items-center justify-center rounded-full bg-black/40 backdrop-blur-sm border border-white/40 hover:bg-black/60 transition-all duration-300'>
-              <ChevronRight className='w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-white group-hover:scale-110 transition-transform duration-300' />
+            {/* Main Headline */}
+            <div className='space-y-4 md:space-y-6'>
+              <h1 className='text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight text-white'>
+                {`India's Leading`}
+                <span 
+                  className='block bg-gradient-to-r bg-clip-text text-transparent'
+                  style={{ backgroundImage: "linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%)" }}
+                >
+                  FDA Compliant
+                </span>
+                <span className='block'>Instrument Partner</span>
+              </h1>
+
+              <p className='text-lg md:text-xl lg:text-2xl leading-relaxed max-w-2xl text-slate-300'>
+                27+ years of excellence in delivering cutting-edge analytical
+                instruments and comprehensive validation services for
+                pharmaceutical manufacturing.
+              </p>
             </div>
-          </button>
 
-          {/* Bottom Controls - Better mobile positioning */}
-          <div className='absolute bottom-4 sm:bottom-6 md:bottom-8 left-1/2 transform -translate-x-1/2 z-10 px-4'>
-            <div className='flex items-center space-x-3 sm:space-x-4 md:space-x-6 px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 md:py-4 bg-black/30 backdrop-blur-md rounded-full border border-white/30'>
-              {/* Dot Indicators */}
-              <div className='flex space-x-2 sm:space-x-2 md:space-x-2'>
-                {heroData.slider_images.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => goToSlide(index)}
-                    className='group relative p-1.5 sm:p-1'
-                    aria-label={`Go to slide ${index + 1}`}
-                  >
-                    <div className={`rounded-full transition-all duration-300 ${
-                      index === currentSlide
-                        ? "bg-white scale-125 w-2.5 h-2.5 sm:w-3 sm:h-3"
-                        : "bg-white/50 hover:bg-white/70 group-hover:scale-110 w-2 h-2 sm:w-2.5 sm:h-2.5"
-                    }`}></div>
-                  </button>
+            {/* Key Value Props */}
+            <div className='grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4'>
+              {[
+                { icon: <Shield size={16} />, text: "21 CFR Part 11 Ready" },
+                { icon: <CheckCircle size={16} />, text: "Complete IQ/OQ/PQ" },
+                { icon: <Star size={16} />, text: "24/7 Expert Support" },
+              ].map((prop, index) => (
+                <div
+                  key={index}
+                  className='flex items-center gap-2 md:gap-3 rounded-lg px-3 py-2 md:px-4 md:py-3 shadow-sm'
+                  style={{
+                    backgroundColor: "rgba(255, 255, 255, 0.9)",
+                    border: "1px solid rgba(255, 255, 255, 0.2)",
+                    backdropFilter: "blur(10px)"
+                  }}
+                >
+                  <div style={{ color: "#b78852" }}>{prop.icon}</div>
+                  <span className='font-medium text-sm md:text-base' style={{ color: "#8b6a3f" }}>
+                    {prop.text}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {/* CTA Buttons */}
+            <div className='flex flex-col sm:flex-row gap-3 md:gap-4'>
+              <Link
+                href='/products'
+                className='group px-6 py-3 md:px-8 md:py-4 rounded-xl text-base md:text-lg font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 md:gap-3 text-white'
+                style={{
+                  background: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)"
+                }}
+              >
+                <FlaskConical size={18} />
+                <span>Explore Our Solutions</span>
+                <ArrowRight
+                  size={18}
+                  className='group-hover:translate-x-1 transition-transform'
+                />
+              </Link>
+
+              <Link
+                href='/contact'
+                className='group px-6 py-3 md:px-8 md:py-4 rounded-xl text-base md:text-lg font-semibold transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 md:gap-3 text-white'
+                style={{
+                  backgroundColor: "rgba(255, 255, 255, 0.1)",
+                  border: "2px solid rgba(255, 255, 255, 0.3)",
+                  backdropFilter: "blur(10px)"
+                }}
+              >
+                <Phone size={18} />
+                Schedule Consultation
+              </Link>
+            </div>
+
+            {/* Client Logos */}
+            <div className='pt-6 md:pt-8'>
+              <p className='text-sm mb-3 md:mb-4 text-slate-400'>
+                Trusted by industry leaders
+              </p>
+              <div className='flex flex-wrap items-center gap-4 md:gap-8'>
+                {[
+                  "Beckman Coulter",
+                  "Met One",
+                  "Tailin SciTech", 
+                  "Eurping"
+                ].map((partner, index) => (
+                  <div key={index} className='font-semibold text-sm opacity-80 text-white/80'>
+                    {partner}
+                  </div>
                 ))}
               </div>
-
-              {/* Auto-play Toggle */}
-              <button
-                onClick={toggleAutoPlay}
-                className='p-2 sm:p-1.5 md:p-2 rounded-full hover:bg-white/20 transition-all duration-300 group'
-                aria-label={isAutoPlaying ? 'Pause slideshow' : 'Play slideshow'}
-              >
-                {isAutoPlaying ? (
-                  <Pause className='w-4 h-4 sm:w-3 sm:h-3 md:w-4 md:h-4 text-white group-hover:scale-110 transition-transform duration-300' />
-                ) : (
-                  <Play className='w-4 h-4 sm:w-3 sm:h-3 md:w-4 md:h-4 text-white group-hover:scale-110 transition-transform duration-300' />
-                )}
-              </button>
-
-              {/* Counter */}
-              <div className='text-white/90 text-sm sm:text-sm md:text-base font-medium whitespace-nowrap'>
-                {currentSlide + 1}/{heroData.slider_images.length}
-              </div>
             </div>
           </div>
 
-          {/* Progress Bar - More visible on mobile */}
-          <div className='absolute top-0 left-0 w-full h-1 sm:h-1 bg-white/20 z-10'>
-            <div
-              className='h-full bg-gradient-to-r from-blue-400 to-purple-500 transition-all duration-1000 ease-linear'
+          {/* Right Content - Stats & Compliance */}
+          <div className='lg:col-span-4 space-y-6 md:space-y-8'>
+            {/* Stats Grid */}
+            <div className='grid grid-cols-2 gap-3 md:gap-4'>
+              {[
+                {
+                  number: "10K+",
+                  label: "Installations",
+                  sublabel: "Across India",
+                },
+                {
+                  number: "800+",
+                  label: "Customers",
+                  sublabel: "Pharma Companies",
+                },
+                { number: "27+", label: "Years", sublabel: "Experience" },
+                { number: "13", label: "Offices", sublabel: "Pan-India" },
+              ].map((stat, index) => (
+                <div
+                  key={index}
+                  className='rounded-xl md:rounded-2xl p-4 md:p-6 text-center hover:scale-105 transition-all duration-300 shadow-sm'
+                  style={{
+                    backgroundColor: "rgba(255, 255, 255, 0.9)",
+                    border: "1px solid rgba(183, 136, 82, 0.15)",
+                    backdropFilter: "blur(10px)"
+                  }}
+                >
+                  <div className='text-2xl md:text-3xl font-bold mb-1 md:mb-2' style={{ color: "#b78852" }}>
+                    {stat.number}
+                  </div>
+                  <div className='font-semibold text-sm' style={{ color: "#8b6a3f" }}>
+                    {stat.label}
+                  </div>
+                  <div className='text-xs' style={{ color: "#9c7649" }}>{stat.sublabel}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Latest Upcoming Event Card */}
+            {(() => {
+              console.log('🎨 Rendering event card - Loading:', eventLoading, 'Event:', latestEvent);
+              return null;
+            })()}
+            {eventLoading ? (
+              <div 
+                className='rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm animate-pulse'
+                style={{
+                  backgroundColor: "rgba(255, 255, 255, 0.9)",
+                  border: "1px solid rgba(183, 136, 82, 0.15)",
+                  backdropFilter: "blur(10px)"
+                }}
+              >
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-4 h-4 bg-gray-300 rounded"></div>
+                  <div className="w-24 h-4 bg-gray-300 rounded"></div>
+                </div>
+                <div className="space-y-3">
+                  <div className="w-full h-4 bg-gray-300 rounded"></div>
+                  <div className="w-3/4 h-3 bg-gray-300 rounded"></div>
+                  <div className="w-1/2 h-3 bg-gray-300 rounded"></div>
+                </div>
+              </div>
+            ) : latestEvent ? (
+              <div 
+                className='rounded-xl md:rounded-2xl p-4 md:p-6 shadow-lg hover:shadow-xl transition-all duration-300'
+                style={{
+                  backgroundColor: "rgba(255, 255, 255, 0.95)",
+                  border: "1px solid rgba(183, 136, 82, 0.2)",
+                  backdropFilter: "blur(15px)"
+                }}
+              >
+                <div className="flex items-center gap-2 mb-3">
+                  <Calendar size={18} style={{ color: "#b78852" }} />
+                  <h3 className='font-semibold text-sm' style={{ color: "#8b6a3f" }}>
+                    Latest Event
+                  </h3>
+                </div>
+                
+                <div className="space-y-3">
+                  <h4 className="font-bold text-sm md:text-base leading-tight" style={{ color: "#8b6a3f" }}>
+                    {latestEvent.title}
+                  </h4>
+                  
+                  {latestEvent.excerpt && (
+                    <p className="text-xs md:text-sm text-gray-600 leading-relaxed line-clamp-2">
+                      {latestEvent.excerpt.length > 80 
+                        ? `${latestEvent.excerpt.substring(0, 80)}...`
+                        : latestEvent.excerpt
+                      }
+                    </p>
+                  )}
+                  
+                  <div className="space-y-2">
+                    {(latestEvent.event_date || latestEvent.published_date) && (
+                      <div className="flex items-center gap-2">
+                        <Clock size={12} style={{ color: "#b78852" }} />
+                        <span className="text-xs" style={{ color: "#9c7649" }}>
+                          {new Date(latestEvent.event_date || latestEvent.published_date).toLocaleDateString('en-IN', {
+                            weekday: 'short',
+                            year: 'numeric', 
+                            month: 'short',
+                            day: 'numeric'
+                          })}
+                        </span>
+                      </div>
+                    )}
+                    
+                    {latestEvent.event_location && (
+                      <div className="flex items-center gap-2">
+                        <MapPin size={12} style={{ color: "#b78852" }} />
+                        <span className="text-xs" style={{ color: "#9c7649" }}>
+                          {latestEvent.event_location}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <Link
+                    href={`/news/${latestEvent.slug || latestEvent.id}`}
+                    className="inline-flex items-center gap-2 text-xs font-semibold px-3 py-2 rounded-lg transition-all duration-200 hover:scale-105"
+                    style={{
+                      backgroundColor: "#b78852",
+                      color: "white"
+                    }}
+                  >
+                    Learn More
+                    <ArrowRight size={12} />
+                  </Link>
+                </div>
+              </div>
+            ) : (
+              // Fallback card for testing visibility
+              <div 
+                className='rounded-xl md:rounded-2xl p-4 md:p-6 shadow-lg'
+                style={{
+                  backgroundColor: "rgba(255, 255, 255, 0.95)",
+                  border: "1px solid rgba(183, 136, 82, 0.2)",
+                  backdropFilter: "blur(15px)"
+                }}
+              >
+                <div className="flex items-center gap-2 mb-3">
+                  <Calendar size={18} style={{ color: "#b78852" }} />
+                  <h3 className='font-semibold text-sm' style={{ color: "#8b6a3f" }}>
+                    Events
+                  </h3>
+                </div>
+                <div className="space-y-3">
+                  <h4 className="font-bold text-sm md:text-base leading-tight" style={{ color: "#8b6a3f" }}>
+                    No upcoming events
+                  </h4>
+                  <p className="text-xs md:text-sm text-gray-600">
+                    Check back soon for exciting industry events and webinars.
+                  </p>
+                  <Link
+                    href="/news"
+                    className="inline-flex items-center gap-2 text-xs font-semibold px-3 py-2 rounded-lg transition-all duration-200 hover:scale-105"
+                    style={{
+                      backgroundColor: "#b78852",
+                      color: "white"
+                    }}
+                  >
+                    View All News
+                    <ArrowRight size={12} />
+                  </Link>
+                </div>
+              </div>
+            )}
+
+            {/* Compliance Certifications */}
+            {/* <div 
+              className='rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm'
               style={{
-                width: `${((currentSlide + 1) / heroData.slider_images.length) * 100}%`
+                backgroundColor: "rgba(255, 255, 255, 0.9)",
+                border: "1px solid rgba(183, 136, 82, 0.15)",
+                backdropFilter: "blur(10px)"
               }}
-            ></div>
+            >
+              <h3 className='font-semibold mb-3 md:mb-4 flex items-center gap-2' style={{ color: "#8b6a3f" }}>
+                <Shield size={18} style={{ color: "#b78852" }} />
+                Regulatory Compliance
+              </h3>
+              <div className='grid grid-cols-1 gap-2 md:gap-3'>
+                {[
+                  "21 CFR Part 11 Electronic Records",
+                  "USP <788> Particulate Matter",
+                  "EU GMP Annex 1 Compliance",
+                  "ISO 9001:2015 Certified",
+                ].map((cert, index) => (
+                  <div key={index} className='flex items-center gap-2 md:gap-3'>
+                    <CheckCircle size={14} className='flex-shrink-0' style={{ color: "#22c55e" }} />
+                    <span className='text-xs md:text-sm' style={{ color: "#9c7649" }}>{cert}</span>
+                  </div>
+                ))}
+              </div>
+            </div> */}
           </div>
-        </>
-      )}
-    </div>
-  );
-
-  return (
-    <div className='w-full mt-12 sm:mt-16 md:mt-20 lg:mt-24'>
-      {/* RESPONSIVE CONTAINER - Better mobile approach */}
-      <div className='relative w-full h-[70vh] sm:h-[65vh] md:h-[70vh] lg:h-[80vh] max-h-[800px] min-h-[500px] sm:min-h-[450px] md:min-h-[400px] overflow-hidden'>
-        
-        {/* Background Pattern */}
-        <div className='absolute inset-0 opacity-5 z-0'>
-          <div className='absolute inset-0 bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500'></div>
-          <div 
-            className='absolute inset-0 opacity-30'
-            style={{
-              backgroundImage: `radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 1px, transparent 1px)`,
-              backgroundSize: '30px 30px sm:40px sm:40px md:50px md:50px'
-            }}
-          ></div>
         </div>
-
-        {/* Main Content */}
-        {heroData?.background_video_url
-          ? renderVideoBackground()
-          : renderImageSlider()}
       </div>
-    </div>
+
+      {/* Bottom Gradient */}
+      <div className='absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-slate-900 to-transparent'></div>
+    </section>
   );
 }
