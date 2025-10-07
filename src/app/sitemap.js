@@ -195,12 +195,23 @@ export default async function sitemap() {
     // ========================================
     // CATEGORY ROUTES (if categories have pages)
     // ========================================
-    const categoryRoutes = categories.map((category) => ({
-      url: `${BASE_URL}/products?category=${encodeURIComponent(category.name || category)}`,
-      lastModified: currentDate,
-      changeFrequency: "weekly",
-      priority: 0.7,
-    }));
+    const categoryRoutes = categories.map((category) => {
+      // Clean up category name - fix typos and formatting
+      let categoryName = category.name || category;
+      
+      // Fix known typos
+      categoryName = categoryName
+        .replace(/Enviromental/gi, 'Environmental') // Fix spelling
+        .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+        .trim(); // Remove leading/trailing spaces
+      
+      return {
+        url: `${BASE_URL}/products?category=${encodeURIComponent(categoryName)}`,
+        lastModified: currentDate,
+        changeFrequency: "weekly",
+        priority: 0.7,
+      };
+    });
 
     // ========================================
     // COMBINE ALL ROUTES

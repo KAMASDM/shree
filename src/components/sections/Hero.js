@@ -235,7 +235,7 @@ export default function Hero() {
           </div>
 
           {/* Right Content - Stats & Compliance */}
-          <div className='lg:col-span-4 space-y-6 md:space-y-8 mt-8 lg:mt-0'>
+          <div className='lg:col-span-4 space-y-6 md:space-y-8 mt-12 md:mt-16 lg:mt-0'>
             {/* Stats Grid */}
             <div className='grid grid-cols-2 gap-3 md:gap-4'>
               {[

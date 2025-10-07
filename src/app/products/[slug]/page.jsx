@@ -1,6 +1,28 @@
 import ProductDetailPage from "../../../components/pages/ProductDetailPage";
 import { apiService } from "../../../lib/api";
 
+// Pre-generate static pages for all products at build time
+// This ensures metadata is available immediately for social media crawlers
+export async function generateStaticParams() {
+  try {
+    console.log('🔨 Generating static params for product pages...');
+    
+    const response = await apiService.getAllProducts();
+    const products = response?.data || response || [];
+    
+    console.log(`✅ Found ${products.length} products to pre-render`);
+    
+    // Return array of slugs for static generation
+    return products.map((product) => ({
+      slug: product.slug,
+    }));
+  } catch (error) {
+    console.error('❌ Error generating static params:', error);
+    // Return empty array to allow ISR fallback
+    return [];
+  }
+}
+
 // Generate metadata for SEO and social sharing
 export async function generateMetadata({ params }) {
   try {
