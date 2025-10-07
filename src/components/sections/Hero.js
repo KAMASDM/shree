@@ -121,8 +121,8 @@ export default function Hero() {
 
       {/* Content */}
       <div className='relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full'>
-        <div className='grid lg:grid-cols-12 gap-8 lg:gap-12 items-center py-24 md:py-28 lg:py-20 min-h-screen'>
-          {/* Left Content */}
+<div className='grid lg:grid-cols-12 gap-8 lg:gap-12 items-center py-24 md:py-28 lg:py-32 xl:py-36 min-h-screen'>
+            {/* Left Content */}
           <div className='lg:col-span-8 space-y-6 md:space-y-8'>
             {/* Trust Badge */}
             <div 
@@ -305,17 +305,17 @@ export default function Hero() {
                   backdropFilter: "blur(15px)"
                 }}
               >
-                <div className="flex items-center gap-2 mb-3">
+                <div className="flex items-center gap-2 mb-1">
                   <Calendar size={18} style={{ color: "#b78852" }} />
                   <h3 className='font-semibold text-sm' style={{ color: "#8b6a3f" }}>
                     Latest Event
                   </h3>
                 </div>
                 
-                <div className="space-y-3">
+                <div className="space-y-1">
                   {/* Event Image */}
                   {latestEvent.featured_image && (
-                    <div className="w-full h-32 md:h-40 rounded-lg overflow-hidden bg-gray-100">
+                    <div className="w-full h-32 md:h-30 rounded-lg overflow-hidden bg-gray-100">
                       <img
                         src={getImageUrl(latestEvent.featured_image)}
                         alt={latestEvent.title}
