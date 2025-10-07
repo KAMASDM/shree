@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Calendar, User, Search, Globe, ChevronDown, Award } from "lucide-react";
-import { apiService } from "../../lib/api";
+import { apiService, getImageUrl } from "../../lib/api";
 
 export default function NewsPage() {
   const [blogPosts, setBlogPosts] = useState([]);
@@ -145,7 +145,7 @@ export default function NewsPage() {
               </div>
               <div className="order-1 lg:order-2">
                 <Image
-                  src={featuredPost.featured_image}
+                  src={getImageUrl(featuredPost.featured_image) || '/android-chrome-512x512.png'}
                   alt={featuredPost.title}
                   width={600}
                   height={400}
@@ -176,7 +176,7 @@ export default function NewsPage() {
                   <article>
                     <div className='relative overflow-hidden'>
                       <Image
-                        src={post.featured_image}
+                        src={getImageUrl(post.featured_image) || '/android-chrome-512x512.png'}
                         alt={post.title}
                         width={400}
                         height={300}

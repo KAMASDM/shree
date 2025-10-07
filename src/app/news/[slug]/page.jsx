@@ -1,7 +1,7 @@
 // src/app/news/[slug]/page.jsx
 
 import BlogDetailPage from "../../../components/pages/BlogDetailPage";
-import { apiService } from "../../../lib/api"; // Make sure to import your apiService
+import { apiService, getImageUrl } from "../../../lib/api"; // Import getImageUrl
 
 /**
  * This function generates dynamic metadata for the page based on the post slug.
@@ -34,7 +34,7 @@ export async function generateMetadata({ params }) {
     // Use meta fields from the API if they exist, otherwise fallback to main fields
     const title = post.meta_title || post.title;
     const description = post.meta_description || "Read the latest news and insights from Shreedhar Instruments.";
-    const imageUrl = post.featured_image || 'https://shreedhargroup.com/wp-content/uploads/2014/12/logo02.png'; // Fallback image
+    const imageUrl = getImageUrl(post.featured_image) || 'https://shreedhargroup.com/wp-content/uploads/2014/12/logo02.png'; // Fallback image
 
     return {
       title,

@@ -621,4 +621,24 @@ export const apiService = {
   }
 };
 
+// Helper function to get proper image URL
+export const getImageUrl = (imageUrl) => {
+  if (!imageUrl) return null;
+  
+  // If it's already a full URL (external image), return as is
+  if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+    return imageUrl;
+  }
+  
+  // If it's a relative path, construct the full URL
+  // First, try to get the base URL from the API response
+  // Images are typically served from the media/static folder on the backend
+  const baseUrl = 'https://sweekarme.in/shree';
+  
+  // Ensure the path starts with a slash
+  const imagePath = imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`;
+  
+  return `${baseUrl}${imagePath}`;
+};
+
 export default apiService;

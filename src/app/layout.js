@@ -1,5 +1,6 @@
 import Footer from "../components/common/Footer";
 import Header from "../components/common/Header";
+import MobileBottomNav from "../components/common/MobileBottomNav";
 import "./globals.css";
 
 export const metadata = {
@@ -22,6 +23,28 @@ export const metadata = {
   },
   robots: "index, follow",
   canonical: "https://shreedhargroup.com",
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+    other: [
+      {
+        rel: "mask-icon",
+        url: "/favicon.ico",
+      },
+    ],
+  },
+  manifest: "/site.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Shreedhar Instruments",
+  },
   openGraph: {
     type: "website",
     locale: "en_IN",
@@ -56,6 +79,7 @@ export const metadata = {
 export const viewport = {
   width: "device-width",
   initialScale: 1,
+  themeColor: "#b78852",
 };
 
 export default function RootLayout({ children }) {
@@ -112,8 +136,9 @@ export default function RootLayout({ children }) {
         <body className='antialiased'>
           <div className='min-h-screen bg-brand-off-white flex flex-col'>
             <Header />
-            <main className='flex-grow'>{children}</main>
+            <main className='flex-grow pb-20 lg:pb-0'>{children}</main>
             <Footer />
+            <MobileBottomNav />
           </div>
         </body>
       </html>

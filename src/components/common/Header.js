@@ -14,19 +14,12 @@ import {
   Newspaper,
   HelpCircle,
 } from "lucide-react";
-import SHREELogo from "../../../src/img/shree-logo-new.png"; // Import the new logo
+import SHREELogo from "../../../src/img/shree-logo-new.png";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const location = usePathname();
-
-  const mainNav = [
-    { name: "Home", path: "/" },
-    { name: "Products", path: "/products" },
-    { name: "Services", path: "/services" },
-    { name: "Contact", path: "/contact" },
-  ];
   
   const companyLinks = [
     { name: "About Us", path: "/about", icon: <Building size={16} /> },
@@ -55,19 +48,20 @@ export default function Header() {
       }}
     >
       <nav className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-        <div className='flex justify-between items-center h-20'>
+        <div className='flex justify-between items-center h-16 lg:h-20'>
           <div className='flex-shrink-0 flex items-center'>
             <Link
               href='/'
               className='hover:scale-105 transition-transform duration-300'
             >
               <Image
-                src={SHREELogo} // Use the new logo import
+                src={SHREELogo}
                 alt='Shreedhar Instruments'
-                width={700}
-                height={705}
-                className='h-50 w-auto'
-                priority
+                 width={350}
+              height={150}
+              // ✅ Scale the logo visually without affecting layout
+              className='h-30 w-50 scale-150'
+              priority
               />
             </Link>
           </div>
@@ -236,148 +230,152 @@ export default function Header() {
             </Link>
           </div>
 
-          {/* Mobile menu button */}
-          <div className='lg:hidden'>
+          {/* Mobile - Burger menu */}
+          <div className='lg:hidden flex items-center gap-2'>
+            <a
+              href='tel:+919824510383'
+              className='p-2 rounded-full transition-all duration-300 hover:scale-105'
+              style={{ color: "#b78852" }}
+              aria-label="Call us"
+            >
+              <Phone size={20} />
+            </a>
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className='p-2 rounded-md transition-all duration-300'
               style={{ color: "#4a4a4a" }}
+              aria-label="Menu"
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Navigation Menu */}
         {isMenuOpen && (
           <div
-            className='lg:hidden border-t mt-4 pt-4 pb-6'
+            className='lg:hidden border-t pt-4 pb-6 space-y-2'
             style={{
               borderColor: "rgba(183, 136, 82, 0.1)",
               backgroundColor: "rgba(255, 255, 255, 0.95)",
               backdropFilter: "blur(10px)",
               WebkitBackdropFilter: "blur(10px)",
-              margin: "-1rem",
-              marginTop: "1rem",
-              padding: "1rem",
-              borderRadius: "0 0 12px 12px",
             }}
           >
-            <div className='space-y-2'>
-              {/* Home */}
-              <Link
-                href="/"
-                onClick={() => setIsMenuOpen(false)}
-                className={`block w-full text-left px-3 py-2 text-base font-medium rounded-lg transition-all duration-300 ${
-                  location.pathname === "/" ? "font-semibold" : ""
-                }`}
-                style={{
-                  color: location.pathname === "/" ? "#b78852" : "#4a4a4a",
-                  backgroundColor: location.pathname === "/" ? "rgba(183, 136, 82, 0.08)" : "transparent",
-                }}
-              >
-                Home
-              </Link>
-              
-              {/* Company Links */}
+            {/* Home */}
+            <Link
+              href="/"
+              onClick={() => setIsMenuOpen(false)}
+              className={`block w-full text-left px-3 py-2 text-base font-medium rounded-lg transition-all duration-300 ${
+                location.pathname === "/" ? "font-semibold" : ""
+              }`}
+              style={{
+                color: location.pathname === "/" ? "#b78852" : "#4a4a4a",
+                backgroundColor: location.pathname === "/" ? "rgba(183, 136, 82, 0.08)" : "transparent",
+              }}
+            >
+              Home
+            </Link>
+            
+            {/* Company Links */}
+            <div
+              className='border-t pt-2 mt-2'
+              style={{ borderColor: "rgba(183, 136, 82, 0.1)" }}
+            >
               <div
-                className='border-t pt-2 mt-2'
-                style={{ borderColor: "rgba(183, 136, 82, 0.1)" }}
+                className='px-3 py-2 text-sm font-semibold'
+                style={{ color: "#9c7649" }}
               >
-                <div
-                  className='px-3 py-2 text-sm font-semibold'
-                  style={{ color: "#9c7649" }}
-                >
-                  Company
-                </div>
-                {companyLinks.map((item) => (
-                  <Link
-                    key={item.name}
-                    href={item.path}
-                    onClick={() => setIsMenuOpen(false)}
-                    className={`w-full flex items-center gap-3 px-6 py-2 text-sm rounded-lg transition-all duration-300 ${
-                      location.pathname === item.path ? "font-semibold" : ""
-                    }`}
-                    style={{
-                      color:
-                        location.pathname === item.path ? "#b78852" : "#4a4a4a",
-                      backgroundColor:
-                        location.pathname === item.path
-                          ? "rgba(183, 136, 82, 0.08)"
-                          : "transparent",
-                    }}
-                  >
-                    <span style={{ color: "#9c7649" }}>{item.icon}</span>
-                    {item.name}
-                  </Link>
-                ))}
+                Company
               </div>
-
-              {/* Other Main Nav Links */}
-              <Link
-                href="/products"
-                onClick={() => setIsMenuOpen(false)}
-                className={`block w-full text-left px-3 py-2 text-base font-medium rounded-lg transition-all duration-300 ${
-                  location.pathname === "/products" ? "font-semibold" : ""
-                }`}
-                style={{
-                  color: location.pathname === "/products" ? "#b78852" : "#4a4a4a",
-                  backgroundColor: location.pathname === "/products" ? "rgba(183, 136, 82, 0.08)" : "transparent",
-                }}
-              >
-                Products
-              </Link>
-              <Link
-                href="/services"
-                onClick={() => setIsMenuOpen(false)}
-                className={`block w-full text-left px-3 py-2 text-base font-medium rounded-lg transition-all duration-300 ${
-                  location.pathname === "/services" ? "font-semibold" : ""
-                }`}
-                style={{
-                  color: location.pathname === "/services" ? "#b78852" : "#4a4a4a",
-                  backgroundColor: location.pathname === "/services" ? "rgba(183, 136, 82, 0.08)" : "transparent",
-                }}
-              >
-                Services
-              </Link>
-              <Link
-                href="/contact"
-                onClick={() => setIsMenuOpen(false)}
-                className={`block w-full text-left px-3 py-2 text-base font-medium rounded-lg transition-all duration-300 ${
-                  location.pathname === "/contact" ? "font-semibold" : ""
-                }`}
-                style={{
-                  color: location.pathname === "/contact" ? "#b78852" : "#4a4a4a",
-                  backgroundColor: location.pathname === "/contact" ? "rgba(183, 136, 82, 0.08)" : "transparent",
-                }}
-              >
-                Contact
-              </Link>
-
-              {/* Mobile CTA */}
-              <div
-                className='border-t pt-4 mt-4 space-y-3'
-                style={{ borderColor: "rgba(183, 136, 82, 0.1)" }}
-              >
-                <a
-                  href='tel:+917096033001'
-                  className='flex items-center gap-2 font-medium'
-                  style={{ color: "#b78852" }}
-                >
-                  <Phone size={16} />
-                  <span className='text-sm'>+91 9824510383</span>
-                </a>
+              {companyLinks.map((item) => (
                 <Link
-                  href='/quote'
-                  className='block w-full text-center text-white px-6 py-3 rounded-full text-sm font-semibold shadow-lg transition-all duration-300'
+                  key={item.name}
+                  href={item.path}
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`w-full flex items-center gap-3 px-6 py-2 text-sm rounded-lg transition-all duration-300 ${
+                    location.pathname === item.path ? "font-semibold" : ""
+                  }`}
                   style={{
-                    background:
-                      "linear-gradient(135deg, #b78852 0%, #c9955f 100%)",
+                    color:
+                      location.pathname === item.path ? "#b78852" : "#4a4a4a",
+                    backgroundColor:
+                      location.pathname === item.path
+                        ? "rgba(183, 136, 82, 0.08)"
+                        : "transparent",
                   }}
                 >
-                  Get Quote
+                  <span style={{ color: "#9c7649" }}>{item.icon}</span>
+                  {item.name}
                 </Link>
-              </div>
+              ))}
+            </div>
+
+            {/* Other Main Nav Links */}
+            <Link
+              href="/products"
+              onClick={() => setIsMenuOpen(false)}
+              className={`block w-full text-left px-3 py-2 text-base font-medium rounded-lg transition-all duration-300 ${
+                location.pathname === "/products" ? "font-semibold" : ""
+              }`}
+              style={{
+                color: location.pathname === "/products" ? "#b78852" : "#4a4a4a",
+                backgroundColor: location.pathname === "/products" ? "rgba(183, 136, 82, 0.08)" : "transparent",
+              }}
+            >
+              Products
+            </Link>
+            <Link
+              href="/services"
+              onClick={() => setIsMenuOpen(false)}
+              className={`block w-full text-left px-3 py-2 text-base font-medium rounded-lg transition-all duration-300 ${
+                location.pathname === "/services" ? "font-semibold" : ""
+              }`}
+              style={{
+                color: location.pathname === "/services" ? "#b78852" : "#4a4a4a",
+                backgroundColor: location.pathname === "/services" ? "rgba(183, 136, 82, 0.08)" : "transparent",
+              }}
+            >
+              Services
+            </Link>
+            <Link
+              href="/contact"
+              onClick={() => setIsMenuOpen(false)}
+              className={`block w-full text-left px-3 py-2 text-base font-medium rounded-lg transition-all duration-300 ${
+                location.pathname === "/contact" ? "font-semibold" : ""
+              }`}
+              style={{
+                color: location.pathname === "/contact" ? "#b78852" : "#4a4a4a",
+                backgroundColor: location.pathname === "/contact" ? "rgba(183, 136, 82, 0.08)" : "transparent",
+              }}
+            >
+              Contact
+            </Link>
+
+            {/* Mobile CTA */}
+            <div
+              className='border-t pt-4 mt-4 space-y-3'
+              style={{ borderColor: "rgba(183, 136, 82, 0.1)" }}
+            >
+              <a
+                href='tel:+919824510383'
+                className='flex items-center gap-2 px-3 font-medium'
+                style={{ color: "#b78852" }}
+              >
+                <Phone size={16} />
+                <span className='text-sm'>+91 9824510383</span>
+              </a>
+              <Link
+                href='/quote'
+                onClick={() => setIsMenuOpen(false)}
+                className='block w-full text-center text-white px-6 py-3 rounded-full text-sm font-semibold shadow-lg transition-all duration-300'
+                style={{
+                  background:
+                    "linear-gradient(135deg, #b78852 0%, #c9955f 100%)",
+                }}
+              >
+                Get Quote
+              </Link>
             </div>
           </div>
         )}

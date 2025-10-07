@@ -14,7 +14,7 @@ import {
   ChevronUp,
   HelpCircle,
 } from "lucide-react";
-import { apiService } from "../../lib/api";
+import { apiService, getImageUrl } from "../../lib/api";
 
 export default function BlogDetailPage() {
   const [post, setPost] = useState(null);
@@ -439,7 +439,7 @@ export default function BlogDetailPage() {
               {post.featured_image && (
                   <div className="mb-8 rounded-2xl overflow-hidden shadow-md">
                       <Image
-                          src={post.featured_image}
+                          src={getImageUrl(post.featured_image) || '/android-chrome-512x512.png'}
                           alt={post.title}
                           width={800}
                           height={450}

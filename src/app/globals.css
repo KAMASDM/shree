@@ -84,6 +84,18 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Safe Area for Mobile Bottom Navigation */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+/* Mobile Bottom Navigation Spacing */
+@media (max-width: 1023px) {
+  body {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;

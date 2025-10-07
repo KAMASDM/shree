@@ -53,7 +53,7 @@ export default function PartnersSection() {
           {partners.map((partner, index) => (
             <div 
               key={index} 
-              className="group rounded-2xl md:rounded-3xl p-6 md:p-8 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1 md:hover:-translate-y-2 active:scale-95"
+              className="group rounded-xl sm:rounded-2xl md:rounded-3xl p-4 sm:p-5 md:p-6 lg:p-8 text-center transition-all duration-300 hover:shadow-xl hover:-translate-y-1 md:hover:-translate-y-2 active:scale-95"
               style={{
                 backgroundColor: "rgba(255, 255, 255, 0.9)",
                 border: "1px solid rgba(183, 136, 82, 0.15)",
@@ -61,17 +61,17 @@ export default function PartnersSection() {
               }}
             >
               <div 
-                className="relative mx-auto w-14 h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 flex items-center justify-center mb-4 md:mb-6 rounded-xl md:rounded-2xl shadow-sm group-hover:shadow-md transition-all duration-300 group-hover:scale-110"
+                className="relative mx-auto w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 flex items-center justify-center mb-3 sm:mb-4 md:mb-6 rounded-lg sm:rounded-xl md:rounded-2xl shadow-sm group-hover:shadow-md transition-all duration-300 group-hover:scale-110"
                 style={{ backgroundColor: "rgba(183, 136, 82, 0.1)" }}
               >
                 <div style={{ color: "#b78852" }}>
                   {partner.icon}
                 </div>
               </div>
-              <h3 className="text-lg md:text-xl font-bold mb-2" style={{ color: "#8b6a3f" }}>
+              <h3 className="text-base sm:text-lg md:text-xl font-bold mb-1.5 sm:mb-2" style={{ color: "#8b6a3f" }}>
                 {partner.name}
               </h3>
-              <p className="text-sm mb-4" style={{ color: "#9c7649" }}>
+              <p className="text-xs sm:text-sm mb-3 sm:mb-4" style={{ color: "#9c7649" }}>
                 {partner.country} • Since {partner.since}
               </p>
               <span 

@@ -86,27 +86,32 @@ async function proxyRequest(request, path) {
 
 // Handle GET requests
 export async function GET(request, { params }) {
-  return proxyRequest(request, params.path);
+  const { path } = await params;
+  return proxyRequest(request, path);
 }
 
 // Handle POST requests
 export async function POST(request, { params }) {
-  return proxyRequest(request, params.path);
+  const { path } = await params;
+  return proxyRequest(request, path);
 }
 
 // Handle PUT requests
 export async function PUT(request, { params }) {
-  return proxyRequest(request, params.path);
+  const { path } = await params;
+  return proxyRequest(request, path);
 }
 
 // Handle DELETE requests
 export async function DELETE(request, { params }) {
-  return proxyRequest(request, params.path);
+  const { path } = await params;
+  return proxyRequest(request, path);
 }
 
 // Handle PATCH requests
 export async function PATCH(request, { params }) {
-  return proxyRequest(request, params.path);
+  const { path } = await params;
+  return proxyRequest(request, path);
 }
 
 // Handle OPTIONS requests for CORS preflight

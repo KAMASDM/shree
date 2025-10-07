@@ -14,7 +14,7 @@ import {
   MapPin,
 } from "lucide-react";
 import Link from "next/link";
-import { apiService } from "../../lib/api";
+import { apiService, getImageUrl } from "../../lib/api";
 
 export default function Hero() {
   const [latestEvent, setLatestEvent] = useState(null);
@@ -98,33 +98,30 @@ export default function Hero() {
 
   return (
     <section className='relative min-h-screen flex items-center overflow-hidden'>
-      {/* Background YouTube Video */}
+      {/* Modern Gradient Background */}
       <div className='absolute inset-0 z-0'>
-        <iframe
-          className='w-full h-full object-cover'
-          src="https://youtu.be/jeVjfNQ_pAI?si=MMVJ8ap95-upXLak"
-          title="Pharmaceutical Laboratory Background"
-          allow="autoplay; encrypted-media"
-          style={{
-            minWidth: '100vw',
-            minHeight: '100vh',
-            width: 'auto',
-            height: 'auto',
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
-            pointerEvents: 'none'
-          }}
-        ></iframe>
-        {/* Gradient Overlay */}
-        <div className='absolute inset-0 bg-gradient-to-r from-slate-900/85 via-slate-800/75 to-slate-900/85'></div>
-        <div className='absolute inset-0 bg-gradient-to-b from-transparent via-amber-900/10 to-amber-900/20'></div>
+        {/* Base gradient */}
+        <div className='absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900'></div>
+        
+        {/* Golden brown accent gradients */}
+        <div className='absolute inset-0 bg-gradient-to-tr from-amber-900/20 via-transparent to-orange-900/20'></div>
+        <div className='absolute inset-0 bg-gradient-to-bl from-transparent via-amber-800/10 to-transparent'></div>
+        
+        {/* Animated background blobs */}
+        <div className='absolute top-0 left-0 w-96 h-96 bg-amber-700/20 rounded-full blur-3xl animate-blob'></div>
+        <div className='absolute top-0 right-0 w-96 h-96 bg-orange-700/20 rounded-full blur-3xl animate-blob animation-delay-2000'></div>
+        <div className='absolute bottom-0 left-1/2 w-96 h-96 bg-yellow-700/20 rounded-full blur-3xl animate-blob animation-delay-4000'></div>
+        
+        {/* Subtle pattern overlay */}
+        <div className='absolute inset-0 opacity-10' style={{
+          backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(183, 136, 82, 0.15) 1px, transparent 0)',
+          backgroundSize: '40px 40px'
+        }}></div>
       </div>
 
       {/* Content */}
       <div className='relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full'>
-        <div className='grid lg:grid-cols-12 gap-8 lg:gap-12 items-center py-20 min-h-screen'>
+        <div className='grid lg:grid-cols-12 gap-8 lg:gap-12 items-center py-24 md:py-28 lg:py-20 min-h-screen'>
           {/* Left Content */}
           <div className='lg:col-span-8 space-y-6 md:space-y-8'>
             {/* Trust Badge */}
@@ -238,7 +235,7 @@ export default function Hero() {
           </div>
 
           {/* Right Content - Stats & Compliance */}
-          <div className='lg:col-span-4 space-y-6 md:space-y-8'>
+          <div className='lg:col-span-4 space-y-6 md:space-y-8 mt-8 lg:mt-0'>
             {/* Stats Grid */}
             <div className='grid grid-cols-2 gap-3 md:gap-4'>
               {[
@@ -318,11 +315,16 @@ export default function Hero() {
                 <div className="space-y-3">
                   {/* Event Image */}
                   {latestEvent.featured_image && (
-                    <div className="w-full h-32 md:h-40 rounded-lg overflow-hidden">
+                    <div className="w-full h-32 md:h-40 rounded-lg overflow-hidden bg-gray-100">
                       <img
-                        src={latestEvent.featured_image}
+                        src={getImageUrl(latestEvent.featured_image)}
                         alt={latestEvent.title}
                         className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          console.error('Failed to load event image:', latestEvent.featured_image);
+                          e.target.style.display = 'none';
+                          e.target.parentElement.style.display = 'none';
+                        }}
                       />
                     </div>
                   )}

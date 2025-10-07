@@ -26,7 +26,7 @@ export default function ProductCard({ product }) {
           alt={product.name}
           width={400}
           height={300}
-          className='w-full h-40 sm:h-48 md:h-52 object-cover group-hover:scale-110 transition-transform duration-500'
+          className='w-full h-32 sm:h-40 md:h-48 lg:h-52 object-cover group-hover:scale-110 transition-transform duration-500'
           loading="lazy"
         />
 
@@ -58,11 +58,11 @@ export default function ProductCard({ product }) {
       </div>
 
       {/* Content Section */}
-      <div className='p-4 md:p-6 lg:p-8 flex flex-col flex-grow'>
+      <div className='p-3 sm:p-4 md:p-6 lg:p-8 flex flex-col flex-grow'>
         <div className='flex-grow'>
           {/* Product Title */}
           <h3
-            className='text-lg md:text-xl font-bold mb-2 md:mb-3 group-hover:opacity-80 transition-all duration-300 line-clamp-2 leading-tight'
+            className='text-sm sm:text-base md:text-lg lg:text-xl font-bold mb-1.5 sm:mb-2 md:mb-3 group-hover:opacity-80 transition-all duration-300 line-clamp-2 leading-tight'
             style={{ color: "#8b6a3f" }}
           >
             {product.name}
@@ -70,7 +70,7 @@ export default function ProductCard({ product }) {
 
           {/* Product Description */}
           <div
-            className='mb-3 md:mb-4 line-clamp-2 md:line-clamp-3 leading-relaxed text-xs md:text-sm'
+            className='mb-2 sm:mb-3 md:mb-4 line-clamp-2 md:line-clamp-3 leading-relaxed text-xs sm:text-sm'
             style={{ color: "#9c7649" }}
             dangerouslySetInnerHTML={{ __html: product.short_description }}
           />

@@ -14,7 +14,7 @@ function ProductCard({ product }) {
     >
       <div className="relative z-10 w-full h-full overflow-hidden transition-all duration-500 bg-white rounded-2xl shadow-md hover:shadow-2xl hover:-translate-y-1">
         {/* Product Image */}
-        <div className="relative w-full h-48 overflow-hidden">
+        <div className="relative w-full h-36 sm:h-40 md:h-48 overflow-hidden">
           <Image
             src={product.main_image || "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=300&fit=crop"}
             alt={product.name}
@@ -33,7 +33,7 @@ function ProductCard({ product }) {
         </div>
 
         {/* Product Content */}
-        <div className="p-4">
+        <div className="p-3 sm:p-4">
           <h3
             className="mb-2 text-base font-bold leading-tight line-clamp-2"
             style={{ color: "#8b6a3f" }}
@@ -191,7 +191,7 @@ export default function ProductSlider({ currentProduct, title = "Related Product
             className="flex gap-6 p-4 -m-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide"
           >
             {products.map((product) => (
-              <div key={product.id} className="flex-shrink-0 w-[85%] sm:w-[45%] md:w-1/3 lg:w-1/4 snap-center">
+              <div key={product.id} className="flex-shrink-0 w-[70%] sm:w-[45%] md:w-1/3 lg:w-1/4 snap-center">
                 <ProductCard product={product} />
               </div>
             ))}
