@@ -1,5 +1,5 @@
 import ProductDetailPage from "../../../components/pages/ProductDetailPage";
-import { apiService } from "../../../lib/api";
+import { apiService, getImageUrl } from "../../../lib/api"; // Import getImageUrl
 
 // Pre-generate static pages for all products at build time
 // This ensures metadata is available immediately for social media crawlers
@@ -26,7 +26,7 @@ export async function generateStaticParams() {
 // Generate metadata for SEO and social sharing
 export async function generateMetadata({ params }) {
   try {
-    // Await params as required by Next.js 15
+    // Await params as required by Next.js
     const { slug } = await params;
     
     // Fetch product data
@@ -41,22 +41,22 @@ export async function generateMetadata({ params }) {
     }
 
     // Extract description from HTML (remove tags for meta description)
-    const plainDescription = product.short_description
-      ? product.short_description.replace(/<[^>]*>/g, '').trim()
-      : product.description
-      ? product.description.replace(/<[^>]*>/g, '').substring(0, 160).trim()
-      : 'High-quality pharmaceutical laboratory instruments and equipment.';
+    const plainDescription = (
+      product.short_description ||
+      product.description ||
+      'High-quality pharmaceutical laboratory instruments and equipment.'
+    ).replace(/<[^>]*>/g, '').substring(0, 160).trim();
 
-    // Get the product image URL
-    const imageUrl = product.main_image || 'https://sweekarme.in/shree/media/default-product.jpg';
-    const fullImageUrl = imageUrl.startsWith('http') ? imageUrl : `https://sweekarme.in/shree${imageUrl}`;
+    // Use getImageUrl and provide a reliable fallback
+    const imageUrl = getImageUrl(product.main_image) || 'https://shreedhargroup.com/wp-content/uploads/2014/12/logo02.png';
 
     // Brand and category info
     const brandName = product.brand?.name || product.brand || 'Shreedhar Instruments';
     const categoryName = product.category_name || 'Laboratory Equipment';
+    const pageTitle = `${product.name} | ${brandName}`;
 
     return {
-      title: `${product.name} | ${brandName} | Shreedhar Instruments`,
+      title: pageTitle,
       description: plainDescription,
       keywords: [
         product.name,
@@ -70,28 +70,28 @@ export async function generateMetadata({ params }) {
       
       // Open Graph metadata for Facebook, WhatsApp, LinkedIn
       openGraph: {
-        title: product.name,
+        title: pageTitle,
         description: plainDescription,
         url: `https://shreedharinstruments.com/products/${slug}`,
         siteName: 'Shreedhar Instruments',
         images: [
           {
-            url: fullImageUrl,
+            url: imageUrl,
             width: 1200,
             height: 630,
             alt: product.name,
           },
         ],
         locale: 'en_IN',
-        type: 'product',
+        type: 'article', // THIS LINE IS CORRECTED
       },
       
       // Twitter Card metadata
       twitter: {
         card: 'summary_large_image',
-        title: product.name,
+        title: pageTitle,
         description: plainDescription,
-        images: [fullImageUrl],
+        images: [imageUrl],
         creator: '@ShreedharInst',
       },
 
@@ -100,7 +100,7 @@ export async function generateMetadata({ params }) {
         canonical: `https://shreedharinstruments.com/products/${slug}`,
       },
       
-      // Product-specific metadata
+      // Product-specific metadata (using 'other' for custom tags)
       other: {
         'product:brand': brandName,
         'product:category': categoryName,

@@ -1,12 +1,28 @@
 // src/lib/api.js
 import axios from 'axios';
 
-// Determine if we should use the proxy or direct API calls
-const USE_PROXY = process.env.NEXT_PUBLIC_USE_PROXY !== 'false'; // Default to true
+// --- START OF CHANGES ---
+
+// Determine environment and base URLs
+const USE_PROXY = process.env.NEXT_PUBLIC_USE_PROXY !== 'false';
 const DIRECT_API_URL = 'https://sweekarme.in/shree/api';
 const PROXY_URL = '/api/proxy';
 
-const BASE_URL = USE_PROXY ? PROXY_URL : (process.env.NEXT_PUBLIC_API_BASE_URL || DIRECT_API_URL);
+const IS_SERVER = typeof window === 'undefined';
+const API_HOST = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+
+let BASE_URL;
+
+// If using the proxy, use an absolute URL on the server and a relative one on the client
+if (USE_PROXY) {
+  BASE_URL = IS_SERVER ? `${API_HOST}${PROXY_URL}` : PROXY_URL;
+} else {
+  // Otherwise, use the direct API URL
+  BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || DIRECT_API_URL;
+}
+
+// --- END OF CHANGES ---
+
 
 // Create axios instance with default config
 const apiClient = axios.create({
@@ -23,7 +39,7 @@ apiClient.interceptors.request.use(
     // Log requests in development
     if (process.env.NODE_ENV === 'development') {
       console.log(`API Request: ${config.method?.toUpperCase()} ${config.url}`);
-      console.log(`Using ${USE_PROXY ? 'PROXY' : 'DIRECT'} mode`);
+      console.log(`Using ${USE_PROXY ? 'PROXY' : 'DIRECT'} mode from ${IS_SERVER ? 'SERVER' : 'CLIENT'}`);
     }
     return config;
   },
