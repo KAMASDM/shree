@@ -14,7 +14,7 @@ import {
   ExternalLink,
   ImageIcon,
 } from "lucide-react";
-import { apiService } from "../../lib/api";
+import { apiService, getImageUrl } from "../../lib/api";
 import mapImage from "../../img/shree-map.png"; // ✨ NEW: Import your map image
 
 export default function ContactPage() {
@@ -426,7 +426,7 @@ export default function ContactPage() {
                   {headOffice.office_image && (
                     <div className="relative h-48 md:h-56 overflow-hidden">
                       <img
-                        src={headOffice.office_image}
+                        src={getImageUrl(headOffice.office_image)}
                         alt={`${headOffice.name} building`}
                         className="w-full h-full object-cover"
                         onError={(e) => {
@@ -629,7 +629,7 @@ export default function ContactPage() {
                             {office.office_image ? (
                               <div className="relative h-48 overflow-hidden">
                                 <img
-                                  src={office.office_image}
+                                  src={getImageUrl(office.office_image)}
                                   alt={`${office.name} building`}
                                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                                   onError={(e) => {

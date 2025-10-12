@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { apiService } from "../../lib/api";
+import { apiService, getImageUrl } from "../../lib/api";
 import {
   Send,
   User,
@@ -88,7 +88,7 @@ export default function ProductInquiryForm({ product, onClose }) {
         </h3>
         <div className='flex items-center gap-3 text-amber-600'>
           <img
-            src={product.main_image}
+            src={getImageUrl(product.main_image)}
             alt={product.name}
             className='w-12 h-12 object-cover rounded-lg'
           />

@@ -3,7 +3,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { ChevronLeft, ChevronRight, ArrowRight } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { apiService } from "../../lib/api";
+import { apiService, getImageUrl } from "../../lib/api";
 
 // ✨ Reusable Product Card Component
 function ProductCard({ product }) {
@@ -16,7 +16,7 @@ function ProductCard({ product }) {
         {/* Product Image */}
         <div className="relative w-full h-36 sm:h-40 md:h-48 overflow-hidden">
           <Image
-            src={product.main_image || "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=300&fit=crop"}
+            src={getImageUrl(product.main_image) || "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=300&fit=crop"}
             alt={product.name}
             fill
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

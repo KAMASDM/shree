@@ -2,6 +2,7 @@
 import { ArrowRight, Star } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { getImageUrl } from "../../lib/api";
 
 export default function ProductCard({ product }) {
   const brandName = product.brand ? product.brand.name : "Shreedhar";
@@ -20,7 +21,7 @@ export default function ProductCard({ product }) {
       <div className='relative overflow-hidden'>
         <Image
           src={
-            product.main_image ||
+            getImageUrl(product.main_image) ||
             "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=300&fit=crop"
           }
           alt={product.name}

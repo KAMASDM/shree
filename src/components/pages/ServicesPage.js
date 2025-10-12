@@ -27,7 +27,7 @@ import {
 } from "lucide-react";
 import ServiceInquiryForm from "../forms/ServiceInquiryForm";
 import FeedbackForm from "../forms/FeedbackForm"; // Import the new form
-import { apiService } from "../../lib/api";
+import { apiService, getImageUrl } from "../../lib/api";
 
 export default function ServicesPage() {
   const [services, setServices] = useState([]);
@@ -505,7 +505,7 @@ export default function ServicesPage() {
                     <div className='flex items-start gap-6 mb-6'>
                       <div className='flex-shrink-0'>
                         <Image
-                          src={service.image}
+                          src={getImageUrl(service.image) || "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=80&h=80&fit=crop"}
                           alt={service.title}
                           width={80}
                           height={80}

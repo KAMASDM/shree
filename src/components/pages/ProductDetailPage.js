@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { apiService } from "../../lib/api";
+import { apiService, getImageUrl } from "../../lib/api";
 import {
   ChevronLeft,
   Star,
@@ -464,9 +464,9 @@ export default function ProductDetailPage() {
   }
 
   const galleryImages = [
-    product.main_image,
-    ...(product.images || []).map((img) => img.image),
-  ];
+    getImageUrl(product.main_image),
+    ...(product.images || []).map((img) => getImageUrl(img.image)),
+  ].filter(Boolean); // Remove null/undefined images
 
   if (showContactForm) {
     return (

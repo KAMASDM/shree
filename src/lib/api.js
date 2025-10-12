@@ -646,15 +646,12 @@ export const getImageUrl = (imageUrl) => {
     return imageUrl;
   }
   
-  // If it's a relative path, construct the full URL
-  // First, try to get the base URL from the API response
-  // Images are typically served from the media/static folder on the backend
-  const baseUrl = 'https://sweekarme.in/shree';
+  // If it's a relative path, use the image proxy instead of direct backend URL
+  // Remove leading slash if present to avoid double slashes in the proxy URL
+  const imagePath = imageUrl.startsWith('/') ? imageUrl.substring(1) : imageUrl;
   
-  // Ensure the path starts with a slash
-  const imagePath = imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`;
-  
-  return `${baseUrl}${imagePath}`;
+  // Use the image proxy route for consistent loading and CORS handling
+  return `/api/proxy/images/${imagePath}`;
 };
 
 export default apiService;
