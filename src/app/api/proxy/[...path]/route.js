@@ -43,12 +43,18 @@ async function proxyRequest(request, path) {
       options.body = await request.text();
     }
     
-    console.log(`Proxying ${request.method} request to: ${backendUrl}`);
+    console.log(`🚀 Proxying ${request.method} request to: ${backendUrl}`);
+    console.log(`📋 Request headers:`, headers);
+    if (options.body) {
+      console.log(`📦 Request body: ${options.body.substring(0, 200)}...`);
+    }
     
     const response = await fetch(backendUrl, options);
     
     // Get response data
     const data = await response.text();
+    console.log(`📨 Backend response status: ${response.status}`);
+    console.log(`📨 Backend response: ${data.substring(0, 200)}...`);
     
     // Create response with same status and headers
     const proxyResponse = new NextResponse(data, {
@@ -87,12 +93,14 @@ async function proxyRequest(request, path) {
 // Handle GET requests
 export async function GET(request, { params }) {
   const { path } = await params;
+  console.log(`🔄 GET proxy request for path: ${path.join('/')}`);
   return proxyRequest(request, path);
 }
 
 // Handle POST requests
 export async function POST(request, { params }) {
   const { path } = await params;
+  console.log(`🔄 POST proxy request for path: ${path.join('/')}`);
   return proxyRequest(request, path);
 }
 
