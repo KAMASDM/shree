@@ -3,38 +3,40 @@ import { NextResponse } from 'next/server';
 
 const BACKEND_BASE_URL = 'https://sweekarme.in/shree/api';
 
+// Configure route for file uploads
+export const runtime = 'nodejs'; // Use Node.js runtime for better file handling
+export const maxDuration = 300; // 5 minutes timeout
+export const dynamic = 'force-dynamic'; // Disable static optimization
+
 export async function POST(request) {
   try {
     const backendUrl = `${BACKEND_BASE_URL}/hr/applications/`;
     
-    // Get the request body
-    const body = await request.text();
+    console.log(`🚀 Proxying job application POST request to: ${backendUrl}`);
     
-    // Extract headers (exclude problematic ones)
-    const headers = {};
-    for (const [key, value] of request.headers.entries()) {
-      if (!['host', 'connection', 'x-forwarded-for', 'x-forwarded-proto', 'x-forwarded-host'].includes(key.toLowerCase())) {
-        headers[key] = value;
+    // Get the FormData directly from the request
+    const formData = await request.formData();
+    
+    console.log('📦 FormData fields received:');
+    for (const [key, value] of formData.entries()) {
+      if (value instanceof File) {
+        console.log(`  - ${key}: File(${value.name}, ${value.size} bytes, ${value.type})`);
+      } else {
+        console.log(`  - ${key}: ${value}`);
       }
     }
     
-    // Ensure content-type is set (Note: This might be multipart/form-data for file uploads)
-    if (!headers['content-type']) {
-      headers['content-type'] = 'application/json';
-    }
-    
-    console.log(`🚀 Proxying POST request to: ${backendUrl}`);
-    console.log(`📦 Request content-type: ${headers['content-type']}`);
-    
+    // Forward the FormData to the backend
+    // Note: fetch automatically sets the correct Content-Type with boundary for FormData
     const response = await fetch(backendUrl, {
       method: 'POST',
-      headers,
-      body,
+      body: formData,
+      // Don't set Content-Type header - let fetch handle it for FormData
     });
     
     const responseData = await response.text();
     console.log(`📨 Backend response status: ${response.status}`);
-    console.log(`📨 Backend response: ${responseData}`);
+    console.log(`📨 Backend response: ${responseData.substring(0, 200)}...`);
     
     // Create response with same status
     const proxyResponse = new NextResponse(responseData, {
@@ -58,6 +60,7 @@ export async function POST(request) {
     
   } catch (error) {
     console.error('❌ HR applications proxy request failed:', error);
+    console.error('Error details:', error.stack);
     
     return NextResponse.json(
       { 

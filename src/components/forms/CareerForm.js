@@ -10,6 +10,7 @@ import {
   FileText,
   UploadCloud,
   CheckCircle,
+  Loader2,
 } from "lucide-react";
 
 export default function CareerForm({ selectedJob, allJobs, onClose }) {
@@ -23,6 +24,8 @@ export default function CareerForm({ selectedJob, allJobs, onClose }) {
   });
   const [resumeFile, setResumeFile] = useState(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [error, setError] = useState(null);
 
   const handleInputChange = (e) => {
@@ -31,7 +34,33 @@ export default function CareerForm({ selectedJob, allJobs, onClose }) {
   };
 
   const handleFileChange = (e) => {
-    setResumeFile(e.target.files[0]);
+    const file = e.target.files[0];
+    if (file) {
+      // Check file size (5MB limit)
+      const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+      if (file.size > maxSize) {
+        setError(`File size too large. Maximum size is 5MB. Your file is ${(file.size / 1024 / 1024).toFixed(2)}MB.`);
+        setResumeFile(null);
+        e.target.value = ''; // Clear the input
+        return;
+      }
+      
+      // Check file type (optional but recommended)
+      const allowedTypes = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      ];
+      if (!allowedTypes.includes(file.type)) {
+        setError('Invalid file type. Please upload a PDF or Word document.');
+        setResumeFile(null);
+        e.target.value = '';
+        return;
+      }
+      
+      setResumeFile(file);
+      setError(null); // Clear any previous errors
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -52,9 +81,37 @@ export default function CareerForm({ selectedJob, allJobs, onClose }) {
     submissionData.append("cover_letter", formData.cover_letter);
     submissionData.append("resume", resumeFile);
 
+    setIsSubmitting(true);
+    setUploadProgress(0);
+
     try {
       console.log('📤 Submitting job application via API service...');
+      console.log('📋 Form data:', {
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        job: formData.job,
+        resumeFileName: resumeFile.name,
+        resumeFileSize: resumeFile.size,
+      });
+      
+      // Simulate progress for better UX (since we can't get real upload progress through fetch)
+      const progressInterval = setInterval(() => {
+        setUploadProgress((prev) => {
+          if (prev >= 90) {
+            clearInterval(progressInterval);
+            return 90; // Stop at 90%, complete when response received
+          }
+          return prev + 10;
+        });
+      }, 300);
+      
       const response = await apiService.submitJobApplication(submissionData);
+      
+      clearInterval(progressInterval);
+      setUploadProgress(100);
+      
       console.log('✅ Job application submitted successfully:', response);
 
       setIsSubmitted(true);
@@ -62,8 +119,26 @@ export default function CareerForm({ selectedJob, allJobs, onClose }) {
         onClose && onClose();
       }, 4000);
     } catch (err) {
-      setError("An error occurred. Please check all fields and try again.");
+      setIsSubmitting(false);
+      setUploadProgress(0);
       console.error("💥 Job application submission error:", err);
+      
+      // More detailed error handling
+      if (err.message.includes('408') || err.message.includes('timeout')) {
+        setError("Upload timeout. Your file might be too large. Please try with a smaller resume (max 5MB).");
+      } else if (err.response?.data) {
+        const errorData = err.response.data;
+        if (typeof errorData === 'object') {
+          const errorMessages = Object.entries(errorData)
+            .map(([field, messages]) => `${field}: ${Array.isArray(messages) ? messages.join(', ') : messages}`)
+            .join('\n');
+          setError(`Validation errors:\n${errorMessages}`);
+        } else {
+          setError("An error occurred. Please check all fields and try again.");
+        }
+      } else {
+        setError("Network error. Please check your connection and try again.");
+      }
     }
   };
 
@@ -171,7 +246,7 @@ export default function CareerForm({ selectedJob, allJobs, onClose }) {
         <div>
           <label className='block text-sm font-medium text-gray-700 mb-2'>
             <UploadCloud size={16} className='inline mr-2' /> Upload Resume
-            (PDF, DOCX) *
+            (PDF, DOCX) * <span className='text-xs text-gray-500'>(Max 5MB)</span>
           </label>
           <input
             type='file'
@@ -179,8 +254,19 @@ export default function CareerForm({ selectedJob, allJobs, onClose }) {
             onChange={handleFileChange}
             required
             accept='.pdf,.doc,.docx'
-            className='w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100'
+            className='w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100 cursor-pointer'
           />
+          {resumeFile && (
+            <div className='mt-2 p-3 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2'>
+              <CheckCircle size={16} className='text-green-600' />
+              <div className='flex-1'>
+                <p className='text-sm font-medium text-green-800'>{resumeFile.name}</p>
+                <p className='text-xs text-green-600'>
+                  {(resumeFile.size / 1024).toFixed(2)} KB
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
         <div>
@@ -197,21 +283,62 @@ export default function CareerForm({ selectedJob, allJobs, onClose }) {
           ></textarea>
         </div>
 
-        {error && <p className='text-red-500 text-sm text-center'>{error}</p>}
+        {error && <p className='text-red-500 text-sm text-center whitespace-pre-line'>{error}</p>}
+
+        {/* Upload Progress Bar */}
+        {isSubmitting && (
+          <div className='space-y-2'>
+            <div className='flex items-center justify-between text-sm'>
+              <span className='text-amber-700 font-medium flex items-center gap-2'>
+                <Loader2 size={16} className='animate-spin' />
+                Uploading resume...
+              </span>
+              <span className='text-amber-600 font-semibold'>{uploadProgress}%</span>
+            </div>
+            <div className='w-full bg-gray-200 rounded-full h-2.5 overflow-hidden'>
+              <div 
+                className='bg-gradient-to-r from-amber-500 to-orange-500 h-2.5 rounded-full transition-all duration-300 ease-out'
+                style={{ width: `${uploadProgress}%` }}
+              ></div>
+            </div>
+            <p className='text-xs text-gray-500 text-center'>
+              Please wait while we upload your application. This may take a few moments...
+            </p>
+          </div>
+        )}
 
         <div className='flex gap-4'>
           <button
             type='submit'
-            className='flex-1 bg-gradient-to-r from-amber-600 to-orange-600 text-white py-4 rounded-lg text-lg font-semibold flex items-center justify-center gap-2'
+            disabled={isSubmitting}
+            className={`flex-1 py-4 rounded-lg text-lg font-semibold flex items-center justify-center gap-2 transition-all duration-200 ${
+              isSubmitting 
+                ? 'bg-gray-400 cursor-not-allowed' 
+                : 'bg-gradient-to-r from-amber-600 to-orange-600 text-white hover:shadow-lg'
+            }`}
           >
-            <Send size={20} />
-            Submit Application
+            {isSubmitting ? (
+              <>
+                <Loader2 size={20} className='animate-spin' />
+                Submitting...
+              </>
+            ) : (
+              <>
+                <Send size={20} />
+                Submit Application
+              </>
+            )}
           </button>
           {onClose && (
             <button
               type='button'
               onClick={onClose}
-              className='px-6 py-4 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold'
+              disabled={isSubmitting}
+              className={`px-6 py-4 border-2 rounded-lg font-semibold transition-all duration-200 ${
+                isSubmitting
+                  ? 'border-gray-200 text-gray-400 cursor-not-allowed'
+                  : 'border-gray-300 text-gray-700 hover:border-amber-600 hover:text-amber-600'
+              }`}
             >
               Cancel
             </button>

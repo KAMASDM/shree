@@ -7,6 +7,14 @@ const nextConfig = {
     optimizeCss: true,
   },
   
+  // API route configuration for file uploads
+  api: {
+    bodyParser: {
+      sizeLimit: '10mb', // Increase body size limit for file uploads
+    },
+    responseLimit: '10mb',
+  },
+  
   // Image optimization configuration
   images: {
     remotePatterns: [
