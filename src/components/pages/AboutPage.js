@@ -136,7 +136,7 @@ export default function AboutPage() {
 
   // Calculate dynamic statistics
   const statistics = [
-    { number: "27+", label: "Years", description: "Industry Leadership" },
+    { number: `${new Date().getFullYear() - 1998}+`, label: "Years", description: "Industry Leadership" },
     { number: "800+", label: "Customers", description: "Trusted Partners" },
     { number: "10,000+", label: "Installations", description: "Successful Projects" },
     { number: `${officeLocations.length > 0 ? officeLocations.length : '5'}+`, label: "Offices", description: "Pan-India Presence" }
@@ -172,7 +172,7 @@ export default function AboutPage() {
             <p className="text-lg md:text-xl max-w-4xl mx-auto mb-8 leading-relaxed text-amber-800">
               The <span className="font-bold text-amber-900">most trusted, reliable and ethical</span> organization 
               in analytical instruments for pharmaceutical industry. 
-              <span className="block mt-2 text-base md:text-lg">27+ years of excellence serving pharmaceutical and biopharma sectors</span>
+              <span className="block mt-2 text-base md:text-lg">{new Date().getFullYear() - 1998}+ years of excellence serving pharmaceutical and biopharma sectors</span>
             </p>
           </div>
         </section>
@@ -235,7 +235,7 @@ export default function AboutPage() {
                       <Shield size={20} className="text-amber-600" />
                       Regulatory Excellence
                     </h4>
-                    <p>27+ years of expertise serving the most stringent regulatory environments across India, establishing ourselves as the leading distributor of analytical instruments.</p>
+                    <p>{new Date().getFullYear() - 1998}+ years of expertise serving the most stringent regulatory environments across India, establishing ourselves as the leading distributor of analytical instruments.</p>
                   </div>
                   <div className="p-6 rounded-2xl shadow-sm bg-white border border-amber-100">
                     <h4 className="font-bold mb-2 flex items-center gap-2 text-amber-900">

@@ -241,7 +241,7 @@ export default function Footer({ setCurrentPage, setSelectedProduct }) {
               <div className='flex flex-col sm:flex-row items-center gap-2 sm:gap-4 text-gray-400 text-xs text-center sm:text-left'>
                 <p>&copy; 2025 Shreedhar Instruments. All rights reserved.</p>
                 <span className='hidden sm:block text-gray-600'>|</span>
-                <p>Established 1998 | 27+ Years of Excellence</p>
+                <p>Established 1998 | {new Date().getFullYear() - 1998}+ Years of Excellence</p>
               </div>
               
               {/* Legal links */}

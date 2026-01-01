@@ -153,7 +153,7 @@ export default function Hero() {
               </h1>
 
               <p className='text-lg md:text-xl lg:text-2xl leading-relaxed max-w-2xl text-slate-300'>
-                27+ years of excellence in delivering cutting-edge analytical
+                {new Date().getFullYear() - 1998}+ years of excellence in delivering cutting-edge analytical
                 instruments and comprehensive validation services for
                 pharmaceutical manufacturing.
               </p>
@@ -249,7 +249,7 @@ export default function Hero() {
                   label: "Customers",
                   sublabel: "Pharma Companies",
                 },
-                { number: "27+", label: "Years", sublabel: "Experience" },
+                { number: `${new Date().getFullYear() - 1998}+`, label: "Years", sublabel: "Experience" },
                 { number: "13", label: "Offices", sublabel: "Pan-India" },
               ].map((stat, index) => (
                 <div

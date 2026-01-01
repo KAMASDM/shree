@@ -230,7 +230,7 @@ const PartnersSection = () => {
                 </div>
                 <div className="space-y-2">
                   <div className="text-2xl font-bold text-amber-800">
-                    {benefit.stat}
+                    {benefit.stat === "27+ Years" ? `${new Date().getFullYear() - 1998}+ Years` : benefit.stat}
                   </div>
                   <h4 className="text-lg font-semibold text-amber-800">
                     {benefit.title}
