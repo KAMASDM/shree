@@ -7,13 +7,8 @@ const nextConfig = {
     optimizeCss: true,
   },
   
-  // API route configuration for file uploads
-  api: {
-    bodyParser: {
-      sizeLimit: '10mb', // Increase body size limit for file uploads
-    },
-    responseLimit: '10mb',
-  },
+  // Turbopack configuration for Next.js 16+
+  turbopack: {},
   
   // Image optimization configuration
   images: {
