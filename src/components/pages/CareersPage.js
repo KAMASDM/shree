@@ -15,6 +15,8 @@ import {
   X,
   SlidersHorizontal,
   Info,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 import CareerForm from "../forms/CareerForm";
 import { apiService } from "../../lib/api";
@@ -26,6 +28,19 @@ export default function CareersPage() {
 
   const [showForm, setShowForm] = useState(false);
   const [selectedJob, setSelectedJob] = useState(null);
+  const [expandedJobs, setExpandedJobs] = useState(new Set());
+
+  const toggleJobExpanded = (jobId) => {
+    setExpandedJobs((prev) => {
+      const next = new Set(prev);
+      if (next.has(jobId)) {
+        next.delete(jobId);
+      } else {
+        next.add(jobId);
+      }
+      return next;
+    });
+  };
 
   // State for filters
   const [searchTerm, setSearchTerm] = useState("");
@@ -247,10 +262,23 @@ export default function CareersPage() {
                             {job.location && <span className="flex items-center gap-1.5"><MapPin size={14} /> {job.location}</span>}
                           </div>
                           <div
-                            className='prose prose-sm text-gray-600 line-clamp-3'
+                            className={`prose prose-sm text-gray-600 ${
+                              expandedJobs.has(job.id) ? "" : "line-clamp-3"
+                            }`}
                             style={{ color: "#9c7649" }}
                             dangerouslySetInnerHTML={{ __html: job.description }}
                           />
+                          <button
+                            onClick={() => toggleJobExpanded(job.id)}
+                            className="mt-2 flex items-center gap-1 text-sm font-semibold hover:underline"
+                            style={{ color: "#b78852" }}
+                          >
+                            {expandedJobs.has(job.id) ? (
+                              <><ChevronUp size={15} /> Less</>
+                            ) : (
+                              <><ChevronDown size={15} /> More</>
+                            )}
+                          </button>
                         </div>
                         <div className='mt-4 lg:mt-0 lg:ml-6 flex-shrink-0'>
                           <button
