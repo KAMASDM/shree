@@ -91,7 +91,32 @@ export async function generateMetadata({ params }) {
   try {
     // Await params as required by Next.js
     const { slug } = await params;
-    
+
+    // Return override immediately — no API call needed for known products
+    const seoOverride = SEO_OVERRIDES[slug.toLowerCase()];
+    if (seoOverride) {
+      return {
+        title: seoOverride.title,
+        description: seoOverride.description,
+        openGraph: {
+          title: seoOverride.title,
+          description: seoOverride.description,
+          url: `https://shreedhargroup.com/products/${slug}`,
+          siteName: 'Shreedhar Group',
+          locale: 'en_IN',
+          type: 'website',
+        },
+        twitter: {
+          card: 'summary_large_image',
+          title: seoOverride.title,
+          description: seoOverride.description,
+        },
+        alternates: {
+          canonical: `https://shreedhargroup.com/products/${slug}`,
+        },
+      };
+    }
+
     // Fetch product data
     const response = await apiService.getProductBySlug(slug);
     const product = response?.data || response;
