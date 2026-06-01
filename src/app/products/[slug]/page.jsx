@@ -1,6 +1,69 @@
 import ProductDetailPage from "../../../components/pages/ProductDetailPage";
 import { apiService, getImageUrl } from "../../../lib/api"; // Import getImageUrl
 
+const SEO_OVERRIDES = {
+  "portable-air-particle-counter": {
+    title: "Portable Air Particle Counter 3400+ for Cleanroom Monitoring System | Shreedhar Group",
+    description: "Discover the Portable Air Particle Counter 3400+ for accurate cleanroom and pharmaceutical air quality monitoring. Ideal for GMP compliance and contamination control applications.",
+  },
+  "online-air-particle-counter": {
+    title: "Online Air Particle Counter 6000P for Real-Time Cleanroom Monitoring | Shreedhar Group",
+    description: "Monitor airborne particles with the Online Air Particle Counter 6015P for cleanrooms, pharmaceutical, and GMP environments. Reliable real-time contamination monitoring solutions.",
+  },
+  "microbial-active-air-sampler": {
+    title: "Portable Air Sampler AAS100 for Microbial Active Air Sampler | Shreedhar Group",
+    description: "Explore the Portable Air Sampler AAS100 for accurate microbial air monitoring in cleanrooms, pharmaceutical, and GMP environments. Reliable active air sampling solution by Shreedhar Group.",
+  },
+  "container-closure-integrity-tester": {
+    title: "Container Closure Integrity Tester (CCIT) | Leak Detection System By Shreedhar Group",
+    description: "Discover the Container Closure Integrity Tester (CCIT) for accurate leak detection and package integrity testing in pharmaceutical and GMP environments. Reliable contamination control solutions by Shreedhar Group.",
+  },
+  "liquid-particle-counter": {
+    title: "Liquid Particle Counter | Pharmaceutical Fluid Monitoring System By Shreedhar Group",
+    description: "Discover advanced Liquid Particle Counter solutions for accurate particle monitoring in pharmaceutical, laboratory, and GMP applications. Ensure product quality and contamination control with Shreedhar Group.",
+  },
+  "filter-integrity-tester": {
+    title: "Filter Integrity Tester | GMP Filter Testing Equipment By Shreedhar Group",
+    description: "Discover advanced Filter Integrity Tester solutions for reliable filter validation and integrity testing in pharmaceutical, biotech, and GMP manufacturing environments.",
+  },
+  "tailin-glove-integrity-tester-git-wlan": {
+    title: "Glove Integrity Tester | Isolator Glove Leak Testing System By Shreedhar Group",
+    description: "Explore the Glove Integrity Tester for accurate glove leak detection in isolators and cleanrooms. Ideal for GMP compliance and contamination control applications.",
+  },
+  "rtp-integrity-tester": {
+    title: "Rapid Transfer Port Tester | RTP Integrity Testing Solution By Shreedhar Group",
+    description: "Ensure contamination-free material transfer with the Rapid Transfer Port Tester for RTP integrity testing in pharmaceutical and aseptic manufacturing facilities.",
+  },
+  "real-time-air-microbial-detector": {
+    title: "Real Time Microbial Detector | Instant Air Monitoring System By Shreedhar Group",
+    description: "Discover the Real Time Microbial Detector for continuous airborne microbial monitoring in cleanrooms and pharmaceutical environments. Advanced real-time contamination detection solution.",
+  },
+  "sterility-test-isolator": {
+    title: "Pharmaceutical Isolator India | Sterility Test Isolator Manufacturer By Shreedhar Group",
+    description: "Explore high-quality Pharmaceutical Isolator solutions in India for sterility testing, contamination control, and aseptic processing. Trusted GMP-compliant systems by Shreedhar Group.",
+  },
+  "labware-washer": {
+    title: "GMP Glassware Washer for Pharma & Lab Cleaning | Shreedhar Group",
+    description: "Discover GMP Glassware Washer systems for efficient, validated, and contamination-free labware cleaning in pharmaceutical and laboratory environments. Explore Shreedhar Group solutions.",
+  },
+  "automatic-polarimeter-for-pharmaceutical": {
+    title: "Automatic Polarimeter for Pharmaceutical Testing | Shreedhar Group",
+    description: "Ensure precise optical rotation measurements with advanced automatic polarimeters designed for pharmaceutical quality control and laboratory compliance.",
+  },
+  "automatic-digital-refractometers-for-pharmaceutical": {
+    title: "Automatic Digital Refractometer for Pharma Labs | Shreedhar Group",
+    description: "High-accuracy digital refractometers for pharmaceutical applications, delivering reliable concentration and purity analysis with GMP compliance.",
+  },
+  "apas-independence-automated-plate-assessment-system": {
+    title: "Automated Colony Counter System for Microbiology Labs | Shreedhar Group",
+    description: "Streamline microbial testing with an automated colony counter system that improves accuracy, efficiency, and laboratory productivity.",
+  },
+  "pharmaceutical-water-purification-system": {
+    title: "Pharmaceutical Water Purification System in India | Shreedhar Group",
+    description: "Advanced pharmaceutical water purification systems for PW, HPW, and WFI production, ensuring regulatory compliance and consistent water quality.",
+  },
+};
+
 // Pre-generate static pages for all products at build time
 // This ensures metadata is available immediately for social media crawlers
 export async function generateStaticParams() {
@@ -53,11 +116,15 @@ export async function generateMetadata({ params }) {
     // Brand and category info
     const brandName = product.brand?.name || product.brand || 'Shreedhar Instruments';
     const categoryName = product.category_name || 'Laboratory Equipment';
-    const pageTitle = `${product.name} | ${brandName}`;
+    const defaultTitle = `${product.name} | ${brandName}`;
+
+    const seoOverride = SEO_OVERRIDES[slug.toLowerCase()] || {};
+    const pageTitle = seoOverride.title || defaultTitle;
+    const pageDescription = seoOverride.description || plainDescription;
 
     return {
       title: pageTitle,
-      description: plainDescription,
+      description: pageDescription,
       keywords: [
         product.name,
         brandName,
@@ -71,7 +138,7 @@ export async function generateMetadata({ params }) {
       // Open Graph metadata for Facebook, WhatsApp, LinkedIn
       openGraph: {
         title: pageTitle,
-        description: plainDescription,
+        description: pageDescription,
         url: `https://shreedharinstruments.com/products/${slug}`,
         siteName: 'Shreedhar Instruments',
         images: [
@@ -90,7 +157,7 @@ export async function generateMetadata({ params }) {
       twitter: {
         card: 'summary_large_image',
         title: pageTitle,
-        description: plainDescription,
+        description: pageDescription,
         images: [imageUrl],
         creator: '@ShreedharInst',
       },

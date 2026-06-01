@@ -1,3 +1,4 @@
+import Script from "next/script";
 import Footer from "../components/common/Footer";
 import Header from "../components/common/Header";
 import MobileBottomNav from "../components/common/MobileBottomNav";
@@ -72,7 +73,10 @@ export const metadata = {
     ],
   },
   verification: {
-    google: "your-google-verification-code",
+    google: "ERa0hccIS41y9DeNiT6ZaNFTFP0W2MjdirbGBXYIH_s",
+    other: {
+      "msvalidate.01": "4696707AB29826B0C48BEB52040969B4",
+    },
   },
 };
 
@@ -87,6 +91,12 @@ export default function RootLayout({ children }) {
     <>
       <html lang='en' suppressHydrationWarning>
         <head>
+          <script
+            type='text/javascript'
+            dangerouslySetInnerHTML={{
+              __html: `(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y)})(window,document,"clarity","script","wlu2i2h8ju");`,
+            }}
+          />
           <script
             type='application/ld+json'
             dangerouslySetInnerHTML={{
@@ -134,6 +144,13 @@ export default function RootLayout({ children }) {
           />
         </head>
         <body className='antialiased'>
+          <Script
+            src='https://www.googletagmanager.com/gtag/js?id=G-P1TH0JWEVB'
+            strategy='afterInteractive'
+          />
+          <Script id='ga4' strategy='afterInteractive'>
+            {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-P1TH0JWEVB');`}
+          </Script>
           <div className='min-h-screen bg-brand-off-white flex flex-col'>
             <Header />
             <main className='flex-grow pb-20 lg:pb-0'>{children}</main>
