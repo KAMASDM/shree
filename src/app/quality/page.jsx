@@ -2,6 +2,20 @@
 import React from 'react';
 import { Award, Target, Users, Cog, TrendingUp, Shield, CheckCircle, Star, Zap, Heart, Globe, Wrench } from 'lucide-react';
 
+export const metadata = {
+  title: "Quality Policy | GMP & FDA Compliance Standards | Shreedhar Group",
+  description: "Shreedhar Group's quality policy reflects our commitment to delivering FDA-compliant, GMP-certified analytical instruments with IQ/OQ/PQ validation support for India's pharmaceutical industry.",
+  alternates: { canonical: "https://shreedhargroup.com/quality" },
+  openGraph: {
+    title: "Quality Policy | GMP & FDA Compliance | Shreedhar Group",
+    description: "Our quality commitment ensures every analytical instrument meets stringent FDA, EU GMP, USP, and ISO standards — backed by full validation documentation and 27+ years of compliance expertise.",
+    url: "https://shreedhargroup.com/quality",
+    siteName: "Shreedhar Group",
+    locale: "en_IN",
+    type: "website",
+  },
+};
+
 export default function QualityPolicyPage() {
   return (
     <div 
