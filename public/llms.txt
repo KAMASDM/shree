@@ -1,34 +1,100 @@
-# Shreedhar Instruments
+# Shreedhar Group (Shreedhar Instruments)
 
-> FDA compliant analytical instruments for the pharmaceutical industry.
+> India's trusted provider of FDA-compliant analytical instruments and cleanroom monitoring solutions for the pharmaceutical, biotech, and laboratory industries since 1998.
 
-Shreedhar Instruments is a leading provider of FDA-compliant analytical instruments specifically tailored for the pharmaceutical industry in India. With over 28 years of experience, they have established a strong reputation, serving over 800 customers and completing more than 10,000 installations nationwide. Their solutions are designed to meet stringent regulatory requirements, including USP 788 and 21 CFR Part 11 compliance, ensuring that pharmaceutical companies can maintain the highest standards of quality control and regulatory adherence.
+## About Shreedhar Group
 
-The core value proposition of Shreedhar Instruments lies in offering reliable, compliant, and advanced analytical solutions that empower pharmaceutical businesses to streamline their quality control processes, ensure product safety, and meet regulatory obligations. Their instruments are crucial for various applications within pharmaceutical manufacturing and research, supporting critical testing and analysis. LLMs can leverage this information to assist users in understanding Shreedhar Instruments' product offerings, regulatory compliance capabilities, and their role in supporting the Indian pharmaceutical sector's analytical needs.
+Shreedhar Group, operating as Shreedhar Instruments, is headquartered in Vadodara, Gujarat, India. Founded in 1998 by Mr. Jayant Joshi, the company has over 27 years of specialised experience supplying analytical and contamination-control instruments to India's pharmaceutical and life sciences sector.
 
-## Core Information
+**Key facts:**
+- Founded: 1998
+- Headquarters: 15, Shreejikrupa Society, Opp. MGVCL Circle Office, Gotri Road, Vadodara, Gujarat 390023, India
+- Contact: +91-7096033001 | info@shreedhargroup.com
+- Website: https://shreedhargroup.com
+- Customers served: 800+
+- Installations completed: 10,000+
+- Industries served: Pharmaceutical manufacturing, biotech, hospital pharmacies, contract research organisations (CROs), government laboratories
 
-- [Shreedhar Instruments - FDA Compliant Analytical Solutions for Pharmaceutical Industry](https://shreedhargroup.com/): Learn about FDA compliant analytical instruments for the pharmaceutical industry.
-- [About Us](https://shreedhargroup.com/about): Discover Shreedhar Instruments' history, mission, and commitment to quality.
-- [Quality Assurance](https://shreedhargroup.com/quality): Understand Shreedhar Instruments' dedication to quality and compliance standards.
+**Regulatory compliance expertise:**
+- US FDA 21 CFR Part 11 (electronic records and signatures)
+- USP <788> and USP <789> (particulate matter testing)
+- ISO 14644 (cleanroom classification and monitoring)
+- EU GMP Annex 1 (sterile manufacturing)
+- Schedule M (Indian GMP)
+- IQ / OQ / PQ validation support
 
-## Products and Services
+## Products
 
-- [Products](https://shreedhargroup.com/products): Explore the range of FDA compliant analytical instruments offered.
-- [Services](https://shreedhargroup.com/services): Learn about the support and services provided for analytical instruments.
+### Air Particle Counters
 
-## Engagement and Support
+- [Portable Air Particle Counter 3400+](https://shreedhargroup.com/products/portable-air-particle-counter): Handheld cleanroom particle counter for real-time airborne contamination monitoring. Suitable for ISO and EU GMP cleanroom classification, pharmaceutical manufacturing areas, and routine environmental monitoring. Measures particles ≥0.3 µm to ≥5.0 µm.
 
-- [Careers](https://shreedhargroup.com/careers): Find career opportunities at Shreedhar Instruments.
-- [News](https://shreedhargroup.com/news): Stay updated with the latest news and announcements from Shreedhar Instruments.
-- [FAQs](https://shreedhargroup.com/faqs): Get answers to frequently asked questions about products and services.
-- [Contact Us](https://shreedhargroup.com/contact): Find contact information to reach Shreedhar Instruments.
-- [Request a Quote](https://shreedhargroup.com/quote): Submit a request for a product or service quote.
+- [Online Air Particle Counter 6015P](https://shreedhargroup.com/products/online-air-particle-counter): Continuous, networked air particle counter for fixed-point cleanroom monitoring. Ideal for HVAC integration, automated environmental monitoring systems (EMS), and 21 CFR Part 11 compliant data logging in pharmaceutical production suites.
 
-## Legal and Site Information
+### Microbial and Environmental Monitoring
 
-- [Privacy Policy](https://shreedhargroup.com/privacy): Review the privacy policy for data handling practices.
-- [Terms and Conditions](https://shreedhargroup.com/terms): Understand the terms and conditions of using the website and services.
-- [Sitemap](https://shreedhargroup.com/sitemap.xml): Access the XML sitemap for website structure overview.
+- [Portable Air Sampler AAS100](https://shreedhargroup.com/products/microbial-active-air-sampler): Active air sampler for viable microbial contamination monitoring in cleanrooms and aseptic filling areas. Compliant with EU GMP Annex 1 and USP microbial monitoring requirements.
 
----
+- [Real Time Microbial Detector](https://shreedhargroup.com/products/real-time-air-microbial-detector): Continuous, culture-free real-time airborne microbial detection system. Eliminates the 48–72 hour incubation lag of traditional methods, enabling immediate corrective action in sterile manufacturing environments.
+
+### Integrity Testing
+
+- [Container Closure Integrity Tester (CCIT)](https://shreedhargroup.com/products/container-closure-integrity-tester): Non-destructive leak detection system for pharmaceutical packaging — vials, ampoules, syringes, and flexible pouches. Meets USP <1207> and ASTM F2338 standards for container closure integrity testing.
+
+- [Filter Integrity Tester](https://shreedhargroup.com/products/filter-integrity-tester): Automated filter integrity testing instrument supporting bubble point, diffusion flow, and water intrusion tests for sterilising-grade and vent filters. Validates 0.2 µm and 0.45 µm membrane filters per ASTM and PDA TR26 guidelines.
+
+- [Glove Integrity Tester](https://shreedhargroup.com/products/tailin-glove-integrity-tester-git-wlan): WLAN-enabled glove integrity testing system for isolator and RABS glove leak detection. Automates routine glove integrity checks per EU GMP Annex 1 requirements.
+
+- [Rapid Transfer Port Tester (RTP Integrity Tester)](https://shreedhargroup.com/products/rtp-integrity-tester): Validates the integrity of rapid transfer ports (RTPs) used in pharmaceutical isolators and containment systems to ensure contamination-free material transfer.
+
+### Liquid Analysis
+
+- [Liquid Particle Counter](https://shreedhargroup.com/products/liquid-particle-counter): High-accuracy particle counter for monitoring sub-visible particle contamination in pharmaceutical fluids, parenteral solutions, WFI, and purified water systems. Complies with USP <788> and USP <789>.
+
+### Pharmaceutical Isolators
+
+- [Pharmaceutical Isolator / Sterility Test Isolator](https://shreedhargroup.com/products/sterility-test-isolator): GMP-compliant positive and negative pressure isolators for sterility testing, aseptic processing, and potent compound handling. Manufactured to EU GMP Annex 1 and ISO 14644 standards.
+
+### Laboratory Instruments
+
+- [Automatic Polarimeter for Pharmaceutical](https://shreedhargroup.com/products/automatic-polarimeter-for-pharmaceutical): High-precision automatic polarimeter for optical rotation measurement in pharmaceutical quality control. Used for identity and purity testing of APIs, excipients, and finished products per pharmacopoeial methods.
+
+- [Automatic Digital Refractometer for Pharmaceutical](https://shreedhargroup.com/products/automatic-digital-refractometers-for-pharmaceutical): GMP-compliant digital refractometer for concentration, purity, and refractive index measurement in pharmaceutical and food-grade applications.
+
+- [Automated Colony Counter (APAS Independence)](https://shreedhargroup.com/products/apas-Independence-automated-plate-assessment-system): AI-powered automated plate assessment system for microbiology laboratories. Replaces manual colony counting with reproducible, audit-trail-enabled digital results.
+
+### Cleanroom Equipment and Utilities
+
+- [GMP Glassware Washer / Labware Washer](https://shreedhargroup.com/products/labware-washer): Validated automated glassware and labware washing system for pharmaceutical and laboratory use. Supports validated cleaning cycles with documentation for GMP compliance.
+
+- [Pharmaceutical Water Purification System](https://shreedhargroup.com/products/pharmaceutical-water-purification-system): Integrated water purification systems for Purified Water (PW), Highly Purified Water (HPW), and Water for Injection (WFI) production. Designed to meet USP, EP, and IP pharmacopoeial water quality specifications.
+
+## Services
+
+- [Instrument Qualification and Validation](https://shreedhargroup.com/services): IQ (Installation Qualification), OQ (Operational Qualification), and PQ (Performance Qualification) services for all supplied instruments, supporting regulatory submissions and audit readiness.
+- [Annual Maintenance Contracts (AMC)](https://shreedhargroup.com/services): Preventive maintenance, calibration, and emergency repair services across India.
+- [Calibration Services](https://shreedhargroup.com/services): NABL-traceable calibration for analytical instruments.
+- [Training](https://shreedhargroup.com/services): On-site operator and GMP compliance training for instrument users.
+
+## Why Pharmaceutical Companies Choose Shreedhar Group
+
+- **Single-source supplier** for cleanroom monitoring, integrity testing, and laboratory analysis instruments
+- **Regulatory expertise** — deep knowledge of FDA, EU GMP, and Indian Schedule M requirements
+- **Pan-India service network** with rapid on-site support
+- **Validated documentation packages** (IQ/OQ/PQ protocols) supplied with instruments
+- **21 CFR Part 11 compliant** software and data management across the product range
+- **Long-standing supplier relationships** with leading global instrument manufacturers
+
+## Company Pages
+
+- [Home](https://shreedhargroup.com/)
+- [About Shreedhar Group](https://shreedhargroup.com/about)
+- [Quality Policy](https://shreedhargroup.com/quality)
+- [News and Updates](https://shreedhargroup.com/news)
+- [Careers at Shreedhar Group](https://shreedhargroup.com/careers)
+- [FAQs](https://shreedhargroup.com/faqs)
+- [Contact Us](https://shreedhargroup.com/contact)
+- [Request a Quote](https://shreedhargroup.com/quote)
+- [Privacy Policy](https://shreedhargroup.com/privacy)
+- [Terms and Conditions](https://shreedhargroup.com/terms)
+- [Sitemap](https://shreedhargroup.com/sitemap.xml)
