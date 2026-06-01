@@ -11,5 +11,5 @@ Disallow: /private/
 Crawl-delay: 1
 
 # Sitemaps
-Sitemap: https://shreedharinstruments.com/sitemap.xml
-Sitemap: https://shreedharinstruments.com/sitemap-enhanced.xml
+Sitemap: https://shreedhargroup.com/sitemap.xml
+Sitemap: https://shreedhargroup.com/sitemap-enhanced.xml

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "https://shreedharinstruments.com"; // Frontend URL (updated to correct domain)
+const BASE_URL = "https://shreedhargroup.com";
 const API_URL = "https://sweekarme.in/shree/api"; // Backend API URL
 
 // Helper function to get valid date

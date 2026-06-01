@@ -163,7 +163,7 @@ export async function generateMetadata({ params }) {
       openGraph: {
         title: pageTitle,
         description: pageDescription,
-        url: `https://shreedharinstruments.com/products/${slug}`,
+        url: `https://shreedhargroup.com/products/${slug}`,
         siteName: 'Shreedhar Instruments',
         images: [
           {
@@ -188,7 +188,7 @@ export async function generateMetadata({ params }) {
 
       // Additional metadata
       alternates: {
-        canonical: `https://shreedharinstruments.com/products/${slug}`,
+        canonical: `https://shreedhargroup.com/products/${slug}`,
       },
       
       // Product-specific metadata (using 'other' for custom tags)

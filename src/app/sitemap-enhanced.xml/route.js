@@ -2,7 +2,7 @@
 // Enhanced XML Sitemap with Images, Titles, and Descriptions
 import axios from "axios";
 
-const BASE_URL = "https://shreedharinstruments.com";
+const BASE_URL = "https://shreedhargroup.com";
 const API_URL = "https://sweekarme.in/shree/api";
 
 // Helper to escape XML special characters
