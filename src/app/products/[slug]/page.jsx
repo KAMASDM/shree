@@ -143,9 +143,8 @@ export async function generateMetadata({ params }) {
     const categoryName = product.category_name || 'Laboratory Equipment';
     const defaultTitle = `${product.name} | ${brandName}`;
 
-    const seoOverride = SEO_OVERRIDES[slug.toLowerCase()] || {};
-    const pageTitle = seoOverride.title || defaultTitle;
-    const pageDescription = seoOverride.description || plainDescription;
+    const pageTitle = defaultTitle;
+    const pageDescription = plainDescription;
 
     return {
       title: pageTitle,
