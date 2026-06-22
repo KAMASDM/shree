@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
 import {
   Search,
@@ -32,6 +32,8 @@ export default function ProductsPage() {
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   // ✨ CHANGED: Show applications by default since a category is pre-selected
   const [showApplications, setShowApplications] = useState(true);
+  const [showApplicationDropdown, setShowApplicationDropdown] = useState(false);
+  const applicationDropdownRef = useRef(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -76,6 +78,16 @@ export default function ProductsPage() {
     fetchProducts();
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (applicationDropdownRef.current && !applicationDropdownRef.current.contains(event.target)) {
+        setShowApplicationDropdown(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   // Get available applications for the selected category
   const availableApplications = useMemo(() => {
     if (selectedCategory === "All") return [];
@@ -104,6 +116,7 @@ export default function ProductsPage() {
     setSearchTerm("");
     setShowMobileFilters(false);
     setShowApplications(category !== "All");
+    setShowApplicationDropdown(false);
   };
 
   const handleApplicationToggle = (application) => {
@@ -289,6 +302,87 @@ export default function ProductsPage() {
               />
             </div>
 
+            {/* Desktop Filter by Application */}
+            {showApplications && availableApplications.length > 0 && (
+              <div className='hidden md:block relative' ref={applicationDropdownRef}>
+                <button
+                  onClick={() => setShowApplicationDropdown((prev) => !prev)}
+                  className='flex items-center gap-2 h-full px-4 py-3 rounded-xl transition-all duration-300'
+                  style={{
+                    backgroundColor: selectedApplications.length > 0 ? "#b78852" : "rgba(255, 255, 255, 0.9)",
+                    color: selectedApplications.length > 0 ? "white" : "#8b6a3f",
+                    boxShadow: "0 2px 8px rgba(183, 136, 82, 0.1)",
+                  }}
+                >
+                  <Target size={18} />
+                  <span className='text-sm font-medium hidden lg:inline'>Filter by Application</span>
+                  {selectedApplications.length > 0 && (
+                    <span
+                      className='px-2 py-0.5 rounded-full text-xs'
+                      style={{ backgroundColor: "rgba(255, 255, 255, 0.25)" }}
+                    >
+                      {selectedApplications.length}
+                    </span>
+                  )}
+                  <ChevronDown
+                    size={14}
+                    style={{
+                      transform: showApplicationDropdown ? "rotate(180deg)" : "none",
+                      transition: "transform 0.2s",
+                    }}
+                  />
+                </button>
+
+                {showApplicationDropdown && (
+                  <div
+                    className='absolute right-0 mt-2 w-80 max-h-80 overflow-y-auto rounded-xl shadow-lg z-20 p-2'
+                    style={{
+                      backgroundColor: "white",
+                      border: "1px solid rgba(183, 136, 82, 0.2)",
+                    }}
+                  >
+                    {selectedApplications.length > 0 && (
+                      <button
+                        onClick={() => setSelectedApplications([])}
+                        className='w-full text-left text-xs font-medium px-3 py-2 rounded-lg mb-1 transition-colors'
+                        style={{ color: "#dc2626" }}
+                      >
+                        Clear application filters
+                      </button>
+                    )}
+                    {availableApplications.map((application) => {
+                      const isSelected = selectedApplications.includes(application);
+                      return (
+                        <button
+                          key={application}
+                          onClick={() => handleApplicationToggle(application)}
+                          className='w-full flex items-center justify-between gap-2 px-3 py-2 rounded-lg text-sm text-left transition-colors'
+                          style={{
+                            backgroundColor: isSelected ? "rgba(201, 149, 95, 0.12)" : "transparent",
+                            color: "#8b6a3f",
+                          }}
+                        >
+                          <span className='flex items-center gap-2'>
+                            <span
+                              className='flex items-center justify-center w-4 h-4 rounded border'
+                              style={{
+                                backgroundColor: isSelected ? "#c9955f" : "transparent",
+                                borderColor: isSelected ? "#c9955f" : "rgba(183, 136, 82, 0.4)",
+                              }}
+                            >
+                              {isSelected && <CheckCircle size={12} color='white' />}
+                            </span>
+                            {application}
+                          </span>
+                          <span style={{ color: "#9c7649" }}>({getApplicationCount(application)})</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            )}
+
             {/* Mobile Filter Toggle */}
             <button
               onClick={() => setShowMobileFilters(!showMobileFilters)}
@@ -367,47 +461,6 @@ export default function ProductsPage() {
           </div>
         </div>
       </div>
-
-      {/* Desktop Applications Filter */}
-      {showApplications && availableApplications.length > 0 && (
-        <div className='hidden md:block py-4 border-b' style={{ borderColor: "rgba(183, 136, 82, 0.1)" }}>
-          <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-            <div className='mb-3'>
-              <h3 className='text-sm font-semibold flex items-center gap-2' style={{ color: "#8b6a3f" }}>
-                <Target size={16} />
-                Filter by Application:
-              </h3>
-            </div>
-            <div className='flex flex-wrap gap-2'>
-              {availableApplications.map((application) => (
-                <button
-                  key={application}
-                  onClick={() => handleApplicationToggle(application)}
-                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
-                    selectedApplications.includes(application)
-                      ? "shadow-md transform scale-105"
-                      : "shadow-sm hover:shadow-md hover:scale-105"
-                  }`}
-                  style={{
-                    backgroundColor: selectedApplications.includes(application)
-                      ? "#c9955f"
-                      : "rgba(255, 255, 255, 0.9)",
-                    color: selectedApplications.includes(application) ? "white" : "#8b6a3f",
-                    border: selectedApplications.includes(application)
-                      ? "none"
-                      : "1px solid rgba(183, 136, 82, 0.2)",
-                  }}
-                >
-                  {selectedApplications.includes(application) && (
-                    <CheckCircle size={14} />
-                  )}
-                  {application} ({getApplicationCount(application)})
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Mobile Category & Application Dropdown */}
       {showMobileFilters && (

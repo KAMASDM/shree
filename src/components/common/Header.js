@@ -10,7 +10,6 @@ import {
   Phone,
   ChevronDown,
   Building,
-  Briefcase,
   Newspaper,
   HelpCircle,
 } from "lucide-react";
@@ -23,7 +22,6 @@ export default function Header() {
   
   const companyLinks = [
     { name: "About Us", path: "/about", icon: <Building size={16} /> },
-    { name: "Careers", path: "/careers", icon: <Briefcase size={16} /> },
     { name: "Events & Blogs", path: "/news", icon: <Newspaper size={16} /> },
     { name: "FAQs", path: "/faqs", icon: <HelpCircle size={16} /> },
   ];
@@ -191,6 +189,22 @@ export default function Header() {
                 Services
               </Link>
               <Link
+                href="/careers"
+                className={`px-3 py-2 text-sm font-medium transition-all duration-300 relative ${
+                  location?.pathname === "/careers" ? "border-b-2" : "hover:scale-105"
+                }`}
+                style={{
+                  color:
+                    location?.pathname === "/careers" ? "#b78852" : "#4a4a4a",
+                  borderColor:
+                    location?.pathname === "/careers"
+                      ? "#b78852"
+                      : "transparent",
+                }}
+              >
+                Careers
+              </Link>
+              <Link
                 href="/contact"
                 className={`px-3 py-2 text-sm font-medium transition-all duration-300 relative ${
                   location?.pathname === "/contact" ? "border-b-2" : "hover:scale-105"
@@ -337,6 +351,19 @@ export default function Header() {
               }}
             >
               Services
+            </Link>
+            <Link
+              href="/careers"
+              onClick={() => setIsMenuOpen(false)}
+              className={`block w-full text-left px-3 py-2 text-base font-medium rounded-lg transition-all duration-300 ${
+                location.pathname === "/careers" ? "font-semibold" : ""
+              }`}
+              style={{
+                color: location.pathname === "/careers" ? "#b78852" : "#4a4a4a",
+                backgroundColor: location.pathname === "/careers" ? "rgba(183, 136, 82, 0.08)" : "transparent",
+              }}
+            >
+              Careers
             </Link>
             <Link
               href="/contact"

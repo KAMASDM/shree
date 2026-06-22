@@ -56,11 +56,19 @@ export default function Hero() {
                 tagName.toLowerCase() === 'events'
               );
             });
-            console.log(`📋 Post "${post.title}" - Event tag: ${hasEventTag}`, {
+            // Backend also marks events via the post's category instead of tags
+            const categoryName = post.category && (typeof post.category === 'object' ? post.category.name : post.category);
+            const hasEventCategory = categoryName && (
+              categoryName.toLowerCase() === 'event' ||
+              categoryName.toLowerCase() === 'events'
+            );
+            const isEvent = hasEventTag || hasEventCategory;
+            console.log(`📋 Post "${post.title}" - Event: ${isEvent}`, {
               tags: post.tags,
-              hasEventTag
+              category: post.category,
+              isEvent
             });
-            return hasEventTag;
+            return isEvent;
           });
           
           console.log('🎯 Filtered event posts:', eventPosts);
@@ -240,7 +248,7 @@ export default function Hero() {
             <div className='grid grid-cols-2 gap-3 md:gap-4'>
               {[
                 {
-                  number: "10K+",
+                  number: "11K+",
                   label: "Installations",
                   sublabel: "Across India",
                 },
@@ -250,7 +258,7 @@ export default function Hero() {
                   sublabel: "Pharma Companies",
                 },
                 { number: `${new Date().getFullYear() - 1998}+`, label: "Years", sublabel: "Experience" },
-                { number: "13", label: "Offices", sublabel: "Pan-India" },
+                { number: "14", label: "Offices", sublabel: "Pan-India" },
               ].map((stat, index) => (
                 <div
                   key={index}
