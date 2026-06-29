@@ -268,6 +268,34 @@ export default function CareersPage() {
                             style={{ color: "#9c7649" }}
                             dangerouslySetInnerHTML={{ __html: job.description }}
                           />
+                          {expandedJobs.has(job.id) && (
+                            <>
+                              {job.responsibilities && (
+                                <div className="mt-4">
+                                  <h4 className="text-sm font-bold mb-1" style={{ color: "#8b6a3f" }}>
+                                    Responsibilities
+                                  </h4>
+                                  <div
+                                    className="prose prose-sm text-gray-600"
+                                    style={{ color: "#9c7649" }}
+                                    dangerouslySetInnerHTML={{ __html: job.responsibilities }}
+                                  />
+                                </div>
+                              )}
+                              {job.qualifications && (
+                                <div className="mt-4">
+                                  <h4 className="text-sm font-bold mb-1" style={{ color: "#8b6a3f" }}>
+                                    Qualifications
+                                  </h4>
+                                  <div
+                                    className="prose prose-sm text-gray-600"
+                                    style={{ color: "#9c7649" }}
+                                    dangerouslySetInnerHTML={{ __html: job.qualifications }}
+                                  />
+                                </div>
+                              )}
+                            </>
+                          )}
                           <button
                             onClick={() => toggleJobExpanded(job.id)}
                             className="mt-2 flex items-center gap-1 text-sm font-semibold hover:underline"
