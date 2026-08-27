@@ -7,14 +7,17 @@ import Image from "next/image";
 import { ArrowRight, Calendar, User, Search, Globe, ChevronDown, Award } from "lucide-react";
 import { apiService, getImageUrl } from "../../lib/api";
 
-export default function NewsPage() {
-  const [blogPosts, setBlogPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function NewsPage({ initialPosts = null }) {
+  const hasInitialPosts = Array.isArray(initialPosts);
+  const [blogPosts, setBlogPosts] = useState(initialPosts || []);
+  const [loading, setLoading] = useState(!hasInitialPosts);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState("blogs");
 
   useEffect(() => {
+    if (hasInitialPosts) return;
+
     const fetchPosts = async () => {
       try {
         const response = await apiService.getAllBlogPosts();
@@ -27,7 +30,7 @@ export default function NewsPage() {
       }
     };
     fetchPosts();
-  }, []);
+  }, [hasInitialPosts]);
 
   const filteredPosts = blogPosts.filter(
     (post) => {

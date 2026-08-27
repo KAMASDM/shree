@@ -369,19 +369,47 @@ const ProductFAQSection = ({ product }) => {
   );
 };
 
-export default function ProductDetailPage() {
+const getAvailableProductTabs = (product) => {
+  if (!product) return [];
+
+  return [
+    { key: "overview", label: "Overview", icon: <Star size={18} />, data: product.full_description || product.features },
+    { key: "applications", label: "Applications", icon: <Package size={18} />, data: product.applications },
+    { key: "specifications", label: "Technical Specs", icon: <Settings size={18} />, data: product.specifications },
+    { key: "compliance", label: "Regulatory", icon: <Shield size={18} />, data: product.compliance },
+    { key: "documentation", label: "Documentation", icon: <FileText size={18} />, data: product.documentation },
+    { key: "faqs", label: "FAQs", icon: <HelpCircle size={18} />, data: true },
+  ].filter((tab) => tab.key === "faqs" || (tab.data && tab.data.length > 0));
+};
+
+export default function ProductDetailPage({ initialProduct = null }) {
   const params = useParams();
   const slug = params.slug;
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const hasInitialProduct = initialProduct?.slug === slug;
+  const [product, setProduct] = useState(hasInitialProduct ? initialProduct : null);
+  const [loading, setLoading] = useState(!hasInitialProduct);
   const [error, setError] = useState(null);
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [activeTab, setActiveTab] = useState("overview");
   const [showContactForm, setShowContactForm] = useState(false);
-  const [availableTabs, setAvailableTabs] = useState([]);
+  const [availableTabs, setAvailableTabs] = useState(() =>
+    hasInitialProduct ? getAvailableProductTabs(initialProduct) : []
+  );
 
   useEffect(() => {
+    if (initialProduct?.slug === slug) {
+      const initialTabs = getAvailableProductTabs(initialProduct);
+      setProduct(initialProduct);
+      setAvailableTabs(initialTabs);
+      setError(null);
+      setLoading(false);
+      setActiveTab((currentTab) =>
+        initialTabs.some((tab) => tab.key === currentTab) ? currentTab : "overview"
+      );
+      return;
+    }
+
     const fetchProduct = async () => {
       if (!slug) return;
       setLoading(true);
@@ -392,27 +420,14 @@ export default function ProductDetailPage() {
         console.log('📦 Product data loaded:', productData);
         setProduct(productData);
 
-        // Define all possible tabs including FAQs
-        const allPossibleTabs = [
-          { key: "overview", label: "Overview", icon: <Star size={18} />, data: productData.full_description || productData.features },
-          { key: "applications", label: "Applications", icon: <Package size={18} />, data: productData.applications },
-          { key: "specifications", label: "Technical Specs", icon: <Settings size={18} />, data: productData.specifications },
-          { key: "compliance", label: "Regulatory", icon: <Shield size={18} />, data: productData.compliance },
-          { key: "documentation", label: "Documentation", icon: <FileText size={18} />, data: productData.documentation },
-          { key: "faqs", label: "FAQs", icon: <HelpCircle size={18} />, data: true }, // Always show FAQs tab
-        ];
-
-        // Filter tabs to only include those with data (except FAQs which we always show)
-        const currentAvailableTabs = allPossibleTabs.filter(tab =>
-          tab.key === "faqs" || (tab.data && tab.data.length > 0)
-        );
+        const currentAvailableTabs = getAvailableProductTabs(productData);
         setAvailableTabs(currentAvailableTabs);
 
         // Check if the current active tab is still valid, if not, reset to 'overview'
         const availableKeys = currentAvailableTabs.map(tab => tab.key);
-        if (!availableKeys.includes(activeTab)) {
-          setActiveTab("overview");
-        }
+        setActiveTab((currentTab) =>
+          availableKeys.includes(currentTab) ? currentTab : "overview"
+        );
 
       } catch (err) {
         setError("Failed to load product details.");
@@ -423,7 +438,7 @@ export default function ProductDetailPage() {
     };
 
     fetchProduct();
-  }, [slug, activeTab]);
+  }, [slug, initialProduct]);
 
   if (loading) {
     return (

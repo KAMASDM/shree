@@ -5,6 +5,10 @@ import axios from "axios";
 const BASE_URL = "https://shreedhargroup.com";
 const API_URL = "https://sweekarme.in/shree/api";
 
+// Always read the current CMS state so publication does not require a rebuild.
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 // Helper to escape XML special characters
 function escapeXml(unsafe) {
   if (!unsafe) return '';
@@ -34,7 +38,7 @@ function getValidDate(dateString) {
 async function fetchAllProducts() {
   try {
     const response = await axios.get(`${API_URL}/products/all/`, { timeout: 10000 });
-    return response.data || [];
+    return (response.data || []).filter((product) => product?.slug);
   } catch (error) {
     console.error("Error fetching products:", error.message);
     return [];
@@ -44,7 +48,9 @@ async function fetchAllProducts() {
 async function fetchAllBlogPosts() {
   try {
     const response = await axios.get(`${API_URL}/blogs/posts/`, { timeout: 10000 });
-    return response.data || [];
+    return (response.data || []).filter(
+      (post) => post?.status === "published" && post?.slug
+    );
   } catch (error) {
     console.error("Error fetching blog posts:", error.message);
     return [];
@@ -247,7 +253,7 @@ export async function GET() {
       status: 200,
       headers: {
         'Content-Type': 'application/xml',
-        'Cache-Control': 'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400',
+        'Cache-Control': 'no-store, max-age=0',
       },
     });
 
@@ -269,6 +275,7 @@ export async function GET() {
       status: 200,
       headers: {
         'Content-Type': 'application/xml',
+        'Cache-Control': 'no-store, max-age=0',
       },
     });
   }

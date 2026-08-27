@@ -35,9 +35,10 @@ const FaqItem = ({ faq, isOpen, onToggle }) => (
   </div>
 );
 
-export default function FaqsPage() {
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function FaqsPage({ initialCategories = null }) {
+  const hasInitialCategories = Array.isArray(initialCategories);
+  const [categories, setCategories] = useState(initialCategories || []);
+  const [loading, setLoading] = useState(!hasInitialCategories);
   const [error, setError] = useState(null);
 
   const [openIndex, setOpenIndex] = useState("0-0"); // Format "categoryIndex-faqIndex"
@@ -45,6 +46,8 @@ export default function FaqsPage() {
   const [activeCategory, setActiveCategory] = useState("All");
 
   useEffect(() => {
+    if (hasInitialCategories) return;
+
     const fetchFaqs = async () => {
       try {
         const response = await apiService.getFAQCategories();
@@ -57,7 +60,7 @@ export default function FaqsPage() {
       }
     };
     fetchFaqs();
-  }, []);
+  }, [hasInitialCategories]);
 
   const handleToggle = (catIndex, faqIndex) => {
     const newIndex = `${catIndex}-${faqIndex}`;

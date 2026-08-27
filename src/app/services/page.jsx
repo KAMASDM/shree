@@ -1,4 +1,7 @@
 import ServicesPage from "../../components/pages/ServicesPage";
+import { apiService } from "../../lib/api";
+
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Instrument Qualification, Calibration & AMC Services | Shreedhar Group",
@@ -14,6 +17,15 @@ export const metadata = {
   },
 };
 
-export default function Page() {
-  return <ServicesPage />;
+export default async function Page() {
+  let initialServices = null;
+
+  try {
+    const response = await apiService.getAllServices();
+    if (Array.isArray(response?.data)) initialServices = response.data;
+  } catch (error) {
+    console.error("Failed to render services on the server:", error);
+  }
+
+  return <ServicesPage initialServices={initialServices} />;
 }

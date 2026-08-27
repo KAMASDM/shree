@@ -115,15 +115,31 @@ const nextConfig = {
     CUSTOM_KEY: process.env.CUSTOM_KEY,
   },
 
-  // Redirects (if needed)
+  // Preserve SEO equity and bookmarks from the previous WordPress site.
+  // These are deliberately exact-path redirects so current application routes
+  // and dynamic product/news URLs are not affected.
   async redirects() {
     return [
-      // Add any redirects here
-      // {
-      //   source: '/old-path',
-      //   destination: '/new-path',
-      //   permanent: true,
-      // },
+      {
+        source: '/about-us',
+        destination: '/about',
+        statusCode: 301,
+      },
+      {
+        source: '/glove-integrity-test/glove-integrity-tester',
+        destination: '/products/wireless-glove-integrity-tester-git-wlan',
+        statusCode: 301,
+      },
+      {
+        source: '/industry/pharmaceutical-sterile-manufacturing',
+        destination: '/products?category=Pharmaceutical',
+        statusCode: 301,
+      },
+      {
+        source: '/uncategorized/fully-robotic-glove-less-isolator-based-filling-machine',
+        destination: '/products/single-head-filling-machine',
+        statusCode: 301,
+      },
     ];
   },
 

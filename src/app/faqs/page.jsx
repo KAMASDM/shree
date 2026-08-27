@@ -1,4 +1,7 @@
 import FaqsPage from "../../components/pages/FaqsPage";
+import { apiService } from "../../lib/api";
+
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "FAQs | Pharmaceutical Analytical Instruments Support | Shreedhar Group",
@@ -14,6 +17,15 @@ export const metadata = {
   },
 };
 
-export default function Page() {
-  return <FaqsPage />;
+export default async function Page() {
+  let initialCategories = null;
+
+  try {
+    const response = await apiService.getFAQCategories();
+    if (Array.isArray(response?.data)) initialCategories = response.data;
+  } catch (error) {
+    console.error("Failed to render FAQs on the server:", error);
+  }
+
+  return <FaqsPage initialCategories={initialCategories} />;
 }

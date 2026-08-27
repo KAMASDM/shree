@@ -9,13 +9,13 @@ const DIRECT_API_URL = 'https://sweekarme.in/shree/api';
 const PROXY_URL = '/api/proxy';
 
 const IS_SERVER = typeof window === 'undefined';
-const API_HOST = process.env.NEXTAUTH_URL || 'http://localhost:3000';
 
 let BASE_URL;
 
-// If using the proxy, use an absolute URL on the server and a relative one on the client
+// Browser requests use the same-origin proxy. Server-side rendering and metadata
+// can call the backend directly and must not depend on a local Next.js port.
 if (USE_PROXY) {
-  BASE_URL = IS_SERVER ? `${API_HOST}${PROXY_URL}` : PROXY_URL;
+  BASE_URL = IS_SERVER ? DIRECT_API_URL : PROXY_URL;
 } else {
   // Otherwise, use the direct API URL
   BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || DIRECT_API_URL;

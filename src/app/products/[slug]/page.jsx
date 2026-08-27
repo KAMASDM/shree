@@ -1,6 +1,8 @@
 import ProductDetailPage from "../../../components/pages/ProductDetailPage";
 import { apiService, getImageUrl } from "../../../lib/api"; // Import getImageUrl
 
+export const dynamic = "force-dynamic";
+
 const SEO_OVERRIDES = {
   "portable-air-particle-counter": {
     title: "Portable Air Particle Counter 3400+ for Cleanroom Monitoring System | Shreedhar Group",
@@ -208,6 +210,18 @@ export async function generateMetadata({ params }) {
   }
 }
 
-export default function Page() {
-  return <ProductDetailPage />;
+export default async function Page({ params }) {
+  const { slug } = await params;
+  let initialProduct = null;
+
+  try {
+    const response = await apiService.getProductBySlug(slug);
+    if (response?.data && typeof response.data === "object") {
+      initialProduct = response.data;
+    }
+  } catch (error) {
+    console.error("Failed to render product on the server:", error);
+  }
+
+  return <ProductDetailPage initialProduct={initialProduct} />;
 }

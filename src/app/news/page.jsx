@@ -1,4 +1,7 @@
 import NewsPage from "../../components/pages/NewsPage";
+import { apiService } from "../../lib/api";
+
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "News & Updates | Pharmaceutical Instruments Industry | Shreedhar Group",
@@ -14,6 +17,15 @@ export const metadata = {
   },
 };
 
-export default function Page() {
-  return <NewsPage />;
+export default async function Page() {
+  let initialPosts = null;
+
+  try {
+    const response = await apiService.getAllBlogPosts();
+    if (Array.isArray(response?.data)) initialPosts = response.data;
+  } catch (error) {
+    console.error("Failed to render news on the server:", error);
+  }
+
+  return <NewsPage initialPosts={initialPosts} />;
 }

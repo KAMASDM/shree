@@ -9,8 +9,9 @@ import { apiService, getImageUrl } from "../../../lib/api"; // Import getImageUr
  */
 export async function generateMetadata({ params }) {
   try {
-    // It's safer to access the slug property directly after checking params
-    let slug = params?.slug;
+    // Dynamic route params are asynchronous in current Next.js versions.
+    const resolvedParams = await params;
+    let slug = resolvedParams?.slug;
     if (Array.isArray(slug)) {
         slug = slug[0];
     }
@@ -24,7 +25,7 @@ export async function generateMetadata({ params }) {
     // Fetch the specific post using the slug
     const { data: post } = await apiService.getBlogPostBySlug(slug);
 
-    if (!post) {
+    if (!post || typeof post !== "object") {
       return {
         title: 'Post Not Found',
         description: 'The post you are looking for does not exist.',
@@ -32,13 +33,16 @@ export async function generateMetadata({ params }) {
     }
 
     // Use meta fields from the API if they exist, otherwise fallback to main fields
-    const title = post.meta_title || post.title;
+    const title = post.meta_title?.trim() || post.title?.trim() || "Shreedhar Instruments News";
     const description = post.meta_description || "Read the latest news and insights from Shreedhar Instruments.";
     const imageUrl = getImageUrl(post.featured_image) || 'https://shreedhargroup.com/wp-content/uploads/2014/12/logo02.png'; // Fallback image
 
     return {
       title,
       description,
+      alternates: {
+        canonical: `https://shreedhargroup.com/news/${post.slug}`,
+      },
       // Open Graph tags for platforms like Facebook, WhatsApp, LinkedIn
       openGraph: {
         title,
@@ -73,7 +77,18 @@ export async function generateMetadata({ params }) {
   }
 }
 
-// The default export remains the same
-export default function Page() {
-  return <BlogDetailPage />;
+export default async function Page({ params }) {
+  const { slug } = await params;
+  let initialPost = null;
+
+  try {
+    const response = await apiService.getBlogPostBySlug(slug);
+    if (response?.data && typeof response.data === "object") {
+      initialPost = response.data;
+    }
+  } catch (error) {
+    console.error("Failed to render blog post on the server:", error);
+  }
+
+  return <BlogDetailPage initialPost={initialPost} />;
 }

@@ -20,9 +20,18 @@ import {
 import ProductCard from "../common/ProductCard";
 import { apiService } from "../../lib/api";
 
-export default function ProductsPage() {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+const sortProducts = (products) => [...products].sort((a, b) => {
+  if (a.is_new && !b.is_new) return -1;
+  if (!a.is_new && b.is_new) return 1;
+  return new Date(b.created_at) - new Date(a.created_at);
+});
+
+export default function ProductsPage({ initialProducts = null }) {
+  const hasInitialProducts = Array.isArray(initialProducts);
+  const [products, setProducts] = useState(() =>
+    hasInitialProducts ? sortProducts(initialProducts) : []
+  );
+  const [loading, setLoading] = useState(!hasInitialProducts);
   const [error, setError] = useState(null);
   // ✨ CHANGED: Default category is now "Pharmaceutical"
   const [selectedCategory, setSelectedCategory] = useState("Pharmaceutical");
@@ -36,6 +45,8 @@ export default function ProductsPage() {
   const applicationDropdownRef = useRef(null);
 
   useEffect(() => {
+    if (hasInitialProducts) return;
+
     const fetchProducts = async () => {
       try {
         console.log('🔄 Fetching products via API service...');
@@ -47,14 +58,7 @@ export default function ProductsPage() {
 
         // ✨ NEW: Sort products to show new items first
         if (Array.isArray(productsData)) {
-          productsData.sort((a, b) => {
-            // Primary sort: `is_new: true` comes before `is_new: false`
-            if (a.is_new && !b.is_new) return -1;
-            if (!a.is_new && b.is_new) return 1;
-            
-            // Secondary sort (optional but good practice): newest items first
-            return new Date(b.created_at) - new Date(a.created_at);
-          });
+          productsData = sortProducts(productsData);
         }
         
         setProducts(productsData);
@@ -76,7 +80,7 @@ export default function ProductsPage() {
     };
 
     fetchProducts();
-  }, []);
+  }, [hasInitialProducts]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {

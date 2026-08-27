@@ -29,15 +29,18 @@ import ServiceInquiryForm from "../forms/ServiceInquiryForm";
 import FeedbackForm from "../forms/FeedbackForm"; // Import the new form
 import { apiService, getImageUrl } from "../../lib/api";
 
-export default function ServicesPage() {
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function ServicesPage({ initialServices = null }) {
+  const hasInitialServices = Array.isArray(initialServices);
+  const [services, setServices] = useState(initialServices || []);
+  const [loading, setLoading] = useState(!hasInitialServices);
   const [error, setError] = useState(null);
   const [showServiceForm, setShowServiceForm] = useState(false);
   const [selectedService, setSelectedService] = useState("");
   const [showFeedbackForm, setShowFeedbackForm] = useState(false); // State for feedback form
 
   useEffect(() => {
+    if (hasInitialServices) return;
+
     const fetchServices = async () => {
       try {
         const response = await apiService.getAllServices();
@@ -52,7 +55,7 @@ export default function ServicesPage() {
       }
     };
     fetchServices();
-  }, []);
+  }, [hasInitialServices]);
 
   const serviceProcess = [
     {

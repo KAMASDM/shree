@@ -3,6 +3,10 @@ import axios from "axios";
 const BASE_URL = "https://shreedhargroup.com";
 const API_URL = "https://sweekarme.in/shree/api"; // Backend API URL
 
+// Sitemaps must reflect newly published CMS content without requiring a deploy.
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 // Helper function to get valid date
 function getValidDate(dateString) {
   if (!dateString) return new Date();
@@ -19,7 +23,7 @@ async function fetchAllProducts() {
         'Accept': 'application/json',
       },
     });
-    return response.data || [];
+    return (response.data || []).filter((product) => product?.slug);
   } catch (error) {
     console.error("Error fetching products for sitemap:", error.message);
     return [];
@@ -35,7 +39,9 @@ async function fetchAllBlogPosts() {
         'Accept': 'application/json',
       },
     });
-    return response.data || [];
+    return (response.data || []).filter(
+      (post) => post?.status === "published" && post?.slug
+    );
   } catch (error) {
     console.error("Error fetching blog posts for sitemap:", error.message);
     return [];

@@ -1,4 +1,7 @@
 import ProductsPage from "../../components/pages/ProductsPage";
+import { apiService } from "../../lib/api";
+
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Pharmaceutical Analytical Instruments & Cleanroom Equipment | Shreedhar Group",
@@ -14,6 +17,15 @@ export const metadata = {
   },
 };
 
-export default function Page() {
-  return <ProductsPage />;
+export default async function Page() {
+  let initialProducts = null;
+
+  try {
+    const response = await apiService.getAllProducts();
+    if (Array.isArray(response?.data)) initialProducts = response.data;
+  } catch (error) {
+    console.error("Failed to render products on the server:", error);
+  }
+
+  return <ProductsPage initialProducts={initialProducts} />;
 }

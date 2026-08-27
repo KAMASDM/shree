@@ -6,6 +6,8 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   Calendar,
+  Clock,
+  FileText,
   User,
   ArrowLeft,
   Tag,
@@ -16,9 +18,33 @@ import {
 } from "lucide-react";
 import { apiService, getImageUrl } from "../../lib/api";
 
-export default function BlogDetailPage() {
-  const [post, setPost] = useState(null);
-  const [loading, setLoading] = useState(true);
+const htmlToPlainText = (value = '') => value
+  .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+  .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+  .replace(/<\/?[a-z][^>]*>/gi, ' ')
+  .replace(/&#(\d+);/g, (_, code) => String.fromCodePoint(Number(code)))
+  .replace(/&#x([\da-f]+);/gi, (_, code) => String.fromCodePoint(parseInt(code, 16)))
+  .replace(/&nbsp;/gi, ' ')
+  .replace(/&amp;/gi, '&')
+  .replace(/&quot;/gi, '"')
+  .replace(/&apos;|&#39;/gi, "'")
+  .replace(/&lt;/gi, '<')
+  .replace(/&gt;/gi, '>')
+  .replace(/\s+/g, ' ')
+  .trim();
+
+const countWords = (content = '') => {
+  const words = htmlToPlainText(content).match(/[\p{L}\p{N}]+(?:[’'-][\p{L}\p{N}]+)*/gu);
+  return words?.length || 0;
+};
+
+const normalizeArticleHeadings = (content = '') => content
+  .replace(/<h1(\s[^>]*)?>/gi, '<h2$1>')
+  .replace(/<\/h1>/gi, '</h2>');
+
+export default function BlogDetailPage({ initialPost = null }) {
+  const [post, setPost] = useState(initialPost);
+  const [loading, setLoading] = useState(!initialPost);
   const [error, setError] = useState(null);
   const [isSharing, setIsSharing] = useState(false);
   const [expandedFAQ, setExpandedFAQ] = useState({});
@@ -26,6 +52,13 @@ export default function BlogDetailPage() {
   const { slug } = params;
 
   useEffect(() => {
+    if (initialPost?.slug === slug) {
+      setPost(initialPost);
+      setError(null);
+      setLoading(false);
+      return;
+    }
+
     if (slug) {
       const fetchPost = async () => {
         setLoading(true);
@@ -42,7 +75,7 @@ export default function BlogDetailPage() {
       };
       fetchPost();
     }
-  }, [slug]);
+  }, [slug, initialPost]);
 
   const toggleFAQ = (index) => {
     setExpandedFAQ(prev => ({
@@ -218,8 +251,11 @@ export default function BlogDetailPage() {
   }
 
   // Process the content
-  const processedContent = processContentForDisplay(post.content);
+  const processedContent = processContentForDisplay(normalizeArticleHeadings(post.content));
   const isContentSplit = typeof processedContent === 'object';
+  const displayTitle = htmlToPlainText(post.title) || 'Shreedhar Instruments News';
+  const wordCount = countWords(post.content);
+  const readingTime = Math.max(1, Math.ceil(wordCount / 200));
 
   return (
     <>
@@ -408,7 +444,7 @@ export default function BlogDetailPage() {
               <header className="mb-8">
                 <div className="text-sm font-semibold text-amber-600 mb-2">{isEvent ? 'Event' : (post.category?.name || 'Blog')}</div>
                 <h1 className='text-3xl md:text-4xl font-bold mb-4 text-gray-900'>
-                  {post.title}
+                  {displayTitle}
                 </h1>
                 <div className="flex flex-wrap items-center justify-between gap-4">
                   <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-500">
@@ -422,6 +458,14 @@ export default function BlogDetailPage() {
                         <span>By {post.author_name}</span>
                       </div>
                     )}
+                    <div className="flex items-center gap-2">
+                      <FileText size={14} />
+                      <span>{wordCount.toLocaleString()} words</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Clock size={14} />
+                      <span>{readingTime} min read</span>
+                    </div>
                   </div>
                   {isEvent && (
                     <button
@@ -440,7 +484,7 @@ export default function BlogDetailPage() {
                   <div className="mb-8 rounded-2xl overflow-hidden shadow-md">
                       <Image
                           src={getImageUrl(post.featured_image) || '/android-chrome-512x512.png'}
-                          alt={post.title}
+                          alt={displayTitle}
                           width={800}
                           height={450}
                           className="w-full h-auto object-cover"
